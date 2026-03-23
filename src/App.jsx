@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 
-// ── TOKENS ────────────────────────────────────────────────────
 const C = {
   forest:  "#243028",
   mossy:   "#3D5040",
@@ -12,6 +11,17 @@ const C = {
   stone:   "#7A7060",
   pale:    "#DDD5C8",
   offwhite:"#FAF6F0",
+  white:   "#FFFFFF",
+  screen:  "#F8F9FB",
+  border:  "#D7DCE3",
+  text:    "#1D2430",
+  muted:   "#6E7785",
+  blue:    "#4D8DFF",
+  pink:    "#F26BAA",
+  green:   "#53B483",
+  yellow:  "#F2C14E",
+  red:     "#E96A5F",
+  lilac:   "#A78BFA",
 };
 const F = {
   display: '"EB Garamond", serif',
@@ -19,7 +29,6 @@ const F = {
   mono:    '"DM Mono", monospace',
 };
 
-// ── GLOBAL STYLES ─────────────────────────────────────────────
 function GlobalStyles() {
   useEffect(() => {
     const link = document.createElement("link");
@@ -35,6 +44,7 @@ function GlobalStyles() {
         background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
       @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
       @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+      @keyframes pulseSoft{from{opacity:.45}to{opacity:1}}
       .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
       .reveal.on{opacity:1;transform:none}
       ::-webkit-scrollbar{width:2px}
@@ -42,10 +52,10 @@ function GlobalStyles() {
       ::selection{background:${C.amber}33}
       input,select,textarea{font-family:${F.sans}}
       button{font-family:${F.sans};cursor:pointer}
-
-      /* ── RESPONSIVE ── */
-
-      /* Tablet and below */
+      @media(max-width:900px){
+        .demo-row{grid-template-columns:1fr !important;gap:1.75rem !important}
+        .demo-copy{max-width:none !important}
+      }
       @media(max-width:768px){
         .section-pad{padding:5rem 1.5rem !important}
         .hero-pad{padding:6rem 1.5rem 4rem !important}
@@ -55,8 +65,6 @@ function GlobalStyles() {
         .feature-grid{grid-template-columns:1fr !important}
         .survey-wrap{padding:5rem 1.5rem !important}
       }
-
-      /* Mobile */
       @media(max-width:480px){
         .section-pad{padding:4rem 1.2rem !important}
         .hero-pad{padding:5rem 1.2rem 3.5rem !important}
@@ -84,7 +92,6 @@ function useReveal() {
   });
 }
 
-// ── NAVBAR ────────────────────────────────────────────────────
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -125,7 +132,6 @@ function Navbar() {
   );
 }
 
-// ── PARTICLE CANVAS ───────────────────────────────────────────
 function ParticleCanvas() {
   const canvasRef = React.useRef(null);
   useEffect(() => {
@@ -149,8 +155,6 @@ function ParticleCanvas() {
     function draw() {
       ctx.clearRect(0, 0, W, H);
       const t = Date.now() * .001;
-
-      // Draw connections
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
@@ -167,8 +171,6 @@ function ParticleCanvas() {
           }
         }
       }
-
-      // Draw particles
       particles.forEach(p => {
         p.x += p.vx; p.y += p.vy;
         if (p.x < -10) p.x = W+10;
@@ -198,48 +200,25 @@ function ParticleCanvas() {
     return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
   }, []);
 
-  return (
-    <canvas ref={canvasRef} style={{position:"absolute",inset:0,width:"100%",height:"100%",zIndex:1}}/>
-  );
+  return <canvas ref={canvasRef} style={{position:"absolute",inset:0,width:"100%",height:"100%",zIndex:1}}/>;
 }
 
-// ── HERO ──────────────────────────────────────────────────────
 function Hero() {
   return (
     <section className="hero-pad" style={{
       minHeight:"100dvh",display:"flex",flexDirection:"column",justifyContent:"flex-end",
-      padding:"8rem 3.5rem 5.5rem",
-      position:"relative",overflow:"hidden",
+      padding:"8rem 3.5rem 5.5rem",position:"relative",overflow:"hidden",
     }}>
-      {/* Background */}
       <div style={{position:"absolute",inset:0,zIndex:0,background:C.forest}}/>
-      {/* Particle canvas */}
       <ParticleCanvas />
-      {/* Gradient overlay — keeps text readable */}
-      <div style={{
-        position:"absolute",inset:0,zIndex:2,
-        background:`linear-gradient(to top, rgba(36,48,40,.97) 20%, rgba(36,48,40,.75) 55%, rgba(36,48,40,.4) 100%)`,
-      }}/>
+      <div style={{position:"absolute",inset:0,zIndex:2,background:`linear-gradient(to top, rgba(36,48,40,.97) 20%, rgba(36,48,40,.75) 55%, rgba(36,48,40,.4) 100%)`}}/>
       <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(90deg,${C.amber},${C.sage})`,zIndex:3}}/>
-
       <div style={{position:"relative",zIndex:4,maxWidth:860}}>
-        <h1 style={{
-          fontFamily:F.display,
-          fontSize:"clamp(3.2rem,9vw,8.5rem)",
-          fontWeight:400,lineHeight:.96,color:C.offwhite,
-          letterSpacing:"-.01em",marginBottom:"2rem",
-          animation:"fadeUp .9s .15s ease both",
-        }}>
+        <h1 style={{fontFamily:F.display,fontSize:"clamp(3.2rem,9vw,8.5rem)",fontWeight:400,lineHeight:.96,color:C.offwhite,letterSpacing:"-.01em",marginBottom:"2rem",animation:"fadeUp .9s .15s ease both"}}>
           <em style={{color:C.amber,fontStyle:"italic"}}>Your</em> phone.<br/>
           <em style={{color:C.amber,fontStyle:"italic"}}>Your</em> rules.
         </h1>
-        <p style={{
-          fontFamily:F.sans,fontWeight:300,
-          fontSize:"clamp(.9rem,1.5vw,1.05rem)",
-          lineHeight:1.85,color:`${C.offwhite}99`,
-          maxWidth:520,
-          animation:"fadeUp .9s .3s ease both",
-        }}>
+        <p style={{fontFamily:F.sans,fontWeight:300,fontSize:"clamp(.9rem,1.5vw,1.05rem)",lineHeight:1.85,color:`${C.offwhite}99`,maxWidth:520,animation:"fadeUp .9s .3s ease both"}}>
           We create mutually beneficial technology. A smartphone that keeps everything you need and removes only what you ask it to.
         </p>
       </div>
@@ -247,7 +226,6 @@ function Hero() {
   );
 }
 
-// ── PROPOSITION ───────────────────────────────────────────────
 function Proposition() {
   useReveal();
   return (
@@ -256,35 +234,14 @@ function Proposition() {
         <div className="reveal" style={{fontFamily:F.mono,fontSize:".72rem",letterSpacing:".2em",textTransform:"uppercase",color:C.sage,marginBottom:"3rem",fontWeight:"bold"}}>
           How it works
         </div>
-
         <div style={{display:"flex",flexDirection:"column",gap:0}}>
           {[
-            {
-              n:"00",
-              title:"Apply and tell us about your phone",
-              body:"If you have a spare Samsung or Google Pixel, we may be able to work with it. If not, we can arrange a phone for you.",
-            },
-            {
-              n:"01",
-              title:"You tell us your rules",
-              body:"Block apps completely or set daily time limits. Silence notifications during work hours. Filter specific websites and content. Switch to greyscale after 9pm. Whatever you want to change, write it down.",
-            },
-            {
-              n:"02",
-              title:"We configure your phone",
-              body:"We set it up at the system level. Not an app you can delete. Not a setting you can toggle off. The rules are set at a level your future self cannot easily undo.",
-            },
-            {
-              n:"03",
-              title:"You live with it",
-              body:"That's it. We check in. If the rules are not working, we adjust them. You are in control of what the rules are.",
-            },
+            { n:"00", title:"Apply and tell us about your phone", body:"If you have a spare Samsung or Google Pixel, we may be able to work with it. If not, we can arrange a phone for you." },
+            { n:"01", title:"You tell us your rules", body:"Block apps completely or set daily time limits. Silence notifications during work hours. Filter specific websites and content. Switch to greyscale after 9pm. Whatever you want to change, write it down." },
+            { n:"02", title:"We configure your phone", body:"We set it up at the system level. Not an app you can delete. Not a setting you can toggle off. The rules are set at a level your future self cannot easily undo." },
+            { n:"03", title:"You live with it", body:"That's it. We check in. If the rules are not working, we adjust them. You are in control of what the rules are." },
           ].map((s,i) => (
-            <div key={i} className="reveal" data-d={i*.1} style={{
-              display:"grid",gridTemplateColumns:"2.5rem 1fr",
-              gap:".75rem",padding:"2.5rem 0",
-              borderTop:`1px solid ${C.pale}`,
-            }}>
+            <div key={i} className="reveal" data-d={i*.1} style={{display:"grid",gridTemplateColumns:"2.5rem 1fr",gap:".75rem",padding:"2.5rem 0",borderTop:`1px solid ${C.pale}`}}>
               <span style={{fontFamily:F.mono,fontSize:".72rem",color:C.stone,paddingTop:".35rem",fontWeight:"bold"}}>{s.n}</span>
               <div>
                 <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1.4rem",color:C.forest,marginBottom:".65rem"}}>{s.title}</div>
@@ -293,7 +250,6 @@ function Proposition() {
             </div>
           ))}
         </div>
-
         <div className="reveal" data-d=".3" style={{marginTop:"3.5rem",padding:"2rem 2.5rem",background:C.forest,borderRadius:16}}>
           <p style={{fontFamily:F.display,fontStyle:"italic",fontSize:"clamp(1.1rem,2.2vw,1.5rem)",color:C.offwhite,lineHeight:1.6}}>
             You decide how you use your phone. We make it stick.
@@ -304,100 +260,114 @@ function Proposition() {
   );
 }
 
-// ── EVE DEMO — four scenes ────────────────────────────────────
+function AppIcon({ label, color, glyph, dimmed = false }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, opacity: dimmed ? 0.28 : 1, transition: "opacity .45s ease, transform .45s ease" }}>
+      <div style={{ width: 34, height: 34, borderRadius: 10, background: color, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "inset 0 1px 0 rgba(255,255,255,.35)", fontSize: ".9rem" }}>{glyph}</div>
+      <span style={{ fontFamily: F.sans, fontSize: ".42rem", color: C.muted }}>{label}</span>
+    </div>
+  );
+}
 
-// Shared phone shell
-function PhoneShell({ children, greyscale = false }) {
+function PhoneShell({ children, greyscale = false, time = "10:47" }) {
   return (
     <div style={{
-      width: 200, minHeight: 380,
-      background: greyscale ? "#2a2a2a" : C.forest,
-      borderRadius: 28,
-      border: `1px solid ${greyscale ? "#444" : C.mossy}`,
+      width: 228,
+      minHeight: 438,
+      padding: 8,
+      background: "linear-gradient(180deg,#1f2a25 0%,#314239 100%)",
+      borderRadius: 34,
+      border: "1px solid rgba(255,255,255,.18)",
+      boxShadow: "0 28px 80px rgba(36,48,40,.22)",
       overflow: "hidden",
-      boxShadow: `0 20px 60px ${C.forest}44`,
       flexShrink: 0,
-      filter: greyscale ? "saturate(0.1)" : "none",
+      filter: greyscale ? "saturate(0)" : "none",
       transition: "filter 1.2s ease",
-      display: "flex", flexDirection: "column",
     }}>
-      {/* Status bar */}
-      <div style={{ padding: "10px 16px 6px", display: "flex", justifyContent: "space-between" }}>
-        <span style={{ fontFamily: F.mono, fontSize: ".5rem", color: `${C.offwhite}66` }}>10:47</span>
-        <div style={{ display: "flex", gap: 3 }}>
-          {[1,1,1].map((_,i) => (
-            <div key={i} style={{ width: 3, height: 3, borderRadius: "50%", background: `${C.offwhite}44` }}/>
-          ))}
+      <div style={{ background: C.white, minHeight: 422, borderRadius: 27, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+        <div style={{ padding: "8px 14px 6px", display: "flex", justifyContent: "space-between", alignItems: "center", background: C.white }}>
+          <span style={{ fontFamily: F.mono, fontSize: ".54rem", color: C.text }}>{time}</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <div style={{ width: 10, height: 7, borderRadius: 3, border: `1px solid ${C.text}` }} />
+            <div style={{ width: 4, height: 4, borderRadius: "50%", background: C.text, opacity: .75 }} />
+            <div style={{ width: 14, height: 6, borderRadius: 99, background: C.text, opacity: .8 }} />
+          </div>
         </div>
-      </div>
-      <div style={{ flex: 1, padding: "0 12px 14px", display: "flex", flexDirection: "column" }}>
-        {children}
+        <div style={{ flex: 1, padding: "8px 12px 14px", display: "flex", flexDirection: "column", background: greyscale ? "#E5E5E5" : C.screen }}>
+          {children}
+        </div>
       </div>
     </div>
   );
 }
 
-// Scene 1 — The opening
+function SceneFrame({ children, label, title, body }) {
+  return (
+    <div className="demo-row" style={{ display: "grid", gridTemplateColumns: "240px minmax(0,1fr)", gap: "2.5rem", alignItems: "start" }}>
+      {children}
+      <div className="demo-copy" style={{ maxWidth: 520, textAlign: "left", justifySelf: "start" }}>
+        <div style={{ fontFamily: F.mono, fontSize: ".58rem", letterSpacing: ".15em", textTransform: "uppercase", color: C.sage, marginBottom: ".6rem" }}>{label}</div>
+        <div style={{ fontFamily: F.display, fontWeight: 500, fontSize: "1.35rem", color: C.forest, marginBottom: body ? ".8rem" : 0 }}>{title}</div>
+        {body ? <p style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".92rem", color: C.stone, lineHeight: 1.8, textAlign: "left" }}>{body}</p> : null}
+      </div>
+    </div>
+  );
+}
+
 function Scene1() {
   const [step, setStep] = useState(0);
   useEffect(() => {
     const delays = [800, 1800, 3000];
     const timers = delays.map((d, i) => setTimeout(() => setStep(i + 1), d));
-    const reset = setTimeout(() => setStep(0), 6000);
+    const reset = setTimeout(() => setStep(0), 6200);
     return () => { timers.forEach(clearTimeout); clearTimeout(reset); };
   }, [step === 0 ? undefined : null]);
 
+  const apps = [
+    ["Camera", C.pink, "📷"], ["Music", C.lilac, "🎵"], ["Mail", C.blue, "✉️"], ["Maps", C.green, "🗺️"],
+    ["Shop", C.yellow, "🛒"], ["News", C.red, "📰"], ["Chat", C.green, "💬"], ["Settings", "#C6CBD3", "⚙️"],
+  ];
+
   return (
-    <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
+    <SceneFrame label="01 — The opening" title="Just tell Eve what you want.">
       <PhoneShell>
-        {/* Normal home screen icons */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8, marginBottom: 12, marginTop: 4 }}>
-          {["📸","🎵","📧","🗺","🛒","📰","💬","⚙"].map((icon, i) => (
-            <div key={i} style={{ aspectRatio: "1", background: `${C.offwhite}12`, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: ".9rem" }}>
-              {icon}
-            </div>
-          ))}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10, marginBottom: 14, marginTop: 2 }}>
+          {apps.map(([label, color, glyph], i) => <AppIcon key={i} label={label} color={color} glyph={glyph} />)}
         </div>
-        {/* Chat input area */}
-        <div style={{ marginTop: "auto" }}>
+        <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
           {step >= 1 && (
-            <div style={{ background: `${C.offwhite}14`, borderRadius: 12, padding: "8px 10px", marginBottom: 6, border: `1px solid ${C.offwhite}22`, animation: "fadeUp .4s ease both" }}>
-              <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: C.amber, letterSpacing: ".1em", marginBottom: 4 }}>EVE</div>
-              <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".62rem", color: `${C.offwhite}88`, lineHeight: 1.5 }}>Hi. What's on your mind?</div>
+            <div style={{ background: C.white, borderRadius: 16, padding: "12px 12px", border: `1px solid ${C.border}`, animation: "fadeUp .4s ease both", boxShadow: "0 6px 18px rgba(15,23,42,.05)" }}>
+              <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: C.amber, letterSpacing: ".1em", marginBottom: 5 }}>EVE</div>
+              <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".68rem", color: C.text, lineHeight: 1.5 }}>Hi. What's on your mind?</div>
             </div>
           )}
           {step >= 2 && (
-            <div style={{ background: C.amber, borderRadius: 12, padding: "8px 10px", marginBottom: 6, animation: "fadeUp .4s ease both" }}>
-              <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".62rem", color: C.offwhite, lineHeight: 1.5 }}>I've been spending too much time on my phone and I need to change that.</div>
+            <div style={{ background: C.amber, borderRadius: 16, padding: "12px 12px", animation: "fadeUp .4s ease both", boxShadow: "0 10px 20px rgba(184,114,58,.22)" }}>
+              <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".68rem", color: C.offwhite, lineHeight: 1.55 }}>I've been spending too much time on my phone and I need to change that.</div>
             </div>
           )}
           {step >= 3 && (
-            <div style={{ background: `${C.offwhite}14`, borderRadius: 12, padding: "8px 10px", border: `1px solid ${C.offwhite}22`, animation: "fadeUp .4s ease both" }}>
-              <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: C.amber, letterSpacing: ".1em", marginBottom: 4 }}>EVE</div>
-              <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".62rem", color: `${C.offwhite}88`, lineHeight: 1.5 }}>Let me take a look at how you've been using it.</div>
+            <div style={{ background: C.white, borderRadius: 16, padding: "12px 12px", border: `1px solid ${C.border}`, animation: "fadeUp .4s ease both", boxShadow: "0 6px 18px rgba(15,23,42,.05)" }}>
+              <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: C.amber, letterSpacing: ".1em", marginBottom: 5 }}>EVE</div>
+              <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".68rem", color: C.text, lineHeight: 1.5 }}>Let me take a look at how you've been using it.</div>
             </div>
           )}
         </div>
       </PhoneShell>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: F.mono, fontSize: ".58rem", letterSpacing: ".15em", textTransform: "uppercase", color: C.sage, marginBottom: ".5rem" }}>01 — The opening</div>
-        <div style={{ fontFamily: F.display, fontWeight: 500, fontSize: "1.2rem", color: C.forest, marginBottom: ".75rem" }}>Just tell Eve what you want.</div>
-        <p style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".88rem", color: C.stone, lineHeight: 1.8 }}>No forms. No settings. No selecting from a list of options. Eve listens, then gets to work.</p>
-      </div>
-    </div>
+    </SceneFrame>
   );
 }
 
-// Scene 2 — Eve analyses
 const ANALYSIS_LINES = [
   "Reviewing app usage — last 14 days...",
   "Instagram: 1h 42m average daily",
   "Pinterest: 38m average daily",
   "Google News: 29m average daily",
   "WhatsApp: active throughout the day",
+  "",
   "Cross-referencing with calendar...",
-  "Work hours: 9am – 6pm",
-  "High usage overlap during work hours detected",
+  "Work hours identified: 9am – 6pm",
+  "High usage overlap detected during work hours",
   "Notification interruptions: avg 47 per day",
   "Most frequent unlock trigger: Instagram",
   "",
@@ -415,50 +385,34 @@ function Scene2() {
         const l = ANALYSIS_LINES[i];
         setLines(prev => [...prev, l]);
         i++;
-        if (i < ANALYSIS_LINES.length) setTimeout(addLine, l === "" ? 600 : l.startsWith("I think") ? 900 : 280);
-        else { setTimeout(() => setDone(true), 400); setTimeout(() => { setLines([]); setDone(false); }, 6000); }
+        if (i < ANALYSIS_LINES.length) setTimeout(addLine, l === "" ? 500 : l.startsWith("I think") ? 1000 : 240);
+        else { setTimeout(() => setDone(true), 450); setTimeout(() => { setLines([]); setDone(false); }, 6200); }
       }
     };
-    const t = setTimeout(addLine, 400);
+    const t = setTimeout(addLine, 350);
     return () => clearTimeout(t);
   }, [done === false && lines.length === 0 ? undefined : null]);
 
   return (
-    <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
+    <SceneFrame label="02 — Eve analyses" title="It already knows your patterns." body="Eve reads your usage data before it says anything. When the plan arrives, it's built on evidence — not guesswork.">
       <PhoneShell>
-        <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column", gap: 2, paddingTop: 4 }}>
-          <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: C.amber, letterSpacing: ".1em", marginBottom: 6 }}>EVE — ANALYSING</div>
+        <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column", gap: 3, paddingTop: 4 }}>
+          <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: C.amber, letterSpacing: ".1em", marginBottom: 8 }}>EVE — ANALYSING</div>
           {lines.map((l, i) => (
-            <div key={i} style={{
-              fontFamily: F.mono,
-              fontSize: ".5rem",
-              color: l.startsWith("I think") ? C.offwhite : l.startsWith("High") || l.startsWith("Most") ? `${C.amber}cc` : `${C.offwhite}55`,
-              lineHeight: 1.6,
-              animation: "fadeUp .25s ease both",
-              fontWeight: l.startsWith("I think") ? 400 : 300,
-              paddingTop: l === "" ? 4 : 0,
-            }}>{l || " "}</div>
+            <div key={i} style={{ fontFamily: F.mono, fontSize: ".56rem", color: l.startsWith("I think") ? C.text : l.startsWith("High") || l.startsWith("Most") ? C.amber : C.muted, lineHeight: 1.6, animation: "fadeUp .25s ease both", fontWeight: l.startsWith("I think") ? 400 : 300, paddingTop: l === "" ? 5 : 0 }}>{l || " "}</div>
           ))}
-          {!done && lines.length > 0 && (
-            <span style={{ fontFamily: F.mono, fontSize: ".5rem", color: C.amber, animation: "fadeUp .3s ease infinite alternate" }}>█</span>
-          )}
+          {!done && lines.length > 0 && <span style={{ fontFamily: F.mono, fontSize: ".56rem", color: C.amber, animation: "pulseSoft .45s ease infinite alternate" }}>█</span>}
         </div>
       </PhoneShell>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: F.mono, fontSize: ".58rem", letterSpacing: ".15em", textTransform: "uppercase", color: C.sage, marginBottom: ".5rem" }}>02 — Eve analyses</div>
-        <div style={{ fontFamily: F.display, fontWeight: 500, fontSize: "1.2rem", color: C.forest, marginBottom: ".75rem" }}>It already knows your patterns.</div>
-        <p style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".88rem", color: C.stone, lineHeight: 1.8 }}>Eve reads your usage data before it says anything. When the plan arrives, it's built on evidence — not guesswork.</p>
-      </div>
-    </div>
+    </SceneFrame>
   );
 }
 
-// Scene 3 — The plan
 const PLAN_MSGS = [
   { side: "eve", text: "Based on your usage, I'd suggest blocking Instagram and Pinterest completely during work hours and keeping WhatsApp available. Want to go further?" },
-  { side: "user", text: "Yes. Notifications are distracting too. And make the phone less tempting." },
-  { side: "eve", text: "I can silence all notifications during work hours except your boss and partner. And switch your phone to greyscale — less colour, less pull." },
-  { side: "eve", text: "Let's try this for two weeks. I'll check in with you on the 14th. You can adjust anything before then." },
+  { side: "user", text: "Yes. Most notifications are distracting too. And make the phone less tempting to pick up." },
+  { side: "eve", text: "Got it. I can silence all notifications during work hours except your boss and partner. And I can switch your phone to greyscale — less colour, less pull." },
+  { side: "eve", text: "Let's try this for two weeks. I'll check in with you on the 14th to see if it's working. You can adjust anything before then." },
   { side: "user", text: "Let's do it." },
 ];
 
@@ -466,135 +420,114 @@ function Scene3() {
   const [shown, setShown] = useState(0);
   const [typing, setTyping] = useState(false);
   useEffect(() => {
-    if (shown >= PLAN_MSGS.length) { setTimeout(() => setShown(0), 4000); return; }
+    if (shown >= PLAN_MSGS.length) { setTimeout(() => setShown(0), 4200); return; }
     const m = PLAN_MSGS[shown];
     if (m.side === "eve") {
       setTyping(true);
-      const t = setTimeout(() => { setTyping(false); setShown(n => n + 1); }, m.text.length * 18 + 400);
-      return () => clearTimeout(t);
-    } else {
-      const t = setTimeout(() => setShown(n => n + 1), 900);
+      const t = setTimeout(() => { setTyping(false); setShown(n => n + 1); }, m.text.length * 14 + 450);
       return () => clearTimeout(t);
     }
+    const t = setTimeout(() => setShown(n => n + 1), 900);
+    return () => clearTimeout(t);
   }, [shown]);
 
   return (
-    <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
+    <SceneFrame label="03 — The plan" title="Eve recommends. You decide." body="Not a menu of options. A considered recommendation, built on your data. You adjust, confirm, and it is set for two weeks.">
       <PhoneShell>
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-end" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 7, justifyContent: "flex-end" }}>
           {PLAN_MSGS.slice(0, shown).map((m, i) => (
             <div key={i} style={{ display: "flex", justifyContent: m.side === "user" ? "flex-end" : "flex-start", animation: "fadeUp .3s ease both" }}>
-              <div style={{
-                maxWidth: "88%", padding: "6px 9px", borderRadius: 10,
-                background: m.side === "user" ? C.amber : `${C.offwhite}14`,
-                border: `1px solid ${m.side === "user" ? C.amber : `${C.offwhite}18`}`,
-              }}>
-                {m.side === "eve" && <div style={{ fontFamily: F.mono, fontSize: ".45rem", color: C.amber, letterSpacing: ".1em", marginBottom: 3 }}>EVE</div>}
-                <span style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".58rem", color: m.side === "user" ? C.offwhite : `${C.offwhite}88`, lineHeight: 1.55 }}>{m.text}</span>
+              <div style={{ maxWidth: "88%", padding: "8px 10px", borderRadius: 14, background: m.side === "user" ? C.amber : C.white, border: `1px solid ${m.side === "user" ? C.amber : C.border}`, boxShadow: m.side === "user" ? "0 8px 18px rgba(184,114,58,.18)" : "0 6px 16px rgba(15,23,42,.04)" }}>
+                {m.side === "eve" && <div style={{ fontFamily: F.mono, fontSize: ".45rem", color: C.amber, letterSpacing: ".1em", marginBottom: 4 }}>EVE</div>}
+                <span style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".6rem", color: m.side === "user" ? C.offwhite : C.text, lineHeight: 1.55 }}>{m.text}</span>
               </div>
             </div>
           ))}
           {typing && (
             <div style={{ display: "flex", justifyContent: "flex-start" }}>
-              <div style={{ padding: "6px 9px", borderRadius: 10, background: `${C.offwhite}14`, border: `1px solid ${C.offwhite}18`, display: "flex", gap: 3 }}>
-                {[0,1,2].map(i => <div key={i} style={{ width: 4, height: 4, borderRadius: "50%", background: `${C.offwhite}55`, animation: `fadeUp .5s ${i*.14}s ease infinite alternate` }}/>)}
+              <div style={{ padding: "8px 10px", borderRadius: 14, background: C.white, border: `1px solid ${C.border}`, display: "flex", gap: 4 }}>
+                {[0,1,2].map(i => <div key={i} style={{ width: 4, height: 4, borderRadius: "50%", background: C.muted, animation: `pulseSoft .5s ${i*.14}s ease infinite alternate` }} />)}
               </div>
             </div>
           )}
         </div>
       </PhoneShell>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: F.mono, fontSize: ".58rem", letterSpacing: ".15em", textTransform: "uppercase", color: C.sage, marginBottom: ".5rem" }}>03 — The plan</div>
-        <div style={{ fontFamily: F.display, fontWeight: 500, fontSize: "1.2rem", color: C.forest, marginBottom: ".75rem" }}>Eve recommends. You decide.</div>
-        <p style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".88rem", color: C.stone, lineHeight: 1.8 }}>Not a menu of options. A considered recommendation, built on your data. You adjust, confirm, and it's set for two weeks.</p>
-      </div>
-    </div>
+    </SceneFrame>
   );
 }
 
-// Scene 4 — The change
 function Scene4() {
   const [phase, setPhase] = useState(0);
-  // 0: before, 1: implementing, 2: greyscale done, 3: block screen
   useEffect(() => {
-    const seq = [0, 1800, 3800, 6000, 9500];
+    const seq = [0, 1800, 3800, 6000, 9400];
     const timers = seq.map((d, i) => setTimeout(() => setPhase(i), d));
     return () => timers.forEach(clearTimeout);
   }, []);
 
   const isGrey = phase >= 2;
   const apps = [
-    { name: "Maps",      visible: true },
-    { name: "WhatsApp",  visible: true },
-    { name: "Calendar",  visible: true },
-    { name: "Mail",      visible: true },
-    { name: "Instagram", visible: phase < 1 },
-    { name: "Pinterest", visible: phase < 1 },
-    { name: "News",      visible: true },
-    { name: "Spotify",   visible: true },
+    { name: "Maps", label: "Maps", glyph: "🗺️", color: C.green, visible: true },
+    { name: "WhatsApp", label: "Chat", glyph: "💬", color: C.green, visible: true },
+    { name: "Calendar", label: "Cal", glyph: "📅", color: C.white, visible: true },
+    { name: "Mail", label: "Mail", glyph: "✉️", color: C.blue, visible: true },
+    { name: "Instagram", label: "Insta", glyph: "📸", color: C.pink, visible: phase < 1 },
+    { name: "Pinterest", label: "Pin", glyph: "📌", color: C.red, visible: phase < 1 },
+    { name: "News", label: "News", glyph: "📰", color: C.yellow, visible: true },
+    { name: "Spotify", label: "Music", glyph: "🎵", color: C.lilac, visible: true },
   ];
 
   return (
-    <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
-      <PhoneShell greyscale={isGrey}>
+    <SceneFrame label="04 — The change" title="The phone actually changes." body="Apps disappear. Colour drains. The browser blocks. Not a notification. Not a reminder. The phone keeps its word.">
+      <PhoneShell greyscale={isGrey} time={phase >= 3 ? "11:23" : "10:47"}>
         {phase < 3 ? (
           <>
-            <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: isGrey ? "#aaa" : C.amber, letterSpacing: ".1em", marginBottom: 8 }}>
-              {phase === 0 ? "HOME" : phase === 1 ? "EVE — CONFIGURING..." : "WORK MODE · UNTIL 6PM"}
+            <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: isGrey ? "#666" : C.amber, letterSpacing: ".1em", marginBottom: 10 }}>
+              {phase === 0 ? "HOME" : phase === 1 ? "EVE — CONFIGURING..." : "WORK MODE. UNTIL 6PM."}
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 7 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }}>
               {apps.map(app => (
-                <div key={app.name} style={{
-                  aspectRatio: "1", borderRadius: 10,
-                  background: app.visible ? `${C.offwhite}${isGrey ? "18" : "14"}` : "transparent",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  transition: "all .6s cubic-bezier(.34,1.56,.64,1)",
-                  transform: app.visible ? "scale(1)" : "scale(0)",
-                  opacity: app.visible ? 1 : 0,
-                }}>
-                  {app.visible && <span style={{ fontFamily: F.mono, fontSize: ".48rem", color: isGrey ? "#888" : `${C.offwhite}88` }}>{app.name.slice(0,3)}</span>}
+                <div key={app.name} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, transition: "all .6s cubic-bezier(.34,1.56,.64,1)", transform: app.visible ? "scale(1)" : "scale(.5)", opacity: app.visible ? 1 : 0 }}>
+                  <div style={{ width: 34, height: 34, borderRadius: 10, background: app.color, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "inset 0 1px 0 rgba(255,255,255,.35)" }}>{app.glyph}</div>
+                  <span style={{ fontFamily: F.sans, fontSize: ".42rem", color: isGrey ? "#777" : C.muted }}>{app.label}</span>
                 </div>
               ))}
             </div>
+            <div style={{ marginTop: 14, background: C.white, border: `1px solid ${C.border}`, borderRadius: 14, padding: "8px 10px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span style={{ fontFamily: F.sans, fontSize: ".56rem", color: isGrey ? "#666" : C.text }}>Notifications</span>
+              <span style={{ fontFamily: F.mono, fontSize: ".58rem", color: isGrey ? "#666" : C.amber }}>{phase === 0 ? "47" : phase === 1 ? "14" : "2"}</span>
+            </div>
             {phase >= 2 && (
-              <div style={{ marginTop: "auto", background: `${C.offwhite}12`, borderRadius: 10, padding: "8px 10px", border: `1px solid ${C.offwhite}18`, animation: "fadeUp .5s ease both" }}>
-                <div style={{ fontFamily: F.mono, fontSize: ".45rem", color: "#aaa", letterSpacing: ".1em", marginBottom: 3 }}>EVE</div>
-                <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".55rem", color: "#aaa", lineHeight: 1.5 }}>All set. I'll check in on the 14th. Good luck.</div>
+              <div style={{ marginTop: "auto", background: C.white, borderRadius: 14, padding: "10px 10px", border: `1px solid ${C.border}`, animation: "fadeUp .5s ease both" }}>
+                <div style={{ fontFamily: F.mono, fontSize: ".45rem", color: isGrey ? "#666" : C.amber, letterSpacing: ".1em", marginBottom: 3 }}>EVE</div>
+                <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".58rem", color: isGrey ? "#666" : C.text, lineHeight: 1.5 }}>All set. I'll check in on the 14th. Good luck.</div>
               </div>
             )}
           </>
         ) : (
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "8px 0" }}>
-            <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: "#888", letterSpacing: ".1em", marginBottom: 12 }}>INSTAGRAM.COM</div>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: "#333", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 10, fontSize: "1.1rem", filter: "saturate(0)" }}>📸</div>
-            <div style={{ fontFamily: F.sans, fontWeight: 500, fontSize: ".65rem", color: "#ccc", marginBottom: 6, lineHeight: 1.4 }}>Instagram is off until 6pm.</div>
-            <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".58rem", color: "#888", lineHeight: 1.5 }}>Enjoy the focus.</div>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "8px 6px" }}>
+            <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: "#767676", letterSpacing: ".1em", marginBottom: 12 }}>INSTAGRAM.COM</div>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: "#D4D4D4", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12, fontSize: "1.15rem" }}>📸</div>
+            <div style={{ fontFamily: F.sans, fontWeight: 500, fontSize: ".7rem", color: "#4A4A4A", marginBottom: 6, lineHeight: 1.4 }}>Instagram is off until 6pm.</div>
+            <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".6rem", color: "#767676", lineHeight: 1.5 }}>Enjoy the focus.</div>
           </div>
         )}
       </PhoneShell>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: F.mono, fontSize: ".58rem", letterSpacing: ".15em", textTransform: "uppercase", color: C.sage, marginBottom: ".5rem" }}>04 — The change</div>
-        <div style={{ fontFamily: F.display, fontWeight: 500, fontSize: "1.2rem", color: C.forest, marginBottom: ".75rem" }}>The phone actually changes.</div>
-        <p style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".88rem", color: C.stone, lineHeight: 1.8 }}>Apps disappear. Colour drains. The browser blocks. Not a notification. Not a reminder. The phone keeps its word.</p>
-      </div>
-    </div>
+    </SceneFrame>
   );
 }
 
-// ── EVE DEMO SECTION ─────────────────────────────────────────
 function Differentiation() {
   useReveal();
   return (
     <section className="section-pad" style={{ padding: "7rem 3rem", background: C.cream, borderTop: `1px solid ${C.pale}` }}>
-      <div style={{ maxWidth: 860, margin: "0 auto" }}>
-        <div className="reveal" style={{ marginBottom: "4rem" }}>
+      <div style={{ maxWidth: 980, margin: "0 auto", textAlign: "left" }}>
+        <div className="reveal" style={{ marginBottom: "4rem", textAlign: "left" }}>
           <div style={{ fontFamily: F.mono, fontSize: ".72rem", letterSpacing: ".2em", textTransform: "uppercase", color: C.sage, marginBottom: ".75rem", fontWeight: "bold" }}>Meet Eve</div>
-          <h2 style={{ fontFamily: F.display, fontSize: "clamp(2rem,4vw,3.2rem)", fontWeight: 400, lineHeight: 1.15, color: C.forest }}>
-            See how it works.<br/>
-            <em style={{ fontStyle: "italic", color: C.amber }}>In your own words.</em>
+          <h2 style={{ fontFamily: F.display, fontSize: "clamp(2rem,4vw,3.2rem)", fontWeight: 400, lineHeight: 1.12, color: C.forest, maxWidth: 520, textAlign: "left" }}>
+            Tell Eve what you want
           </h2>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "4rem", textAlign: "left" }}>
           <div className="reveal" data-d=".05"><Scene1 /></div>
           <div className="reveal" data-d=".1"><Scene2 /></div>
           <div className="reveal" data-d=".15"><Scene3 /></div>
@@ -605,7 +538,6 @@ function Differentiation() {
   );
 }
 
-// ── WHO THIS IS FOR ───────────────────────────────────────────
 function WhoThisIsFor() {
   useReveal();
   return (
@@ -624,315 +556,45 @@ function WhoThisIsFor() {
             "You tried blocking apps. You deleted them after three weeks.",
             "You know exactly what you want to change. You just can't make it stick.",
           ].map((line,i) => (
-            <div key={i} className="reveal" data-d={i*.07} style={{
-              display:"flex",gap:"1.5rem",alignItems:"flex-start",
-              padding:"1.2rem 0",borderTop:`1px solid ${C.pale}`,
-            }}>
+            <div key={i} className="reveal" data-d={i*.07} style={{display:"flex",gap:"1.5rem",alignItems:"flex-start",padding:"1.2rem 0",borderTop:`1px solid ${C.pale}`}}>
               <span style={{fontFamily:F.mono,fontSize:".6rem",color:C.amber,paddingTop:".2rem",flexShrink:0}}>→</span>
-              <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".95rem",color:C.stone,lineHeight:1.75}}>{line}</p>
+              <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".95rem",color:C.stone,lineHeight:1.8}}>{line}</p>
             </div>
           ))}
         </div>
-        <div className="reveal" data-d=".24" style={{marginTop:"3rem",paddingTop:"2.5rem",borderTop:`1px solid ${C.pale}`}}>
-          <p style={{fontFamily:F.display,fontStyle:"italic",fontSize:"clamp(1.1rem,2.2vw,1.55rem)",color:C.forest,lineHeight:1.55,maxWidth:580}}>
-            If you know what you want to change and have not found something that holds, this is for you.
-          </p>
-        </div>
       </div>
     </section>
   );
 }
 
-// ── SURVEY / APPLICATION ──────────────────────────────────────
-const SURVEY_STEPS = [
-  {
-    id:"areas",
-    question:"Where would you most like to change your smartphone use?",
-    subtext:"Select up to two",
-    type:"multi",
-    max:2,
-    options:[
-      "Work or study performance",
-      "Sleep",
-      "Mental and emotional wellbeing (mood, anxiety, comparison)",
-      "Attention span",
-      "Relationships and social presence",
-      "Physical health (sedentary time, posture, eye strain)",
-    ],
-  },
-  {
-    id:"behaviours",
-    question:"Which apps or behaviours feel hardest to control?",
-    subtext:"Select all that apply",
-    type:"multi",
-    options:[
-      "Short-form video (TikTok, Reels, YouTube Shorts)",
-      "Social media (Instagram, LinkedIn, Twitter/X, Facebook, Reddit)",
-      "Messaging and group chats (WhatsApp, iMessage)",
-      "News",
-      "Games",
-      "Online shopping",
-      "Notifications in general",
-      "Compulsive checking, reflexively unlocking my phone",
-      "Nothing specific, I just want healthier use",
-    ],
-  },
-  {
-    id:"tried",
-    question:"What have you tried before?",
-    subtext:"Select all that apply",
-    type:"multi",
-    options:[
-      "Default Screen Time or Digital Wellbeing settings",
-      "Apps (Opal, Forest, Onesec, others)",
-      "Grayscale mode",
-      "Deleting apps or accounts",
-      "Restricting notifications",
-      "Content filters (VPNs, DNS)",
-      "Brick or dumb phone (Nokia, Punkt, others)",
-      "Minimal smartphone (Light Phone, others)",
-      "Locked-down smartphone (Balance, Wisephone, SLEKE)",
-      "Physical blockers (Brick, Bloc, Unplug, lockbox)",
-      "Nothing yet",
-    ],
-  },
-  {
-    id:"why_failed",
-    question:"What was the main reason they didn't last?",
-    type:"single",
-    options:[
-      "Too easy to bypass or uninstall",
-      "Blocked things I actually needed",
-      "Too much effort to set up or maintain",
-      "Social or work pressure made it impractical",
-      "I moved to different apps and spent the same time there",
-      "They still work, this is no longer a problem for me",
-    ],
-  },
-  {
-    id:"phone",
-    question:"What phone do you currently use?",
-    type:"single",
-    options:["Samsung","Google Pixel","Other Android","iPhone"],
-  },
-  {
-    id:"email",
-    question:"Last step. Where should we reach you?",
-    type:"email",
-  },
-];
-
-function Survey() {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [selected, setSelected] = useState([]);
-  useReveal();
-
-  const current = SURVEY_STEPS[step];
-  const progress = (step / SURVEY_STEPS.length) * 100;
-
-  function handleSingle(opt) {
-    setAnswers(a => ({...a, [current.id]: opt}));
-    setTimeout(() => { setSelected([]); setStep(s => s + 1); }, 200);
-  }
-
-  function handleMultiToggle(opt) {
-    const max = current.max;
-    setSelected(s => {
-      if (s.includes(opt)) return s.filter(x => x !== opt);
-      if (max && s.length >= max) return s;
-      return [...s, opt];
-    });
-  }
-
-  function handleMultiNext() {
-    setAnswers(a => ({...a, [current.id]: selected}));
-    setSelected([]);
-    setStep(s => s + 1);
-  }
-
-  function handleSubmit() {
-    if (!email.includes("@")) return;
-    setAnswers(a => ({...a, email}));
-    setSubmitted(true);
-  }
-
-  if (submitted) {
-    return (
-      <section id="apply" className="survey-wrap" style={{padding:"9rem 3rem",background:C.forest}}>
-        <div style={{maxWidth:560,margin:"0 auto",textAlign:"center"}}>
-          <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".2em",textTransform:"uppercase",color:C.amber,marginBottom:"2rem"}}>
-            Application received
-          </div>
-          <h2 style={{fontFamily:F.display,fontStyle:"italic",fontSize:"clamp(2rem,4vw,3rem)",color:C.offwhite,lineHeight:1.15,marginBottom:"1.5rem"}}>
-            You're on the list.
-          </h2>
-          <p style={{fontFamily:F.sans,fontWeight:300,fontSize:"1rem",color:`${C.offwhite}77`,lineHeight:1.85,maxWidth:400,margin:"0 auto"}}>
-            We're reviewing applications and will be in touch if you're selected for the first cohort. We'll reach out via email within two weeks.
-          </p>
-        </div>
-      </section>
-    );
-  }
-
+function FooterCTA() {
   return (
-    <section id="apply" className="survey-wrap" style={{padding:"9rem 3rem",background:C.forest}}>
-      <div style={{maxWidth:580,margin:"0 auto"}}>
-        {/* Header */}
-        <div className="reveal" style={{marginBottom:"3.5rem"}}>
-          <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".2em",textTransform:"uppercase",color:C.amber,marginBottom:"1.5rem",fontWeight:"bold"}}>
-            Apply for the first cohort
-          </div>
-          <h2 style={{fontFamily:F.display,fontSize:"clamp(2rem,4vw,3rem)",fontWeight:400,fontStyle:"italic",color:C.offwhite,lineHeight:1.15,marginBottom:"1rem"}}>
-            20 spots.<br/>
-            <em style={{color:C.amber}}>We're selecting carefully.</em>
-          </h2>
-          <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".95rem",color:`${C.offwhite}66`,lineHeight:1.8}}>
-            We want people who have genuinely tried other solutions and are ready to commit. Six quick questions.
-          </p>
+    <section id="apply" className="section-pad" style={{padding:"7rem 3rem 8rem",background:C.cream,borderTop:`1px solid ${C.pale}`}}>
+      <div style={{maxWidth:820,margin:"0 auto",textAlign:"left"}}>
+        <div style={{fontFamily:F.display,fontSize:"clamp(2rem,4vw,3.3rem)",lineHeight:1.08,color:C.forest,marginBottom:"1.25rem"}}>
+          Start with the phone you already use.
         </div>
-
-        {/* Progress bar */}
-        <div style={{height:2,background:`${C.offwhite}18`,borderRadius:999,marginBottom:"2.5rem",overflow:"hidden"}}>
-          <div style={{height:"100%",background:C.amber,borderRadius:999,width:`${progress}%`,transition:"width .4s ease"}}/>
-        </div>
-
-        {/* Question */}
-        <div style={{minHeight:320}}>
-          <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".14em",textTransform:"uppercase",color:`${C.offwhite}44`,marginBottom:"1.2rem"}}>
-            {step + 1} / {SURVEY_STEPS.length}
-          </div>
-          <h3 style={{fontFamily:F.display,fontSize:"clamp(1.3rem,2.5vw,1.8rem)",fontWeight:400,color:C.offwhite,marginBottom:current.subtext?".5rem":"2rem",lineHeight:1.3}}>
-            {current.question}
-          </h3>
-          {current.subtext && (
-            <p style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".12em",textTransform:"uppercase",color:`${C.offwhite}44`,marginBottom:"1.5rem"}}>{current.subtext}</p>
-          )}
-
-          {current.type === "single" && (
-            <div style={{display:"flex",flexDirection:"column",gap:".6rem"}}>
-              {current.options.map(opt => (
-                <button key={opt} onClick={() => handleSingle(opt)} style={{
-                  padding:"1rem 1.3rem",borderRadius:10,
-                  background:answers[current.id]===opt?C.amber:`${C.offwhite}0e`,
-                  border:`1px solid ${answers[current.id]===opt?C.amber:`${C.offwhite}22`}`,
-                  color:answers[current.id]===opt?C.offwhite:`${C.offwhite}cc`,
-                  fontFamily:F.sans,fontWeight:400,fontSize:".88rem",
-                  textAlign:"left",transition:"all .15s ease",
-                }}>
-                  {opt}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {current.type === "multi" && (
-            <div>
-              <div style={{display:"flex",flexDirection:"column",gap:".6rem",marginBottom:"1.5rem"}}>
-                {current.options.map(opt => (
-                  <button key={opt} onClick={() => handleMultiToggle(opt)} style={{
-                    padding:"1rem 1.3rem",borderRadius:10,
-                    background:selected.includes(opt)?C.amber:`${C.offwhite}0e`,
-                    border:`1px solid ${selected.includes(opt)?C.amber:`${C.offwhite}22`}`,
-                    color:selected.includes(opt)?C.offwhite:`${C.offwhite}cc`,
-                    fontFamily:F.sans,fontWeight:400,fontSize:".88rem",
-                    textAlign:"left",transition:"all .15s ease",
-                    display:"flex",alignItems:"center",gap:".75rem",
-                  }}>
-                    <span style={{width:16,height:16,borderRadius:4,border:`1.5px solid ${selected.includes(opt)?C.offwhite:`${C.offwhite}44`}`,background:selected.includes(opt)?`${C.offwhite}33`:"transparent",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:".6rem",color:C.offwhite}}>
-                      {selected.includes(opt)?"✓":""}
-                    </span>
-                    {opt}
-                  </button>
-                ))}
-              </div>
-              <div style={{display:"flex",alignItems:"center",gap:".75rem"}}>
-                {step > 0 && (
-                  <button onClick={() => { setStep(s => s - 1); setSelected(answers[SURVEY_STEPS[step-1].id] || []); }} style={{
-                    background:"none",border:`1px solid ${C.offwhite}22`,borderRadius:999,
-                    color:`${C.offwhite}66`,fontFamily:F.mono,fontSize:".6rem",
-                    letterSpacing:".1em",textTransform:"uppercase",
-                    padding:".88rem 1.2rem",cursor:"pointer",transition:"all .2s ease",
-                  }}>← Back</button>
-                )}
-                <button onClick={handleMultiNext} disabled={selected.length===0} style={{
-                  padding:".88rem 2rem",
-                  background:selected.length>0?C.amber:`${C.offwhite}22`,
-                  color:C.offwhite,border:"none",borderRadius:999,
-                  fontFamily:F.sans,fontWeight:600,fontSize:".75rem",
-                  letterSpacing:".08em",textTransform:"uppercase",
-                  opacity:selected.length>0?1:.5,transition:"all .2s ease",
-                }}>
-                  Continue {current.max ? `(${selected.length}/${current.max})` : ""} →
-                </button>
-              </div>
-            </div>
-          )}
-
-          {current.type === "email" && (
-            <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
-              <input
-                value={email}
-                onChange={e=>setEmail(e.target.value)}
-                onKeyDown={e=>e.key==="Enter"&&handleSubmit()}
-                placeholder="your@email.com"
-                type="email"
-                style={{
-                  padding:".9rem 1.2rem",borderRadius:10,
-                  background:`${C.offwhite}0e`,border:`1px solid ${C.offwhite}22`,
-                  color:C.offwhite,fontSize:".9rem",outline:"none",
-                }}
-              />
-              <div style={{display:"flex",alignItems:"center",gap:".75rem"}}>
-                {step > 0 && (
-                  <button onClick={() => { setStep(s => s - 1); setSelected(answers[SURVEY_STEPS[step-1].id] || []); }} style={{
-                    background:"none",border:`1px solid ${C.offwhite}22`,borderRadius:999,
-                    color:`${C.offwhite}66`,fontFamily:F.mono,fontSize:".6rem",
-                    letterSpacing:".1em",textTransform:"uppercase",
-                    padding:".9rem 1.2rem",cursor:"pointer",transition:"all .2s ease",
-                  }}>← Back</button>
-                )}
-                <button onClick={handleSubmit} style={{
-                  padding:".9rem 2rem",background:C.amber,color:C.offwhite,
-                  border:"none",borderRadius:999,fontFamily:F.sans,
-                  fontWeight:600,fontSize:".75rem",letterSpacing:".08em",
-                  textTransform:"uppercase",
-                }}>
-                  Submit application
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+        <p style={{fontFamily:F.sans,fontWeight:300,fontSize:"1rem",color:C.stone,lineHeight:1.9,maxWidth:560,marginBottom:"2rem"}}>
+          Tell us what you want your phone to stop doing. We will help turn that into rules that hold.
+        </p>
+        <a href="https://mutual.technology/" style={{display:"inline-block",fontFamily:F.sans,fontWeight:500,fontSize:".72rem",letterSpacing:".08em",textTransform:"uppercase",color:C.offwhite,textDecoration:"none",padding:".9rem 1.3rem",borderRadius:999,background:C.amber}}>
+          Join the first cohort
+        </a>
       </div>
     </section>
   );
 }
 
-// ── FOOTER ────────────────────────────────────────────────────
-function Footer() {
+export default function MutualSiteEditedPreview() {
   return (
-    <footer style={{background:C.forest,borderTop:`1px solid ${C.mossy}`,padding:"1.8rem 3rem",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-      <span style={{fontFamily:F.display,fontSize:".9rem",color:`${C.offwhite}44`}}>Mutual</span>
-      <span style={{fontFamily:F.mono,fontSize:".52rem",letterSpacing:".12em",textTransform:"uppercase",color:`${C.offwhite}22`}}>Private beta · 2026</span>
-    </footer>
-  );
-}
-
-// ── APP ───────────────────────────────────────────────────────
-export default function App() {
-  return (
-    <div style={{background:C.cream}}>
+    <>
       <GlobalStyles />
       <Navbar />
       <Hero />
       <Proposition />
       <Differentiation />
       <WhoThisIsFor />
-      <Survey />
-      <Footer />
-    </div>
+      <FooterCTA />
+    </>
   );
 }
