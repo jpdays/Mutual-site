@@ -41,6 +41,26 @@ function GlobalStyles() {
       ::selection{background:${C.amber}33}
       input,select,textarea{font-family:${F.sans}}
       button{font-family:${F.sans};cursor:pointer}
+
+      /* ── RESPONSIVE ── */
+
+      /* Tablet and below */
+      @media(max-width:768px){
+        .section-pad{padding:5rem 1.5rem !important}
+        .hero-pad{padding:6rem 1.5rem 4rem !important}
+        .two-col{grid-template-columns:1fr !important}
+        .nav-links{display:none !important}
+        .nav-center{font-size:.52rem !important;padding:.25rem .6rem !important}
+        .feature-grid{grid-template-columns:1fr !important}
+        .survey-wrap{padding:5rem 1.5rem !important}
+      }
+
+      /* Mobile */
+      @media(max-width:480px){
+        .section-pad{padding:4rem 1.2rem !important}
+        .hero-pad{padding:5rem 1.2rem 3.5rem !important}
+        .survey-wrap{padding:4rem 1.2rem !important}
+      }
     `;
     document.head.appendChild(style);
     return () => { document.head.removeChild(link); document.head.removeChild(style); };
@@ -74,24 +94,24 @@ function Navbar() {
   return (
     <nav style={{
       position:"fixed",top:0,left:0,right:0,zIndex:100,
-      padding:"1.25rem 3rem",display:"grid",gridTemplateColumns:"1fr auto 1fr",alignItems:"center",
+      padding:"1.1rem 1.5rem",display:"grid",gridTemplateColumns:"1fr auto 1fr",alignItems:"center",
       background:scrolled?`${C.cream}f2`:"transparent",
       backdropFilter:scrolled?"blur(18px)":"none",
       borderBottom:scrolled?`1px solid ${C.pale}`:"none",
       transition:"all .4s ease",
     }}>
-      <span style={{fontFamily:F.display,fontSize:"1.15rem",fontWeight:500,color:scrolled?C.forest:C.offwhite,transition:"color .4s ease"}}>
+      <span style={{fontFamily:F.display,fontSize:"1.1rem",fontWeight:500,color:scrolled?C.forest:C.offwhite,transition:"color .4s ease"}}>
         Mutual
       </span>
-      <a href="#apply" style={{
-        fontFamily:F.sans,fontWeight:500,fontSize:".68rem",letterSpacing:".08em",
+      <a href="#apply" className="nav-center" style={{
+        fontFamily:F.sans,fontWeight:500,fontSize:".65rem",letterSpacing:".08em",
         textTransform:"uppercase",color:C.offwhite,
-        padding:".5rem 1.3rem",background:C.amber,borderRadius:999,
+        padding:".45rem 1.1rem",background:C.amber,borderRadius:999,
         textDecoration:"none",justifySelf:"center",whiteSpace:"nowrap",
       }}>
         Join the first cohort
       </a>
-      <div style={{justifySelf:"end",display:"flex",gap:"1.8rem",alignItems:"center"}}>
+      <div className="nav-links" style={{justifySelf:"end",display:"flex",gap:"1.5rem",alignItems:"center"}}>
         {["FAQ","About"].map(l => (
           <a key={l} href={`#${l.toLowerCase()}`} style={{
             fontFamily:F.sans,fontWeight:400,fontSize:".75rem",
@@ -107,14 +127,14 @@ function Navbar() {
 // ── HERO ──────────────────────────────────────────────────────
 function Hero() {
   return (
-    <section style={{
+    <section className="hero-pad" style={{
       minHeight:"100dvh",display:"flex",flexDirection:"column",justifyContent:"flex-end",
       padding:"8rem 3.5rem 5.5rem",
       position:"relative",overflow:"hidden",
     }}>
       {/* Fallback colour */}
       <div style={{position:"absolute",inset:0,zIndex:0,background:C.forest}}/>
-      {/* Background image - sits above fallback */}
+      {/* Background image */}
       <div style={{
         position:"absolute",inset:0,zIndex:1,
         backgroundImage:"url(https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80)",
@@ -127,31 +147,25 @@ function Hero() {
         background:`linear-gradient(to top, rgba(36,48,40,.92) 25%, rgba(36,48,40,.7) 60%, rgba(36,48,40,.45) 100%)`,
       }}/>
       {/* Subtle warm tint */}
-      <div style={{
-        position:"absolute",inset:0,zIndex:3,
-        background:`radial-gradient(ellipse at 15% 80%, ${C.amber}22 0%, transparent 55%)`,
-      }}/>
+      <div style={{position:"absolute",inset:0,zIndex:3,background:`radial-gradient(ellipse at 15% 80%, ${C.amber}22 0%, transparent 55%)`}}/>
       <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(90deg,${C.amber},${C.sage})`,zIndex:4}}/>
 
-      <div style={{position:"relative",zIndex:5,maxWidth:920}}>
-        {/* Main headline - same line */}
+      <div style={{position:"relative",zIndex:5,maxWidth:860}}>
         <h1 style={{
-          fontFamily:F.display,fontSize:"clamp(3.5rem,9vw,8.5rem)",
+          fontFamily:F.display,
+          fontSize:"clamp(3rem,9vw,8.5rem)",
           fontWeight:400,lineHeight:.96,color:C.offwhite,
           letterSpacing:"-.01em",marginBottom:"2rem",
           animation:"fadeUp .9s .15s ease both",
-          whiteSpace:"nowrap",
         }}>
           <em style={{color:C.amber,fontStyle:"italic"}}>Your</em> phone.{" "}
           <em style={{color:C.amber,fontStyle:"italic"}}>Your</em> rules.
         </h1>
-
-        {/* Description */}
         <p style={{
           fontFamily:F.sans,fontWeight:300,
-          fontSize:"clamp(.92rem,1.5vw,1.1rem)",
+          fontSize:"clamp(.9rem,1.5vw,1.05rem)",
           lineHeight:1.85,color:`${C.offwhite}99`,
-          maxWidth:560,
+          maxWidth:520,
           animation:"fadeUp .9s .3s ease both",
         }}>
           We create mutually beneficial technology. A smartphone that keeps everything you need and removes only what you ask it to.
@@ -165,7 +179,7 @@ function Hero() {
 function Proposition() {
   useReveal();
   return (
-    <section style={{padding:"8rem 3rem",background:C.parch,borderTop:`1px solid ${C.pale}`}}>
+    <section className="section-pad" style={{padding:"8rem 3rem",background:C.parch,borderTop:`1px solid ${C.pale}`}}>
       <div style={{maxWidth:820,margin:"0 auto"}}>
         <div className="reveal" style={{fontFamily:F.mono,fontSize:".72rem",letterSpacing:".2em",textTransform:"uppercase",color:C.sage,marginBottom:"3rem",fontWeight:"bold"}}>
           How it works
@@ -413,7 +427,7 @@ function PlanCard() {
 function Differentiation() {
   useReveal();
   return (
-    <section style={{padding:"7rem 3rem",background:C.cream,borderTop:`1px solid ${C.pale}`}}>
+    <section className="section-pad" style={{padding:"7rem 3rem",background:C.cream,borderTop:`1px solid ${C.pale}`}}>
       <div style={{maxWidth:1060,margin:"0 auto"}}>
         <div className="reveal" style={{marginBottom:"3.5rem"}}>
           <div style={{fontFamily:F.mono,fontSize:".72rem",letterSpacing:".2em",textTransform:"uppercase",color:C.sage,marginBottom:".75rem",fontWeight:"bold"}}>Features</div>
@@ -422,7 +436,7 @@ function Differentiation() {
             <em style={{fontStyle:"italic",color:C.amber}}>By design.</em>
           </h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(290px,1fr))",gap:"1.2rem"}}>
+        <div className="feature-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(290px,1fr))",gap:"1.2rem"}}>
           <div className="reveal" data-d=".08"><ConversationCard /></div>
           <div className="reveal" data-d=".18"><TimeArcCard /></div>
           <div className="reveal" data-d=".28"><PlanCard /></div>
@@ -436,7 +450,7 @@ function Differentiation() {
 function WhoThisIsFor() {
   useReveal();
   return (
-    <section style={{padding:"7rem 3rem",background:C.parch,borderTop:`1px solid ${C.pale}`}}>
+    <section className="section-pad" style={{padding:"7rem 3rem",background:C.parch,borderTop:`1px solid ${C.pale}`}}>
       <div style={{maxWidth:820,margin:"0 auto"}}>
         <div className="reveal" style={{fontFamily:F.mono,fontSize:".72rem",letterSpacing:".2em",textTransform:"uppercase",color:C.sage,marginBottom:"3rem",fontWeight:"bold"}}>
           Who this is for
@@ -588,7 +602,7 @@ function Survey() {
 
   if (submitted) {
     return (
-      <section id="apply" style={{padding:"9rem 3rem",background:C.forest}}>
+      <section id="apply" className="survey-wrap" style={{padding:"9rem 3rem",background:C.forest}}>
         <div style={{maxWidth:560,margin:"0 auto",textAlign:"center"}}>
           <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".2em",textTransform:"uppercase",color:C.amber,marginBottom:"2rem"}}>
             Application received
@@ -605,7 +619,7 @@ function Survey() {
   }
 
   return (
-    <section id="apply" style={{padding:"9rem 3rem",background:C.forest}}>
+    <section id="apply" className="survey-wrap" style={{padding:"9rem 3rem",background:C.forest}}>
       <div style={{maxWidth:580,margin:"0 auto"}}>
         {/* Header */}
         <div className="reveal" style={{marginBottom:"3.5rem"}}>
