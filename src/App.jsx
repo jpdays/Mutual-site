@@ -218,62 +218,67 @@ function Proposition() {
   );
 }
 
-// ── FEATURE CARD 1 — App Toggles ─────────────────────────────
-function AppToggleCard() {
-  const apps = [
-    { name:"Instagram",  blocked:true  },
-    { name:"YouTube",    blocked:true  },
-    { name:"Maps",       blocked:false },
-    { name:"WhatsApp",   blocked:false },
-    { name:"LinkedIn",   blocked:true  },
-    { name:"Spotify",    blocked:false },
-  ];
-  const [active, setActive] = useState(apps.map(a => a.blocked));
+// ── FEATURE CARD 1 — Conversation ────────────────────────────
+const SETUP_CHAT = [
+  { side:"user",   text:"No Instagram after 9pm." },
+  { side:"mutual", text:"Done. Instagram locks at 9pm every night." },
+  { side:"user",   text:"And no LinkedIn on weekends." },
+  { side:"mutual", text:"Added. LinkedIn is off Saturday and Sunday." },
+  { side:"user",   text:"Can I still use WhatsApp?" },
+  { side:"mutual", text:"Yes. Messaging stays on. Only what you asked to block gets blocked." },
+];
+
+function ConversationCard() {
+  const [shown, setShown] = useState(0);
+  const [typing, setTyping] = useState(false);
 
   useEffect(() => {
-    let i = 0;
-    const seq = [0,4,1,3];
-    const t = setInterval(() => {
-      const idx = seq[i % seq.length];
-      setActive(prev => { const n=[...prev]; n[idx]=!n[idx]; return n; });
-      i++;
-    }, 1400);
-    return () => clearInterval(t);
-  }, []);
+    if (shown >= SETUP_CHAT.length) {
+      const t = setTimeout(() => setShown(0), 3000);
+      return () => clearTimeout(t);
+    }
+    const next = SETUP_CHAT[shown];
+    if (next.side === "mutual") {
+      setTyping(true);
+      const t = setTimeout(() => {
+        setTyping(false);
+        setShown(n => n + 1);
+      }, 1200);
+      return () => clearTimeout(t);
+    } else {
+      const t = setTimeout(() => setShown(n => n + 1), 900);
+      return () => clearTimeout(t);
+    }
+  }, [shown]);
 
   return (
-    <div style={{background:C.offwhite,borderRadius:"2rem",padding:"1.8rem",border:`1px solid ${C.pale}`,minHeight:300}}>
-      <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".15em",textTransform:"uppercase",color:C.sage,marginBottom:".4rem"}}>01 — What you control</div>
-      <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1.15rem",color:C.forest,marginBottom:"1.6rem"}}>Every app. Your call.</div>
-      <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
-        {apps.map((app,i) => (
-          <div key={app.name} style={{
-            display:"flex",alignItems:"center",justifyContent:"space-between",
-            padding:".55rem .85rem",borderRadius:10,
-            background:active[i]?`${C.amber}12`:C.cream,
-            border:`1px solid ${active[i]?`${C.amber}33`:C.pale}`,
-            transition:"all .45s cubic-bezier(.34,1.56,.64,1)",
-          }}>
-            <span style={{fontFamily:F.sans,fontWeight:400,fontSize:".8rem",color:active[i]?C.stone:C.forest,opacity:active[i]?.55:1,transition:"all .45s ease"}}>{app.name}</span>
+    <div style={{background:C.offwhite,borderRadius:"2rem",padding:"1.8rem",border:`1px solid ${C.pale}`,minHeight:320,display:"flex",flexDirection:"column"}}>
+      <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".15em",textTransform:"uppercase",color:C.sage,marginBottom:".4rem"}}>01 — Setup</div>
+      <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1.15rem",color:C.forest,marginBottom:"1.4rem"}}>Just tell us what you want.</div>
+      <div style={{flex:1,display:"flex",flexDirection:"column",gap:".6rem",justifyContent:"flex-end"}}>
+        {SETUP_CHAT.slice(0, shown).map((m, i) => (
+          <div key={i} style={{display:"flex",justifyContent:m.side==="user"?"flex-end":"flex-start"}}>
             <div style={{
-              width:32,height:18,borderRadius:999,position:"relative",
-              background:active[i]?`${C.pale}`:C.forest,
-              transition:"background .4s ease",flexShrink:0,
+              maxWidth:"85%",padding:".55rem .9rem",borderRadius:12,
+              background:m.side==="user"?C.forest:C.cream,
+              border:`1px solid ${m.side==="user"?C.mossy:C.pale}`,
             }}>
-              <div style={{
-                position:"absolute",top:3,
-                left:active[i]?4:15,
-                width:12,height:12,borderRadius:"50%",
-                background:active[i]?C.stone:C.amber,
-                transition:"left .35s cubic-bezier(.34,1.56,.64,1)",
-              }}/>
+              <span style={{fontFamily:F.sans,fontWeight:300,fontSize:".78rem",color:m.side==="user"?C.offwhite:C.stone,lineHeight:1.55}}>
+                {m.text}
+              </span>
             </div>
           </div>
         ))}
+        {typing && (
+          <div style={{display:"flex",justifyContent:"flex-start"}}>
+            <div style={{padding:".55rem .9rem",borderRadius:12,background:C.cream,border:`1px solid ${C.pale}`,display:"flex",gap:4,alignItems:"center"}}>
+              {[0,1,2].map(i => (
+                <div key={i} style={{width:5,height:5,borderRadius:"50%",background:C.stone,opacity:.5,animation:`fadeUp .6s ${i*.15}s ease infinite alternate`}}/>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-      <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".75rem",color:C.stone,marginTop:"1.2rem",lineHeight:1.7}}>
-        Blocked apps, notifications, content filters, grayscale, screen time.
-      </p>
     </div>
   );
 }
@@ -418,7 +423,7 @@ function Differentiation() {
           </h2>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(290px,1fr))",gap:"1.2rem"}}>
-          <div className="reveal" data-d=".08"><AppToggleCard /></div>
+          <div className="reveal" data-d=".08"><ConversationCard /></div>
           <div className="reveal" data-d=".18"><TimeArcCard /></div>
           <div className="reveal" data-d=".28"><PlanCard /></div>
         </div>
