@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 // ── TOKENS ────────────────────────────────────────────────────
 const C = {
@@ -18,7 +18,7 @@ const F = {
   mono:    '"DM Mono", monospace',
 };
 
-// ── GLOBAL ────────────────────────────────────────────────────
+// ── GLOBAL STYLES ─────────────────────────────────────────────
 function GlobalStyles() {
   useEffect(() => {
     const link = document.createElement("link");
@@ -32,16 +32,15 @@ function GlobalStyles() {
       body{background:${C.cream};color:${C.forest};font-family:${F.sans};overflow-x:hidden}
       body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.028;
         background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
-      @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+      @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
       @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-      @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
-      @keyframes typeLine{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-      .reveal{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
+      .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94)}
       .reveal.on{opacity:1;transform:none}
       ::-webkit-scrollbar{width:2px}
       ::-webkit-scrollbar-thumb{background:${C.pale}}
       ::selection{background:${C.amber}33}
-      a{text-decoration:none}
+      input,select,textarea{font-family:${F.sans}}
+      button{font-family:${F.sans};cursor:pointer}
     `;
     document.head.appendChild(style);
     return () => { document.head.removeChild(link); document.head.removeChild(style); };
@@ -75,23 +74,32 @@ function Navbar() {
   return (
     <nav style={{
       position:"fixed",top:0,left:0,right:0,zIndex:100,
-      padding:"1.25rem 3rem",display:"flex",justifyContent:"space-between",alignItems:"center",
-      background: scrolled ? `${C.cream}f2` : "transparent",
-      backdropFilter: scrolled ? "blur(18px)" : "none",
-      borderBottom: scrolled ? `1px solid ${C.pale}` : "none",
+      padding:"1.25rem 3rem",display:"grid",gridTemplateColumns:"1fr auto 1fr",alignItems:"center",
+      background:scrolled?`${C.cream}f2`:"transparent",
+      backdropFilter:scrolled?"blur(18px)":"none",
+      borderBottom:scrolled?`1px solid ${C.pale}`:"none",
       transition:"all .4s ease",
     }}>
-      <span style={{fontFamily:F.display,fontSize:"1.15rem",fontWeight:500,color:scrolled?C.forest:C.offwhite,letterSpacing:".01em",transition:"color .4s ease"}}>
+      <span style={{fontFamily:F.display,fontSize:"1.15rem",fontWeight:500,color:scrolled?C.forest:C.offwhite,transition:"color .4s ease"}}>
         Mutual
       </span>
-      <a href="#cohort" style={{
-        fontFamily:F.sans,fontWeight:500,fontSize:".72rem",letterSpacing:".1em",
+      <a href="#apply" style={{
+        fontFamily:F.sans,fontWeight:500,fontSize:".68rem",letterSpacing:".08em",
         textTransform:"uppercase",color:C.offwhite,
-        padding:".48rem 1.3rem",background:C.amber,borderRadius:999,
-        transition:"opacity .2s ease",
+        padding:".5rem 1.3rem",background:C.amber,borderRadius:999,
+        textDecoration:"none",justifySelf:"center",whiteSpace:"nowrap",
       }}>
-        Join the cohort
+        Join the first cohort
       </a>
+      <div style={{justifySelf:"end",display:"flex",gap:"1.8rem",alignItems:"center"}}>
+        {["FAQ","About"].map(l => (
+          <a key={l} href={`#${l.toLowerCase()}`} style={{
+            fontFamily:F.sans,fontWeight:400,fontSize:".75rem",
+            color:scrolled?`${C.forest}99`:`${C.offwhite}bb`,
+            textDecoration:"none",transition:"color .3s ease",
+          }}>{l}</a>
+        ))}
+      </div>
     </nav>
   );
 }
@@ -99,358 +107,627 @@ function Navbar() {
 // ── HERO ──────────────────────────────────────────────────────
 function Hero() {
   return (
-    <section style={{minHeight:"100dvh",display:"grid",gridTemplateColumns:"1fr 1fr"}}>
-      {/* Left — forest */}
+    <section style={{
+      minHeight:"100dvh",display:"flex",flexDirection:"column",justifyContent:"flex-end",
+      padding:"8rem 3.5rem 5.5rem",
+      position:"relative",overflow:"hidden",
+    }}>
+      {/* Fallback colour */}
+      <div style={{position:"absolute",inset:0,zIndex:0,background:C.forest}}/>
+      {/* Background image - sits above fallback */}
       <div style={{
-        display:"flex",flexDirection:"column",justifyContent:"flex-end",
-        padding:"8rem 4rem 5.5rem 3.5rem",
-        background:C.forest,position:"relative",overflow:"hidden",
-      }}>
-        <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(90deg,${C.amber},${C.sage})`}}/>
-        <div style={{position:"absolute",inset:0,background:`radial-gradient(ellipse at 25% 70%, ${C.mossy}99 0%, transparent 65%)`,zIndex:0}}/>
-        <div style={{position:"relative",zIndex:1}}>
-          <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".2em",textTransform:"uppercase",color:C.amber,marginBottom:"2rem",animation:"fadeIn .8s ease both"}}>
-            — A new kind of phone
-          </div>
-          <h1 style={{fontFamily:F.display,fontSize:"clamp(2.4rem,5.2vw,4.4rem)",fontWeight:400,lineHeight:1.1,color:C.offwhite,letterSpacing:"-.01em",animation:"fadeUp .9s .1s ease both"}}>
-            Your phone was built<br/>
-            to keep you on it.<br/>
-            <em style={{color:C.amber,fontStyle:"italic"}}>We built the other one.</em>
-          </h1>
-        </div>
-      </div>
+        position:"absolute",inset:0,zIndex:1,
+        backgroundImage:"url(https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80)",
+        backgroundSize:"cover",backgroundPosition:"center 40%",
+        backgroundRepeat:"no-repeat",
+      }}/>
+      {/* Dark overlay */}
+      <div style={{
+        position:"absolute",inset:0,zIndex:2,
+        background:`linear-gradient(to top, rgba(36,48,40,.92) 25%, rgba(36,48,40,.7) 60%, rgba(36,48,40,.45) 100%)`,
+      }}/>
+      {/* Subtle warm tint */}
+      <div style={{
+        position:"absolute",inset:0,zIndex:3,
+        background:`radial-gradient(ellipse at 15% 80%, ${C.amber}22 0%, transparent 55%)`,
+      }}/>
+      <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(90deg,${C.amber},${C.sage})`,zIndex:4}}/>
 
-      {/* Right — cream */}
-      <div style={{
-        display:"flex",flexDirection:"column",justifyContent:"flex-end",
-        padding:"8rem 3.5rem 5.5rem 4rem",
-        background:C.cream,borderLeft:`1px solid ${C.pale}`,
-      }}>
-        <h2 style={{fontFamily:F.display,fontSize:"clamp(1.6rem,3vw,2.6rem)",fontWeight:400,lineHeight:1.25,color:C.forest,letterSpacing:"-.01em",marginBottom:"2rem",animation:"fadeUp .9s .3s ease both"}}>
-          It reconfigures itself<br/>
-          around your day.<br/>
-          You set the rules.<br/>
-          <em style={{color:C.amber,fontStyle:"italic"}}>It holds them.</em>
-        </h2>
-        <p style={{fontFamily:F.sans,fontWeight:300,fontSize:"clamp(.88rem,1.3vw,1rem)",lineHeight:1.85,color:C.stone,maxWidth:360,animation:"fadeUp .9s .46s ease both"}}>
-          Not an app. Not a timer. Not a blocklist.<br/>The phone itself — adaptive, persistent, and on your side.
+      <div style={{position:"relative",zIndex:5,maxWidth:920}}>
+        {/* Main headline - same line */}
+        <h1 style={{
+          fontFamily:F.display,fontSize:"clamp(3.5rem,9vw,8.5rem)",
+          fontWeight:400,lineHeight:.96,color:C.offwhite,
+          letterSpacing:"-.01em",marginBottom:"2rem",
+          animation:"fadeUp .9s .15s ease both",
+          whiteSpace:"nowrap",
+        }}>
+          <em style={{color:C.amber,fontStyle:"italic"}}>Your</em> phone.{" "}
+          <em style={{color:C.amber,fontStyle:"italic"}}>Your</em> rules.
+        </h1>
+
+        {/* Description */}
+        <p style={{
+          fontFamily:F.sans,fontWeight:300,
+          fontSize:"clamp(.92rem,1.5vw,1.1rem)",
+          lineHeight:1.85,color:`${C.offwhite}99`,
+          maxWidth:560,
+          animation:"fadeUp .9s .3s ease both",
+        }}>
+          We create mutually beneficial technology. A smartphone that keeps everything you need and removes only what you ask it to.
         </p>
       </div>
     </section>
   );
 }
 
-// ── INTERVENTION SCREEN ───────────────────────────────────────
-function PhoneScreen({ lines, active, dim }) {
+// ── PROPOSITION ───────────────────────────────────────────────
+function Proposition() {
+  useReveal();
   return (
-    <div style={{
-      width:220,height:400,
-      background: dim ? "#1a1a1a" : "#0f1612",
-      borderRadius:32,
-      border:`1px solid ${dim?"#333":"#2a3d2e"}`,
-      overflow:"hidden",
-      boxShadow:`0 32px 80px ${C.forest}55`,
-      position:"relative",
-      flexShrink:0,
-    }}>
-      {/* Status bar */}
-      <div style={{padding:"14px 20px 0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <span style={{fontFamily:F.mono,fontSize:".55rem",color:dim?"#555":"#7A9E82"}}>9:41</span>
-        <div style={{display:"flex",gap:4}}>
-          {[1,1,1].map((b,i)=><div key={i} style={{width:4,height:4,borderRadius:"50%",background:dim?"#444":"#7A9E82",opacity:1-i*.2}}/>)}
+    <section style={{padding:"8rem 3rem",background:C.parch,borderTop:`1px solid ${C.pale}`}}>
+      <div style={{maxWidth:820,margin:"0 auto"}}>
+        <div className="reveal" style={{fontFamily:F.mono,fontSize:".72rem",letterSpacing:".2em",textTransform:"uppercase",color:C.sage,marginBottom:"3rem",fontWeight:"bold"}}>
+          How it works
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:0}}>
+          {[
+            {
+              n:"00",
+              title:"Apply and tell us about your phone",
+              body:"If you have a spare Samsung or Google Pixel, we may be able to work with it. If not, we can arrange a phone for you.",
+            },
+            {
+              n:"01",
+              title:"You tell us your rules",
+              body:"Block apps completely or set daily time limits. Silence all notifications during work hours except your manager. Filter out specific websites and content in the browser. Enforce Do Not Disturb at night. Keep work and personal apps separate. Switch to greyscale after 9pm. Whatever you want to change, write it down.",
+            },
+            {
+              n:"02",
+              title:"We configure your phone",
+              body:"We set it up at the system level. Not an app you can delete. Not a setting you can toggle off. The rules are set at a level your future self cannot easily undo.",
+            },
+            {
+              n:"03",
+              title:"You live with it",
+              body:"That's it. We check in. If the rules are not working, we adjust them. You are in control of what the rules are.",
+            },
+          ].map((s,i) => (
+            <div key={i} className="reveal" data-d={i*.1} style={{
+              display:"grid",gridTemplateColumns:"3.5rem 1fr",
+              gap:"2rem",padding:"2.5rem 0",
+              borderTop:`1px solid ${C.pale}`,
+            }}>
+              <span style={{fontFamily:F.mono,fontSize:".72rem",color:C.stone,paddingTop:".3rem",fontWeight:"bold"}}>{s.n}</span>
+              <div>
+                <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1.4rem",color:C.forest,marginBottom:".65rem"}}>{s.title}</div>
+                <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".95rem",color:C.stone,lineHeight:1.85}}>{s.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="reveal" data-d=".3" style={{marginTop:"3.5rem",padding:"2rem 2.5rem",background:C.forest,borderRadius:16}}>
+          <p style={{fontFamily:F.display,fontStyle:"italic",fontSize:"clamp(1.1rem,2.2vw,1.5rem)",color:C.offwhite,lineHeight:1.6}}>
+            You decide how you use your phone. We make it stick.
+          </p>
         </div>
       </div>
+    </section>
+  );
+}
 
-      {/* Screen content */}
-      <div style={{padding:"28px 18px 0",display:"flex",flexDirection:"column",gap:6}}>
-        {dim ? (
-          // Busy screen — many apps
-          <>
-            <div style={{fontFamily:F.mono,fontSize:".52rem",color:"#555",marginBottom:8,letterSpacing:".1em"}}>NOTIFICATIONS</div>
-            {["Instagram · 14 new","+12 messages","Twitter · trending","YouTube · 3 videos","LinkedIn · 5 alerts","Email · 22 unread","News · breaking"].map((t,i)=>(
-              <div key={i} style={{background:"#1e1e1e",borderRadius:8,padding:"8px 10px",fontFamily:F.sans,fontSize:".6rem",color:"#666",borderLeft:`2px solid #333`}}>{t}</div>
-            ))}
-          </>
-        ) : (
-          // Mutual screen — clean intervention
-          <>
-            <div style={{fontFamily:F.mono,fontSize:".52rem",color:C.sage,marginBottom:12,letterSpacing:".1em"}}>MUTUAL</div>
-            <div style={{background:"#182820",borderRadius:12,padding:"14px 12px",border:`1px solid ${C.mossy}66`}}>
-              <div style={{fontFamily:F.mono,fontSize:".52rem",color:C.amber,marginBottom:8,letterSpacing:".1em"}}>NOTICED</div>
-              {lines.map((line, i) => (
-                <div key={i} style={{fontFamily:F.display,fontStyle:i===0?"normal":"italic",fontSize:line.size||".88rem",color:i===0?C.offwhite:C.sage,lineHeight:1.5,marginBottom:i===0?6:0,animation:`typeLine .4s ${i*.15}s ease both`}}>
-                  {line.text}
-                </div>
-              ))}
+// ── FEATURE CARD 1 — App Toggles ─────────────────────────────
+function AppToggleCard() {
+  const apps = [
+    { name:"Instagram",  blocked:true  },
+    { name:"YouTube",    blocked:true  },
+    { name:"Maps",       blocked:false },
+    { name:"WhatsApp",   blocked:false },
+    { name:"LinkedIn",   blocked:true  },
+    { name:"Spotify",    blocked:false },
+  ];
+  const [active, setActive] = useState(apps.map(a => a.blocked));
+
+  useEffect(() => {
+    let i = 0;
+    const seq = [0,4,1,3];
+    const t = setInterval(() => {
+      const idx = seq[i % seq.length];
+      setActive(prev => { const n=[...prev]; n[idx]=!n[idx]; return n; });
+      i++;
+    }, 1400);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <div style={{background:C.offwhite,borderRadius:"2rem",padding:"1.8rem",border:`1px solid ${C.pale}`,minHeight:300}}>
+      <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".15em",textTransform:"uppercase",color:C.sage,marginBottom:".4rem"}}>01 — What you control</div>
+      <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1.15rem",color:C.forest,marginBottom:"1.6rem"}}>Every app. Your call.</div>
+      <div style={{display:"flex",flexDirection:"column",gap:".5rem"}}>
+        {apps.map((app,i) => (
+          <div key={app.name} style={{
+            display:"flex",alignItems:"center",justifyContent:"space-between",
+            padding:".55rem .85rem",borderRadius:10,
+            background:active[i]?`${C.amber}12`:C.cream,
+            border:`1px solid ${active[i]?`${C.amber}33`:C.pale}`,
+            transition:"all .45s cubic-bezier(.34,1.56,.64,1)",
+          }}>
+            <span style={{fontFamily:F.sans,fontWeight:400,fontSize:".8rem",color:active[i]?C.stone:C.forest,opacity:active[i]?.55:1,transition:"all .45s ease"}}>{app.name}</span>
+            <div style={{
+              width:32,height:18,borderRadius:999,position:"relative",
+              background:active[i]?`${C.pale}`:C.forest,
+              transition:"background .4s ease",flexShrink:0,
+            }}>
+              <div style={{
+                position:"absolute",top:3,
+                left:active[i]?4:15,
+                width:12,height:12,borderRadius:"50%",
+                background:active[i]?C.stone:C.amber,
+                transition:"left .35s cubic-bezier(.34,1.56,.64,1)",
+              }}/>
             </div>
-            {active && (
-              <div style={{display:"flex",gap:6,marginTop:6}}>
-                <div style={{flex:1,background:"#182820",borderRadius:8,padding:"9px 10px",fontFamily:F.sans,fontSize:".65rem",fontWeight:500,color:C.offwhite,textAlign:"center",border:`1px solid ${C.mossy}66`}}>Keep going</div>
-                <div style={{flex:1,background:C.amber,borderRadius:8,padding:"9px 10px",fontFamily:F.sans,fontSize:".65rem",fontWeight:500,color:C.offwhite,textAlign:"center"}}>Put it down</div>
-              </div>
-            )}
-            {/* Rest of screen — quiet */}
-            <div style={{marginTop:8,opacity:.35}}>
-              {["Messages","Maps","Calendar"].map((a,i)=>(
-                <div key={i} style={{background:"#182820",borderRadius:8,padding:"8px 10px",fontFamily:F.sans,fontSize:".6rem",color:"#666",marginBottom:4}}>{a}</div>
-              ))}
+          </div>
+        ))}
+      </div>
+      <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".75rem",color:C.stone,marginTop:"1.2rem",lineHeight:1.7}}>
+        Blocked apps, notifications, content filters, grayscale, screen time.
+      </p>
+    </div>
+  );
+}
+
+// ── FEATURE CARD 2 — Time Arc Clock ──────────────────────────
+function TimeArcCard() {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setTick(n => (n + 1) % 120), 100);
+    return () => clearInterval(t);
+  }, []);
+
+  const hour = 9 + (tick / 120) * 14;
+  const handAngle = ((hour % 12) / 12) * 360 - 90;
+  const blockedStart = ((21 % 12) / 12) * 360;
+  const blockedEnd   = ((7  % 12) / 12) * 360;
+
+  function arcPath(cx, cy, r, startDeg, endDeg) {
+    const s = (startDeg * Math.PI) / 180;
+    const e = (endDeg   * Math.PI) / 180;
+    const x1 = cx + r * Math.cos(s), y1 = cy + r * Math.sin(s);
+    const x2 = cx + r * Math.cos(e), y2 = cy + r * Math.sin(e);
+    const large = (endDeg - startDeg + 360) % 360 > 180 ? 1 : 0;
+    return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
+  }
+
+  const isBlocked = hour >= 21 || hour < 7;
+
+  return (
+    <div style={{background:C.forest,borderRadius:"2rem",padding:"1.8rem",border:`1px solid ${C.mossy}`,minHeight:300}}>
+      <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".15em",textTransform:"uppercase",color:C.amber,marginBottom:".4rem"}}>02 — Rules you set</div>
+      <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1.15rem",color:C.offwhite,marginBottom:"1.4rem"}}>As specific as your day.</div>
+      <div style={{display:"flex",alignItems:"center",gap:"1.8rem"}}>
+        <svg width="110" height="110" viewBox="0 0 110 110" style={{flexShrink:0}}>
+          {/* Background circle */}
+          <circle cx="55" cy="55" r="44" fill="none" stroke={`${C.offwhite}12`} strokeWidth="8"/>
+          {/* Allowed arc (green) */}
+          <path d={arcPath(55,55,44,-90+blockedEnd,-90+blockedStart)} fill="none" stroke={C.sage} strokeWidth="8" strokeLinecap="round" opacity=".7"/>
+          {/* Blocked arc (amber) */}
+          <path d={arcPath(55,55,44,-90+blockedStart,-90+blockedEnd+360)} fill="none" stroke={C.amber} strokeWidth="8" strokeLinecap="round" opacity=".85"/>
+          {/* Hour hand */}
+          <line
+            x1="55" y1="55"
+            x2={55 + 28 * Math.cos((handAngle * Math.PI)/180)}
+            y2={55 + 28 * Math.sin((handAngle * Math.PI)/180)}
+            stroke={C.offwhite} strokeWidth="2.5" strokeLinecap="round"
+          />
+          {/* Centre dot */}
+          <circle cx="55" cy="55" r="3.5" fill={C.offwhite}/>
+          {/* Status dot */}
+          <circle cx="55" cy="55" r="14" fill={isBlocked?`${C.amber}22`:`${C.sage}22`}/>
+        </svg>
+        <div style={{flex:1}}>
+          {[
+            {label:"After 9pm",   status:"blocked",  color:C.amber},
+            {label:"6am – 9am",   status:"allowed",  color:C.sage},
+            {label:"Work hours",  status:"focus",    color:C.sage},
+          ].map(r => (
+            <div key={r.label} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:".35rem 0",borderBottom:`1px solid ${C.offwhite}0e`}}>
+              <span style={{fontFamily:F.sans,fontSize:".75rem",color:`${C.offwhite}88`}}>{r.label}</span>
+              <span style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".1em",textTransform:"uppercase",color:r.color}}>{r.status}</span>
             </div>
-          </>
-        )}
+          ))}
+          <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".72rem",color:`${C.offwhite}55`,marginTop:".8rem",lineHeight:1.65}}>
+            Blocked apps stay blocked. You cannot reinstall them.
+          </p>
+        </div>
       </div>
     </div>
   );
 }
 
-function InterventionSection() {
-  useReveal();
-  const [scene, setScene] = useState(0);
-  const scenes = [
-    {
-      label:"The intervention",
-      lines:[
-        {text:"You've opened Instagram 6 times in the last hour."},
-        {text:"Still want to continue?", size:".82rem"},
-      ],
-      active:true,
-      caption:"One question. No lecture. You decide.",
-    },
-    {
-      label:"Deep work mode",
-      lines:[
-        {text:"Deep work until 11am."},
-        {text:"6 notifications held. 1 that mattered came through.", size:".78rem"},
-      ],
-      active:false,
-      caption:"The phone reconfigured itself. You didn't have to ask.",
-    },
-    {
-      label:"The proactive surface",
-      lines:[
-        {text:"Tuesday 7am."},
-        {text:"Your run playlist is ready.", size:".82rem"},
-      ],
-      active:false,
-      caption:"It knows your patterns. It acts on them.",
-    },
-  ];
-  const s = scenes[scene];
+// ── FEATURE CARD 3 — Plan Timeline + Chat ────────────────────
+const CHAT = [
+  {side:"user", text:"No Instagram after 9pm. And I want to review in 4 weeks."},
+  {side:"mutual", text:"Got it. Instagram blocks at 9pm every night. Check-in set for 28 days from now."},
+  {side:"mutual", text:"We'll reach out when it's time. You can adjust the rules then."},
+];
+
+function PlanCard() {
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    if (shown < CHAT.length) {
+      const t = setTimeout(() => setShown(n => n + 1), 1400);
+      return () => clearTimeout(t);
+    } else {
+      const t = setTimeout(() => setShown(0), 3500);
+      return () => clearTimeout(t);
+    }
+  }, [shown]);
 
   return (
-    <section style={{padding:"8rem 3rem",background:C.parch,borderTop:`1px solid ${C.pale}`}}>
-      <div style={{maxWidth:960,margin:"0 auto"}}>
-        <div className="reveal" style={{marginBottom:"4rem"}}>
-          <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".2em",textTransform:"uppercase",color:C.sage,marginBottom:"1rem"}}>— What it looks like</div>
-          <h2 style={{fontFamily:F.display,fontSize:"clamp(2rem,4vw,3.2rem)",fontWeight:400,lineHeight:1.15,color:C.forest}}>
-            Show, don't describe.<br/>
-            <em style={{fontStyle:"italic",color:C.amber}}>This is the phone.</em>
-          </h2>
-        </div>
+    <div style={{background:C.offwhite,borderRadius:"2rem",padding:"1.8rem",border:`1px solid ${C.pale}`,minHeight:300}}>
+      <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".15em",textTransform:"uppercase",color:C.sage,marginBottom:".4rem"}}>03 — Your plan</div>
+      <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1.15rem",color:C.forest,marginBottom:"1.4rem"}}>Set it. We hold it. We check in.</div>
 
-        <div className="reveal" data-d=".1" style={{display:"flex",gap:"4rem",alignItems:"center",flexWrap:"wrap"}}>
-          {/* Phone mockup */}
-          <div style={{flexShrink:0}}>
-            <PhoneScreen lines={s.lines} active={s.active} dim={false}/>
-          </div>
-
-          {/* Scene selector + caption */}
-          <div style={{flex:1,minWidth:260}}>
-            <div style={{display:"flex",flexDirection:"column",gap:".75rem",marginBottom:"2.5rem"}}>
-              {scenes.map((sc,i)=>(
-                <button key={i} onClick={()=>setScene(i)} style={{
-                  display:"flex",alignItems:"center",gap:".9rem",
-                  background:"none",border:"none",cursor:"pointer",
-                  padding:".75rem 1rem",borderRadius:10,
-                  background: scene===i ? C.forest : "transparent",
-                  transition:"background .2s ease",
-                  textAlign:"left",
-                }}>
-                  <div style={{width:6,height:6,borderRadius:"50%",background:scene===i?C.amber:C.pale,flexShrink:0,transition:"background .2s ease"}}/>
-                  <span style={{fontFamily:F.sans,fontWeight:scene===i?500:300,fontSize:".88rem",color:scene===i?C.offwhite:C.stone,transition:"color .2s ease"}}>{sc.label}</span>
-                </button>
-              ))}
+      {/* Mini timeline */}
+      <div style={{display:"flex",alignItems:"center",gap:0,marginBottom:"1.4rem"}}>
+        {[{label:"Setup",active:shown>=1},{label:"Active",active:shown>=2},{label:"Check-in",active:shown>=3}].map((s,i) => (
+          <div key={s.label} style={{display:"flex",alignItems:"center",flex:i<2?1:"auto"}}>
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:".2rem"}}>
+              <div style={{width:10,height:10,borderRadius:"50%",background:s.active?C.amber:C.pale,transition:"background .4s ease",border:`2px solid ${s.active?C.amber:C.pale}`}}/>
+              <span style={{fontFamily:F.mono,fontSize:".52rem",letterSpacing:".08em",textTransform:"uppercase",color:s.active?C.forest:C.stone,whiteSpace:"nowrap",transition:"color .4s ease"}}>{s.label}</span>
             </div>
-            <div style={{padding:"1.5rem",background:C.cream,borderRadius:14,border:`1px solid ${C.pale}`}}>
-              <p style={{fontFamily:F.display,fontStyle:"italic",fontSize:"1.15rem",color:C.forest,lineHeight:1.6}}>
-                "{s.caption}"
-              </p>
-            </div>
-            <p style={{fontFamily:F.mono,fontSize:".58rem",color:C.pale,letterSpacing:".12em",marginTop:"1.2rem",textTransform:"uppercase"}}>
-              Not a notification. Not an app. The phone itself.
-            </p>
+            {i<2 && <div style={{flex:1,height:1.5,background:shown>i+1?C.amber:C.pale,transition:"background .4s ease",margin:"0 .3rem",marginBottom:"1rem"}}/>}
           </div>
-        </div>
+        ))}
       </div>
-    </section>
+
+      {/* Chat */}
+      <div style={{display:"flex",flexDirection:"column",gap:".5rem",minHeight:120}}>
+        {CHAT.slice(0, shown).map((m, i) => (
+          <div key={i} style={{
+            display:"flex",justifyContent:m.side==="user"?"flex-end":"flex-start",
+            animation:"fadeUp .35s ease both",
+          }}>
+            <div style={{
+              maxWidth:"80%",padding:".55rem .85rem",borderRadius:12,
+              background:m.side==="user"?C.forest:C.cream,
+              border:`1px solid ${m.side==="user"?C.mossy:C.pale}`,
+            }}>
+              <span style={{fontFamily:F.sans,fontWeight:300,fontSize:".74rem",color:m.side==="user"?C.offwhite:C.stone,lineHeight:1.55}}>{m.text}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
-// ── FAILED SOLUTIONS ──────────────────────────────────────────
-const SOLUTIONS = [
-  { n:"01", name:"Delete the apps",         cost:"Free",      note:"You come back. The data on this is unambiguous." },
-  { n:"02", name:"Screen Time limits",       cost:"Free",      note:"One tap. 'Ignore Limit.' Done." },
-  { n:"03", name:"Grayscale mode",           cost:"Free",      note:"Day 3: you stop noticing." },
-  { n:"04", name:"App timers",               cost:"Free",      note:"You override them. Every time." },
-  { n:"05", name:"Nokia brick",              cost:"~£30",      note:"Boarding pass. Bank app. Day 17." },
-  { n:"06", name:"Light Phone 3",            cost:"$699",      note:"40,000+ preorders. Minimal. Static. Doesn't know you exist." },
-  { n:"07", name:"VPN blocklist",            cost:"£5–15/mo",  note:"You found the workaround. You always find the workaround." },
-  { n:"08", name:"Password to a loved one",  cost:"Free",      note:"You asked your friend to ask your mum. Your mum gave it." },
-];
-
-function FailedSolutions() {
+// ── FEATURES SECTION ─────────────────────────────────────────
+function Differentiation() {
   useReveal();
   return (
     <section style={{padding:"7rem 3rem",background:C.cream,borderTop:`1px solid ${C.pale}`}}>
-      <div style={{maxWidth:960,margin:"0 auto"}}>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 2fr",gap:"5rem",marginBottom:"4.5rem",alignItems:"end"}}>
-          <div className="reveal">
-            <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".2em",textTransform:"uppercase",color:C.sage,marginBottom:"1rem"}}>— What exists</div>
-            <h2 style={{fontFamily:F.display,fontSize:"clamp(1.9rem,3.5vw,2.8rem)",fontWeight:400,lineHeight:1.15,color:C.forest}}>
-              Eight tools.<br/><em style={{fontStyle:"italic"}}>None of them work.</em>
-            </h2>
-          </div>
-          <p className="reveal" data-d=".1" style={{fontFamily:F.sans,fontWeight:300,fontSize:"1rem",lineHeight:1.85,color:C.stone}}>
-            Every solution on the market treats the phone as neutral and the person as the problem. It isn't. The phone was built to pull your attention toward it. The solution has to work at the same level.
-          </p>
+      <div style={{maxWidth:1060,margin:"0 auto"}}>
+        <div className="reveal" style={{marginBottom:"3.5rem"}}>
+          <div style={{fontFamily:F.mono,fontSize:".72rem",letterSpacing:".2em",textTransform:"uppercase",color:C.sage,marginBottom:".75rem",fontWeight:"bold"}}>Features</div>
+          <h2 style={{fontFamily:F.display,fontSize:"clamp(2rem,4vw,3.2rem)",fontWeight:400,lineHeight:1.15,color:C.forest}}>
+            Built different.<br/>
+            <em style={{fontStyle:"italic",color:C.amber}}>By design.</em>
+          </h2>
         </div>
-
-        <div style={{display:"flex",flexDirection:"column"}}>
-          {SOLUTIONS.map((s,i)=>(
-            <div key={i} className="reveal" data-d={i*.04} style={{
-              display:"grid",gridTemplateColumns:"3rem 1fr auto",
-              gap:"2rem",padding:"1.4rem 0",
-              borderTop:`1px solid ${C.pale}`,alignItems:"start",
-            }}>
-              <span style={{fontFamily:F.mono,fontSize:".6rem",color:C.pale,paddingTop:".15rem"}}>{s.n}</span>
-              <div>
-                <div style={{fontFamily:F.sans,fontWeight:500,fontSize:".92rem",color:C.forest,marginBottom:".25rem"}}>{s.name}</div>
-                <div style={{fontFamily:F.display,fontStyle:"italic",fontSize:".9rem",color:C.stone,lineHeight:1.5}}>{s.note}</div>
-              </div>
-              <span style={{fontFamily:F.mono,fontSize:".6rem",color:C.pale,whiteSpace:"nowrap",paddingTop:".15rem",textAlign:"right"}}>{s.cost}</span>
-            </div>
-          ))}
-          <div style={{borderTop:`1px solid ${C.pale}`,paddingTop:"2.5rem",marginTop:".5rem"}}>
-            <p className="reveal" style={{fontFamily:F.display,fontStyle:"italic",fontSize:"clamp(1.1rem,2.2vw,1.6rem)",lineHeight:1.55,color:C.forest,maxWidth:640}}>
-              "Every tool here treats the phone as neutral. It isn't. Not one of them knows anything about you — your goals, your context, your day. They just say no."
-            </p>
-          </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(290px,1fr))",gap:"1.2rem"}}>
+          <div className="reveal" data-d=".08"><AppToggleCard /></div>
+          <div className="reveal" data-d=".18"><TimeArcCard /></div>
+          <div className="reveal" data-d=".28"><PlanCard /></div>
         </div>
       </div>
     </section>
   );
 }
 
-// ── BEFORE / AFTER ────────────────────────────────────────────
-const VISIONS = [
-  {
-    label:"Every morning",
-    before:{ title:"You pick up your phone", body:"Before you're fully awake. Instagram. Email. News. Twenty minutes gone before you've had coffee. The day starts on the phone's terms." },
-    after:{  title:"Tuesday 7am", body:"You run on Tuesdays. Your phone knows this. You pick it up — Spotify is open, playlist queued. No search. No friction." },
-  },
-  {
-    label:"At work",
-    before:{ title:"Notifications all day", body:"Every buzz a small interruption. Every interruption costs 23 minutes of focus. By 4pm the work is done but the day felt fragmented." },
-    after:{  title:"Deep work until 11am", body:"Three apps. No social. One exception — your manager. 11am: six notifications held. One that mattered came through." },
-  },
-  {
-    label:"In the evening",
-    before:{ title:"The book on the nightstand", body:"Three weeks. It's been there three weeks. The phone is there too. Most nights the phone wins. Quietly, consistently." },
-    after:{  title:"9:30pm", body:"The book app is in your dock. Social apps step back. The phone shifted. You didn't have to ask." },
-  },
-];
-
-function Vision() {
+// ── WHO THIS IS FOR ───────────────────────────────────────────
+function WhoThisIsFor() {
   useReveal();
   return (
     <section style={{padding:"7rem 3rem",background:C.parch,borderTop:`1px solid ${C.pale}`}}>
-      <div style={{maxWidth:960,margin:"0 auto"}}>
-        <div className="reveal" style={{marginBottom:"4.5rem"}}>
-          <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".2em",textTransform:"uppercase",color:C.sage,marginBottom:"1rem"}}>— What changes</div>
-          <h2 style={{fontFamily:F.display,fontSize:"clamp(2rem,4vw,3.2rem)",fontWeight:400,lineHeight:1.15,color:C.forest}}>
-            The same day.<br/><em style={{fontStyle:"italic",color:C.amber}}>A different phone.</em>
-          </h2>
+      <div style={{maxWidth:820,margin:"0 auto"}}>
+        <div className="reveal" style={{fontFamily:F.mono,fontSize:".72rem",letterSpacing:".2em",textTransform:"uppercase",color:C.sage,marginBottom:"3rem",fontWeight:"bold"}}>
+          Who this is for
         </div>
-
-        <div style={{display:"flex",flexDirection:"column",gap:"1.5rem"}}>
-          {VISIONS.map((v,i)=>(
-            <div key={i} className="reveal" data-d={i*.1}>
-              <div style={{fontFamily:F.mono,fontSize:".56rem",letterSpacing:".18em",textTransform:"uppercase",color:C.sage,marginBottom:".9rem"}}>{v.label}</div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem"}}>
-                <div style={{padding:"2rem",background:C.cream,borderRadius:18,border:`1px solid ${C.pale}`}}>
-                  <div style={{fontFamily:F.mono,fontSize:".55rem",letterSpacing:".14em",textTransform:"uppercase",color:C.pale,marginBottom:".8rem"}}>Now</div>
-                  <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1rem",color:C.forest,marginBottom:".6rem"}}>{v.before.title}</div>
-                  <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".85rem",color:C.stone,lineHeight:1.82}}>{v.before.body}</p>
-                </div>
-                <div style={{padding:"2rem",background:C.forest,borderRadius:18,border:`1px solid ${C.mossy}`,boxShadow:`0 12px 40px ${C.forest}22`}}>
-                  <div style={{fontFamily:F.mono,fontSize:".55rem",letterSpacing:".14em",textTransform:"uppercase",color:C.amber,marginBottom:".8rem"}}>With Mutual</div>
-                  <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1rem",color:C.offwhite,marginBottom:".6rem"}}>{v.after.title}</div>
-                  <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".85rem",color:`${C.offwhite}88`,lineHeight:1.82}}>{v.after.body}</p>
-                </div>
-              </div>
+        <h2 className="reveal" style={{fontFamily:F.display,fontSize:"clamp(1.9rem,3.5vw,2.8rem)",fontWeight:400,lineHeight:1.2,color:C.forest,marginBottom:"3rem"}}>
+          You've tried the other solutions.<br/>
+          <em style={{fontStyle:"italic",color:C.amber}}>They didn't hold.</em>
+        </h2>
+        <div style={{display:"flex",flexDirection:"column",gap:0}}>
+          {[
+            "You bought a dumbphone. You lasted three weeks before you needed Google Maps.",
+            "You tried blocking apps. You deleted them after three weeks.",
+            "You know exactly what you want to change. You just can't make it stick.",
+          ].map((line,i) => (
+            <div key={i} className="reveal" data-d={i*.07} style={{
+              display:"flex",gap:"1.5rem",alignItems:"flex-start",
+              padding:"1.2rem 0",borderTop:`1px solid ${C.pale}`,
+            }}>
+              <span style={{fontFamily:F.mono,fontSize:".6rem",color:C.amber,paddingTop:".2rem",flexShrink:0}}>→</span>
+              <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".95rem",color:C.stone,lineHeight:1.75}}>{line}</p>
             </div>
           ))}
+        </div>
+        <div className="reveal" data-d=".24" style={{marginTop:"3rem",paddingTop:"2.5rem",borderTop:`1px solid ${C.pale}`}}>
+          <p style={{fontFamily:F.display,fontStyle:"italic",fontSize:"clamp(1.1rem,2.2vw,1.55rem)",color:C.forest,lineHeight:1.55,maxWidth:580}}>
+            If you know what you want to change and have not found something that holds, this is for you.
+          </p>
         </div>
       </div>
     </section>
   );
 }
 
-// ── COHORT CTA ────────────────────────────────────────────────
-function Cohort() {
+// ── SURVEY / APPLICATION ──────────────────────────────────────
+const SURVEY_STEPS = [
+  {
+    id:"areas",
+    question:"Where would you most like to change your smartphone use?",
+    subtext:"Select up to two",
+    type:"multi",
+    max:2,
+    options:[
+      "Work or study performance",
+      "Sleep",
+      "Mental and emotional wellbeing (mood, anxiety, comparison)",
+      "Attention span",
+      "Relationships and social presence",
+      "Physical health (sedentary time, posture, eye strain)",
+    ],
+  },
+  {
+    id:"behaviours",
+    question:"Which apps or behaviours feel hardest to control?",
+    subtext:"Select all that apply",
+    type:"multi",
+    options:[
+      "Short-form video (TikTok, Reels, YouTube Shorts)",
+      "Social media (Instagram, LinkedIn, Twitter/X, Facebook, Reddit)",
+      "Messaging and group chats (WhatsApp, iMessage)",
+      "News",
+      "Games",
+      "Online shopping",
+      "Notifications in general",
+      "Compulsive checking, reflexively unlocking my phone",
+      "Nothing specific, I just want healthier use",
+    ],
+  },
+  {
+    id:"tried",
+    question:"What have you tried before?",
+    subtext:"Select all that apply",
+    type:"multi",
+    options:[
+      "Default Screen Time or Digital Wellbeing settings",
+      "Apps (Opal, Forest, Onesec, others)",
+      "Grayscale mode",
+      "Deleting apps or accounts",
+      "Restricting notifications",
+      "Content filters (VPNs, DNS)",
+      "Brick or dumb phone (Nokia, Punkt, others)",
+      "Minimal smartphone (Light Phone, others)",
+      "Locked-down smartphone (Balance, Wisephone, SLEKE)",
+      "Physical blockers (Brick, Bloc, Unplug, lockbox)",
+      "Nothing yet",
+    ],
+  },
+  {
+    id:"why_failed",
+    question:"What was the main reason they didn't last?",
+    type:"single",
+    options:[
+      "Too easy to bypass or uninstall",
+      "Blocked things I actually needed",
+      "Too much effort to set up or maintain",
+      "Social or work pressure made it impractical",
+      "I moved to different apps and spent the same time there",
+      "They still work, this is no longer a problem for me",
+    ],
+  },
+  {
+    id:"phone",
+    question:"What phone do you currently use?",
+    type:"single",
+    options:["Samsung","Google Pixel","Other Android","iPhone"],
+  },
+  {
+    id:"email",
+    question:"Last step. Where should we reach you?",
+    type:"email",
+  },
+];
+
+function Survey() {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState({});
   const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [selected, setSelected] = useState([]);
   useReveal();
 
-  return (
-    <section id="cohort" style={{padding:"9rem 3rem",background:C.forest}}>
-      <div style={{maxWidth:600,margin:"0 auto"}}>
-        <div className="reveal" style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".2em",textTransform:"uppercase",color:C.amber,marginBottom:"1.8rem"}}>
-          — The first cohort
+  const current = SURVEY_STEPS[step];
+  const progress = (step / SURVEY_STEPS.length) * 100;
+
+  function handleSingle(opt) {
+    setAnswers(a => ({...a, [current.id]: opt}));
+    setTimeout(() => { setSelected([]); setStep(s => s + 1); }, 200);
+  }
+
+  function handleMultiToggle(opt) {
+    const max = current.max;
+    setSelected(s => {
+      if (s.includes(opt)) return s.filter(x => x !== opt);
+      if (max && s.length >= max) return s;
+      return [...s, opt];
+    });
+  }
+
+  function handleMultiNext() {
+    setAnswers(a => ({...a, [current.id]: selected}));
+    setSelected([]);
+    setStep(s => s + 1);
+  }
+
+  function handleSubmit() {
+    if (!email.includes("@")) return;
+    setAnswers(a => ({...a, email}));
+    setSubmitted(true);
+  }
+
+  if (submitted) {
+    return (
+      <section id="apply" style={{padding:"9rem 3rem",background:C.forest}}>
+        <div style={{maxWidth:560,margin:"0 auto",textAlign:"center"}}>
+          <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".2em",textTransform:"uppercase",color:C.amber,marginBottom:"2rem"}}>
+            Application received
+          </div>
+          <h2 style={{fontFamily:F.display,fontStyle:"italic",fontSize:"clamp(2rem,4vw,3rem)",color:C.offwhite,lineHeight:1.15,marginBottom:"1.5rem"}}>
+            You're on the list.
+          </h2>
+          <p style={{fontFamily:F.sans,fontWeight:300,fontSize:"1rem",color:`${C.offwhite}77`,lineHeight:1.85,maxWidth:400,margin:"0 auto"}}>
+            We're reviewing applications and will be in touch if you're selected for the first cohort. We'll reach out via email within two weeks.
+          </p>
         </div>
-        <h2 className="reveal" data-d=".08" style={{fontFamily:F.display,fontSize:"clamp(2rem,4.5vw,3.5rem)",fontWeight:400,fontStyle:"italic",color:C.offwhite,lineHeight:1.1,marginBottom:"1.5rem"}}>
-          We're selecting 500 people<br/>
-          to shape this before<br/>
-          <em style={{color:C.amber}}>it launches publicly.</em>
-        </h2>
-        <p className="reveal" data-d=".16" style={{fontFamily:F.sans,fontWeight:300,fontSize:"1rem",lineHeight:1.85,color:`${C.offwhite}77`,marginBottom:"2.8rem",maxWidth:440}}>
-          No spam. No pitch deck. Honest updates when something real is ready — and early access when it is.
-        </p>
+      </section>
+    );
+  }
 
-        {!done ? (
-          <div className="reveal" data-d=".24" style={{display:"flex",gap:".7rem",flexWrap:"wrap"}}>
-            <input
-              value={email}
-              onChange={e=>setEmail(e.target.value)}
-              onKeyDown={e=>e.key==="Enter"&&email.includes("@")&&setDone(true)}
-              placeholder="your@email.com"
-              style={{
-                flex:"1 1 240px",padding:".88rem 1.2rem",
-                background:"transparent",border:`1px solid ${C.offwhite}2e`,
-                borderRadius:999,color:C.offwhite,
-                fontFamily:F.sans,fontSize:".9rem",outline:"none",
-              }}
-            />
-            <button
-              onClick={()=>email.includes("@")&&setDone(true)}
-              style={{
-                padding:".88rem 2rem",background:C.amber,color:C.offwhite,
-                border:"none",borderRadius:999,cursor:"pointer",
-                fontFamily:F.sans,fontWeight:600,fontSize:".75rem",
-                letterSpacing:".08em",textTransform:"uppercase",
-              }}
-            >
-              Apply
-            </button>
+  return (
+    <section id="apply" style={{padding:"9rem 3rem",background:C.forest}}>
+      <div style={{maxWidth:580,margin:"0 auto"}}>
+        {/* Header */}
+        <div className="reveal" style={{marginBottom:"3.5rem"}}>
+          <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".2em",textTransform:"uppercase",color:C.amber,marginBottom:"1.5rem",fontWeight:"bold"}}>
+            Apply for the first cohort
           </div>
-        ) : (
-          <div className="reveal on" style={{fontFamily:F.display,fontStyle:"italic",fontSize:"1.3rem",color:C.amber,lineHeight:1.4}}>
-            You're on the list.<br/>We'll be in touch.
-          </div>
-        )}
+          <h2 style={{fontFamily:F.display,fontSize:"clamp(2rem,4vw,3rem)",fontWeight:400,fontStyle:"italic",color:C.offwhite,lineHeight:1.15,marginBottom:"1rem"}}>
+            20 spots.<br/>
+            <em style={{color:C.amber}}>We're selecting carefully.</em>
+          </h2>
+          <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".95rem",color:`${C.offwhite}66`,lineHeight:1.8}}>
+            We want people who have genuinely tried other solutions and are ready to commit. Six quick questions.
+          </p>
+        </div>
 
-        <p className="reveal" data-d=".32" style={{fontFamily:F.mono,fontSize:".56rem",color:`${C.offwhite}33`,letterSpacing:".12em",textTransform:"uppercase",marginTop:"2rem"}}>
-          {done ? "— Spot confirmed" : "— 500 spots · Early access · No commitment"}
-        </p>
+        {/* Progress bar */}
+        <div style={{height:2,background:`${C.offwhite}18`,borderRadius:999,marginBottom:"2.5rem",overflow:"hidden"}}>
+          <div style={{height:"100%",background:C.amber,borderRadius:999,width:`${progress}%`,transition:"width .4s ease"}}/>
+        </div>
+
+        {/* Question */}
+        <div style={{minHeight:320}}>
+          <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".14em",textTransform:"uppercase",color:`${C.offwhite}44`,marginBottom:"1.2rem"}}>
+            {step + 1} / {SURVEY_STEPS.length}
+          </div>
+          <h3 style={{fontFamily:F.display,fontSize:"clamp(1.3rem,2.5vw,1.8rem)",fontWeight:400,color:C.offwhite,marginBottom:current.subtext?".5rem":"2rem",lineHeight:1.3}}>
+            {current.question}
+          </h3>
+          {current.subtext && (
+            <p style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".12em",textTransform:"uppercase",color:`${C.offwhite}44`,marginBottom:"1.5rem"}}>{current.subtext}</p>
+          )}
+
+          {current.type === "single" && (
+            <div style={{display:"flex",flexDirection:"column",gap:".6rem"}}>
+              {current.options.map(opt => (
+                <button key={opt} onClick={() => handleSingle(opt)} style={{
+                  padding:"1rem 1.3rem",borderRadius:10,
+                  background:answers[current.id]===opt?C.amber:`${C.offwhite}0e`,
+                  border:`1px solid ${answers[current.id]===opt?C.amber:`${C.offwhite}22`}`,
+                  color:answers[current.id]===opt?C.offwhite:`${C.offwhite}cc`,
+                  fontFamily:F.sans,fontWeight:400,fontSize:".88rem",
+                  textAlign:"left",transition:"all .15s ease",
+                }}>
+                  {opt}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {current.type === "multi" && (
+            <div>
+              <div style={{display:"flex",flexDirection:"column",gap:".6rem",marginBottom:"1.5rem"}}>
+                {current.options.map(opt => (
+                  <button key={opt} onClick={() => handleMultiToggle(opt)} style={{
+                    padding:"1rem 1.3rem",borderRadius:10,
+                    background:selected.includes(opt)?C.amber:`${C.offwhite}0e`,
+                    border:`1px solid ${selected.includes(opt)?C.amber:`${C.offwhite}22`}`,
+                    color:selected.includes(opt)?C.offwhite:`${C.offwhite}cc`,
+                    fontFamily:F.sans,fontWeight:400,fontSize:".88rem",
+                    textAlign:"left",transition:"all .15s ease",
+                    display:"flex",alignItems:"center",gap:".75rem",
+                  }}>
+                    <span style={{width:16,height:16,borderRadius:4,border:`1.5px solid ${selected.includes(opt)?C.offwhite:`${C.offwhite}44`}`,background:selected.includes(opt)?`${C.offwhite}33`:"transparent",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:".6rem",color:C.offwhite}}>
+                      {selected.includes(opt)?"✓":""}
+                    </span>
+                    {opt}
+                  </button>
+                ))}
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:".75rem"}}>
+                {step > 0 && (
+                  <button onClick={() => { setStep(s => s - 1); setSelected(answers[SURVEY_STEPS[step-1].id] || []); }} style={{
+                    background:"none",border:`1px solid ${C.offwhite}22`,borderRadius:999,
+                    color:`${C.offwhite}66`,fontFamily:F.mono,fontSize:".6rem",
+                    letterSpacing:".1em",textTransform:"uppercase",
+                    padding:".88rem 1.2rem",cursor:"pointer",transition:"all .2s ease",
+                  }}>← Back</button>
+                )}
+                <button onClick={handleMultiNext} disabled={selected.length===0} style={{
+                  padding:".88rem 2rem",
+                  background:selected.length>0?C.amber:`${C.offwhite}22`,
+                  color:C.offwhite,border:"none",borderRadius:999,
+                  fontFamily:F.sans,fontWeight:600,fontSize:".75rem",
+                  letterSpacing:".08em",textTransform:"uppercase",
+                  opacity:selected.length>0?1:.5,transition:"all .2s ease",
+                }}>
+                  Continue {current.max ? `(${selected.length}/${current.max})` : ""} →
+                </button>
+              </div>
+            </div>
+          )}
+
+          {current.type === "email" && (
+            <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
+              <input
+                value={email}
+                onChange={e=>setEmail(e.target.value)}
+                onKeyDown={e=>e.key==="Enter"&&handleSubmit()}
+                placeholder="your@email.com"
+                type="email"
+                style={{
+                  padding:".9rem 1.2rem",borderRadius:10,
+                  background:`${C.offwhite}0e`,border:`1px solid ${C.offwhite}22`,
+                  color:C.offwhite,fontSize:".9rem",outline:"none",
+                }}
+              />
+              <div style={{display:"flex",alignItems:"center",gap:".75rem"}}>
+                {step > 0 && (
+                  <button onClick={() => { setStep(s => s - 1); setSelected(answers[SURVEY_STEPS[step-1].id] || []); }} style={{
+                    background:"none",border:`1px solid ${C.offwhite}22`,borderRadius:999,
+                    color:`${C.offwhite}66`,fontFamily:F.mono,fontSize:".6rem",
+                    letterSpacing:".1em",textTransform:"uppercase",
+                    padding:".9rem 1.2rem",cursor:"pointer",transition:"all .2s ease",
+                  }}>← Back</button>
+                )}
+                <button onClick={handleSubmit} style={{
+                  padding:".9rem 2rem",background:C.amber,color:C.offwhite,
+                  border:"none",borderRadius:999,fontFamily:F.sans,
+                  fontWeight:600,fontSize:".75rem",letterSpacing:".08em",
+                  textTransform:"uppercase",
+                }}>
+                  Submit application
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
@@ -461,7 +738,7 @@ function Footer() {
   return (
     <footer style={{background:C.forest,borderTop:`1px solid ${C.mossy}`,padding:"1.8rem 3rem",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
       <span style={{fontFamily:F.display,fontSize:".9rem",color:`${C.offwhite}44`}}>Mutual</span>
-      <span style={{fontFamily:F.mono,fontSize:".52rem",letterSpacing:".12em",textTransform:"uppercase",color:`${C.offwhite}22`}}>© 2026</span>
+      <span style={{fontFamily:F.mono,fontSize:".52rem",letterSpacing:".12em",textTransform:"uppercase",color:`${C.offwhite}22`}}>Private beta · 2026</span>
     </footer>
   );
 }
@@ -473,10 +750,10 @@ export default function App() {
       <GlobalStyles />
       <Navbar />
       <Hero />
-      <InterventionSection />
-      <FailedSolutions />
-      <Vision />
-      <Cohort />
+      <Proposition />
+      <Differentiation />
+      <WhoThisIsFor />
+      <Survey />
       <Footer />
     </div>
   );
