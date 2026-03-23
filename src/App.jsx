@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import React from "react";
 
 // ── TOKENS ────────────────────────────────────────────────────
 const C = {
@@ -29,7 +30,7 @@ function GlobalStyles() {
     style.textContent = `
       *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
       html{scroll-behavior:smooth}
-      body{background:${C.cream};color:${C.forest};font-family:${F.sans};overflow-x:hidden}
+      body{background:${C.cream};color:${C.forest};font-family:${F.sans};overflow-x:hidden;text-align:left}
       body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.028;
         background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
       @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
@@ -124,6 +125,84 @@ function Navbar() {
   );
 }
 
+// ── PARTICLE CANVAS ───────────────────────────────────────────
+function ParticleCanvas() {
+  const canvasRef = React.useRef(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let W = canvas.offsetWidth, H = canvas.offsetHeight;
+    canvas.width = W; canvas.height = H;
+
+    const COUNT = Math.floor((W * H) / 14000);
+    const particles = Array.from({length: COUNT}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - .5) * .35,
+      vy: (Math.random() - .5) * .35,
+      r: 1.5 + Math.random() * 2,
+      phase: Math.random() * Math.PI * 2,
+    }));
+
+    let raf;
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      const t = Date.now() * .001;
+
+      // Draw connections
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const d = Math.sqrt(dx*dx + dy*dy);
+          const maxD = 110;
+          if (d < maxD) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(184,114,58,${(.22 - d/maxD*.22)})`;
+            ctx.lineWidth = .6;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw particles
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < -10) p.x = W+10;
+        if (p.x > W+10) p.x = -10;
+        if (p.y < -10) p.y = H+10;
+        if (p.y > H+10) p.y = -10;
+        const pulse = Math.sin(t * .8 + p.phase) * .4 + .8;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * pulse, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(122,158,130,.55)`;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * pulse + 1.5, 0, Math.PI*2);
+        ctx.strokeStyle = `rgba(122,158,130,.15)`;
+        ctx.lineWidth = .8;
+        ctx.stroke();
+      });
+      raf = requestAnimationFrame(draw);
+    }
+    draw();
+
+    const onResize = () => {
+      W = canvas.offsetWidth; H = canvas.offsetHeight;
+      canvas.width = W; canvas.height = H;
+    };
+    window.addEventListener("resize", onResize);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
+  }, []);
+
+  return (
+    <canvas ref={canvasRef} style={{position:"absolute",inset:0,width:"100%",height:"100%",zIndex:1}}/>
+  );
+}
+
 // ── HERO ──────────────────────────────────────────────────────
 function Hero() {
   return (
@@ -132,33 +211,26 @@ function Hero() {
       padding:"8rem 3.5rem 5.5rem",
       position:"relative",overflow:"hidden",
     }}>
-      {/* Fallback colour */}
+      {/* Background */}
       <div style={{position:"absolute",inset:0,zIndex:0,background:C.forest}}/>
-      {/* Background image */}
-      <div style={{
-        position:"absolute",inset:0,zIndex:1,
-        backgroundImage:"url(https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80)",
-        backgroundSize:"cover",backgroundPosition:"center 40%",
-        backgroundRepeat:"no-repeat",
-      }}/>
-      {/* Dark overlay */}
+      {/* Particle canvas */}
+      <ParticleCanvas />
+      {/* Gradient overlay — keeps text readable */}
       <div style={{
         position:"absolute",inset:0,zIndex:2,
-        background:`linear-gradient(to top, rgba(36,48,40,.92) 25%, rgba(36,48,40,.7) 60%, rgba(36,48,40,.45) 100%)`,
+        background:`linear-gradient(to top, rgba(36,48,40,.97) 20%, rgba(36,48,40,.75) 55%, rgba(36,48,40,.4) 100%)`,
       }}/>
-      {/* Subtle warm tint */}
-      <div style={{position:"absolute",inset:0,zIndex:3,background:`radial-gradient(ellipse at 15% 80%, ${C.amber}22 0%, transparent 55%)`}}/>
-      <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(90deg,${C.amber},${C.sage})`,zIndex:4}}/>
+      <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(90deg,${C.amber},${C.sage})`,zIndex:3}}/>
 
-      <div style={{position:"relative",zIndex:5,maxWidth:860}}>
+      <div style={{position:"relative",zIndex:4,maxWidth:860}}>
         <h1 style={{
           fontFamily:F.display,
-          fontSize:"clamp(3rem,9vw,8.5rem)",
+          fontSize:"clamp(3.2rem,9vw,8.5rem)",
           fontWeight:400,lineHeight:.96,color:C.offwhite,
           letterSpacing:"-.01em",marginBottom:"2rem",
           animation:"fadeUp .9s .15s ease both",
         }}>
-          <em style={{color:C.amber,fontStyle:"italic"}}>Your</em> phone.{" "}
+          <em style={{color:C.amber,fontStyle:"italic"}}>Your</em> phone.<br/>
           <em style={{color:C.amber,fontStyle:"italic"}}>Your</em> rules.
         </h1>
         <p style={{
@@ -195,7 +267,7 @@ function Proposition() {
             {
               n:"01",
               title:"You tell us your rules",
-              body:"Block apps completely or set daily time limits. Silence all notifications during work hours except your manager. Filter out specific websites and content in the browser. Enforce Do Not Disturb at night. Keep work and personal apps separate. Switch to greyscale after 9pm. Whatever you want to change, write it down.",
+              body:"Block apps completely or set daily time limits. Silence notifications during work hours. Filter specific websites and content. Switch to greyscale after 9pm. Whatever you want to change, write it down.",
             },
             {
               n:"02",
@@ -209,11 +281,11 @@ function Proposition() {
             },
           ].map((s,i) => (
             <div key={i} className="reveal" data-d={i*.1} style={{
-              display:"grid",gridTemplateColumns:"3.5rem 1fr",
-              gap:"2rem",padding:"2.5rem 0",
+              display:"grid",gridTemplateColumns:"2.5rem 1fr",
+              gap:".75rem",padding:"2.5rem 0",
               borderTop:`1px solid ${C.pale}`,
             }}>
-              <span style={{fontFamily:F.mono,fontSize:".72rem",color:C.stone,paddingTop:".3rem",fontWeight:"bold"}}>{s.n}</span>
+              <span style={{fontFamily:F.mono,fontSize:".72rem",color:C.stone,paddingTop:".35rem",fontWeight:"bold"}}>{s.n}</span>
               <div>
                 <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1.4rem",color:C.forest,marginBottom:".65rem"}}>{s.title}</div>
                 <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".95rem",color:C.stone,lineHeight:1.85}}>{s.body}</p>
@@ -232,32 +304,173 @@ function Proposition() {
   );
 }
 
-// ── FEATURE CARD 1 — Conversation ────────────────────────────
-const SETUP_CHAT = [
-  { side:"user",   text:"No Instagram after 9pm." },
-  { side:"mutual", text:"Done. Instagram locks at 9pm every night." },
-  { side:"user",   text:"And no LinkedIn on weekends." },
-  { side:"mutual", text:"Added. LinkedIn is off Saturday and Sunday." },
-  { side:"user",   text:"Can I still use WhatsApp?" },
-  { side:"mutual", text:"Yes. Messaging stays on. Only what you asked to block gets blocked." },
+// ── EVE DEMO — four scenes ────────────────────────────────────
+
+// Shared phone shell
+function PhoneShell({ children, greyscale = false }) {
+  return (
+    <div style={{
+      width: 200, minHeight: 380,
+      background: greyscale ? "#2a2a2a" : C.forest,
+      borderRadius: 28,
+      border: `1px solid ${greyscale ? "#444" : C.mossy}`,
+      overflow: "hidden",
+      boxShadow: `0 20px 60px ${C.forest}44`,
+      flexShrink: 0,
+      filter: greyscale ? "saturate(0.1)" : "none",
+      transition: "filter 1.2s ease",
+      display: "flex", flexDirection: "column",
+    }}>
+      {/* Status bar */}
+      <div style={{ padding: "10px 16px 6px", display: "flex", justifyContent: "space-between" }}>
+        <span style={{ fontFamily: F.mono, fontSize: ".5rem", color: `${C.offwhite}66` }}>10:47</span>
+        <div style={{ display: "flex", gap: 3 }}>
+          {[1,1,1].map((_,i) => (
+            <div key={i} style={{ width: 3, height: 3, borderRadius: "50%", background: `${C.offwhite}44` }}/>
+          ))}
+        </div>
+      </div>
+      <div style={{ flex: 1, padding: "0 12px 14px", display: "flex", flexDirection: "column" }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// Scene 1 — The opening
+function Scene1() {
+  const [step, setStep] = useState(0);
+  useEffect(() => {
+    const delays = [800, 1800, 3000];
+    const timers = delays.map((d, i) => setTimeout(() => setStep(i + 1), d));
+    const reset = setTimeout(() => setStep(0), 6000);
+    return () => { timers.forEach(clearTimeout); clearTimeout(reset); };
+  }, [step === 0 ? undefined : null]);
+
+  return (
+    <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
+      <PhoneShell>
+        {/* Normal home screen icons */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8, marginBottom: 12, marginTop: 4 }}>
+          {["📸","🎵","📧","🗺","🛒","📰","💬","⚙"].map((icon, i) => (
+            <div key={i} style={{ aspectRatio: "1", background: `${C.offwhite}12`, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: ".9rem" }}>
+              {icon}
+            </div>
+          ))}
+        </div>
+        {/* Chat input area */}
+        <div style={{ marginTop: "auto" }}>
+          {step >= 1 && (
+            <div style={{ background: `${C.offwhite}14`, borderRadius: 12, padding: "8px 10px", marginBottom: 6, border: `1px solid ${C.offwhite}22`, animation: "fadeUp .4s ease both" }}>
+              <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: C.amber, letterSpacing: ".1em", marginBottom: 4 }}>EVE</div>
+              <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".62rem", color: `${C.offwhite}88`, lineHeight: 1.5 }}>Hi. What's on your mind?</div>
+            </div>
+          )}
+          {step >= 2 && (
+            <div style={{ background: C.amber, borderRadius: 12, padding: "8px 10px", marginBottom: 6, animation: "fadeUp .4s ease both" }}>
+              <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".62rem", color: C.offwhite, lineHeight: 1.5 }}>I've been spending too much time on my phone and I need to change that.</div>
+            </div>
+          )}
+          {step >= 3 && (
+            <div style={{ background: `${C.offwhite}14`, borderRadius: 12, padding: "8px 10px", border: `1px solid ${C.offwhite}22`, animation: "fadeUp .4s ease both" }}>
+              <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: C.amber, letterSpacing: ".1em", marginBottom: 4 }}>EVE</div>
+              <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".62rem", color: `${C.offwhite}88`, lineHeight: 1.5 }}>Let me take a look at how you've been using it.</div>
+            </div>
+          )}
+        </div>
+      </PhoneShell>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontFamily: F.mono, fontSize: ".58rem", letterSpacing: ".15em", textTransform: "uppercase", color: C.sage, marginBottom: ".5rem" }}>01 — The opening</div>
+        <div style={{ fontFamily: F.display, fontWeight: 500, fontSize: "1.2rem", color: C.forest, marginBottom: ".75rem" }}>Just tell Eve what you want.</div>
+        <p style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".88rem", color: C.stone, lineHeight: 1.8 }}>No forms. No settings. No selecting from a list of options. Eve listens, then gets to work.</p>
+      </div>
+    </div>
+  );
+}
+
+// Scene 2 — Eve analyses
+const ANALYSIS_LINES = [
+  "Reviewing app usage — last 14 days...",
+  "Instagram: 1h 42m average daily",
+  "Pinterest: 38m average daily",
+  "Google News: 29m average daily",
+  "WhatsApp: active throughout the day",
+  "Cross-referencing with calendar...",
+  "Work hours: 9am – 6pm",
+  "High usage overlap during work hours detected",
+  "Notification interruptions: avg 47 per day",
+  "Most frequent unlock trigger: Instagram",
+  "",
+  "I think I know what's happening.",
 ];
 
-function ConversationCard() {
+function Scene2() {
+  const [lines, setLines] = useState([]);
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    setLines([]); setDone(false);
+    let i = 0;
+    const addLine = () => {
+      if (i < ANALYSIS_LINES.length) {
+        const l = ANALYSIS_LINES[i];
+        setLines(prev => [...prev, l]);
+        i++;
+        if (i < ANALYSIS_LINES.length) setTimeout(addLine, l === "" ? 600 : l.startsWith("I think") ? 900 : 280);
+        else { setTimeout(() => setDone(true), 400); setTimeout(() => { setLines([]); setDone(false); }, 6000); }
+      }
+    };
+    const t = setTimeout(addLine, 400);
+    return () => clearTimeout(t);
+  }, [done === false && lines.length === 0 ? undefined : null]);
+
+  return (
+    <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
+      <PhoneShell>
+        <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column", gap: 2, paddingTop: 4 }}>
+          <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: C.amber, letterSpacing: ".1em", marginBottom: 6 }}>EVE — ANALYSING</div>
+          {lines.map((l, i) => (
+            <div key={i} style={{
+              fontFamily: F.mono,
+              fontSize: ".5rem",
+              color: l.startsWith("I think") ? C.offwhite : l.startsWith("High") || l.startsWith("Most") ? `${C.amber}cc` : `${C.offwhite}55`,
+              lineHeight: 1.6,
+              animation: "fadeUp .25s ease both",
+              fontWeight: l.startsWith("I think") ? 400 : 300,
+              paddingTop: l === "" ? 4 : 0,
+            }}>{l || " "}</div>
+          ))}
+          {!done && lines.length > 0 && (
+            <span style={{ fontFamily: F.mono, fontSize: ".5rem", color: C.amber, animation: "fadeUp .3s ease infinite alternate" }}>█</span>
+          )}
+        </div>
+      </PhoneShell>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontFamily: F.mono, fontSize: ".58rem", letterSpacing: ".15em", textTransform: "uppercase", color: C.sage, marginBottom: ".5rem" }}>02 — Eve analyses</div>
+        <div style={{ fontFamily: F.display, fontWeight: 500, fontSize: "1.2rem", color: C.forest, marginBottom: ".75rem" }}>It already knows your patterns.</div>
+        <p style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".88rem", color: C.stone, lineHeight: 1.8 }}>Eve reads your usage data before it says anything. When the plan arrives, it's built on evidence — not guesswork.</p>
+      </div>
+    </div>
+  );
+}
+
+// Scene 3 — The plan
+const PLAN_MSGS = [
+  { side: "eve", text: "Based on your usage, I'd suggest blocking Instagram and Pinterest completely during work hours and keeping WhatsApp available. Want to go further?" },
+  { side: "user", text: "Yes. Notifications are distracting too. And make the phone less tempting." },
+  { side: "eve", text: "I can silence all notifications during work hours except your boss and partner. And switch your phone to greyscale — less colour, less pull." },
+  { side: "eve", text: "Let's try this for two weeks. I'll check in with you on the 14th. You can adjust anything before then." },
+  { side: "user", text: "Let's do it." },
+];
+
+function Scene3() {
   const [shown, setShown] = useState(0);
   const [typing, setTyping] = useState(false);
-
   useEffect(() => {
-    if (shown >= SETUP_CHAT.length) {
-      const t = setTimeout(() => setShown(0), 3000);
-      return () => clearTimeout(t);
-    }
-    const next = SETUP_CHAT[shown];
-    if (next.side === "mutual") {
+    if (shown >= PLAN_MSGS.length) { setTimeout(() => setShown(0), 4000); return; }
+    const m = PLAN_MSGS[shown];
+    if (m.side === "eve") {
       setTyping(true);
-      const t = setTimeout(() => {
-        setTyping(false);
-        setShown(n => n + 1);
-      }, 1200);
+      const t = setTimeout(() => { setTyping(false); setShown(n => n + 1); }, m.text.length * 18 + 400);
       return () => clearTimeout(t);
     } else {
       const t = setTimeout(() => setShown(n => n + 1), 900);
@@ -266,180 +479,126 @@ function ConversationCard() {
   }, [shown]);
 
   return (
-    <div style={{background:C.offwhite,borderRadius:"2rem",padding:"1.8rem",border:`1px solid ${C.pale}`,minHeight:320,display:"flex",flexDirection:"column"}}>
-      <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".15em",textTransform:"uppercase",color:C.sage,marginBottom:".4rem"}}>01 — Setup</div>
-      <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1.15rem",color:C.forest,marginBottom:"1.4rem"}}>Just tell us what you want.</div>
-      <div style={{flex:1,display:"flex",flexDirection:"column",gap:".6rem",justifyContent:"flex-end"}}>
-        {SETUP_CHAT.slice(0, shown).map((m, i) => (
-          <div key={i} style={{display:"flex",justifyContent:m.side==="user"?"flex-end":"flex-start"}}>
-            <div style={{
-              maxWidth:"85%",padding:".55rem .9rem",borderRadius:12,
-              background:m.side==="user"?C.forest:C.cream,
-              border:`1px solid ${m.side==="user"?C.mossy:C.pale}`,
-            }}>
-              <span style={{fontFamily:F.sans,fontWeight:300,fontSize:".78rem",color:m.side==="user"?C.offwhite:C.stone,lineHeight:1.55}}>
-                {m.text}
-              </span>
-            </div>
-          </div>
-        ))}
-        {typing && (
-          <div style={{display:"flex",justifyContent:"flex-start"}}>
-            <div style={{padding:".55rem .9rem",borderRadius:12,background:C.cream,border:`1px solid ${C.pale}`,display:"flex",gap:4,alignItems:"center"}}>
-              {[0,1,2].map(i => (
-                <div key={i} style={{width:5,height:5,borderRadius:"50%",background:C.stone,opacity:.5,animation:`fadeUp .6s ${i*.15}s ease infinite alternate`}}/>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// ── FEATURE CARD 2 — Time Arc Clock ──────────────────────────
-function TimeArcCard() {
-  const [tick, setTick] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setTick(n => (n + 1) % 120), 100);
-    return () => clearInterval(t);
-  }, []);
-
-  const hour = 9 + (tick / 120) * 14;
-  const handAngle = ((hour % 12) / 12) * 360 - 90;
-  const blockedStart = ((21 % 12) / 12) * 360;
-  const blockedEnd   = ((7  % 12) / 12) * 360;
-
-  function arcPath(cx, cy, r, startDeg, endDeg) {
-    const s = (startDeg * Math.PI) / 180;
-    const e = (endDeg   * Math.PI) / 180;
-    const x1 = cx + r * Math.cos(s), y1 = cy + r * Math.sin(s);
-    const x2 = cx + r * Math.cos(e), y2 = cy + r * Math.sin(e);
-    const large = (endDeg - startDeg + 360) % 360 > 180 ? 1 : 0;
-    return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
-  }
-
-  const isBlocked = hour >= 21 || hour < 7;
-
-  return (
-    <div style={{background:C.forest,borderRadius:"2rem",padding:"1.8rem",border:`1px solid ${C.mossy}`,minHeight:300}}>
-      <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".15em",textTransform:"uppercase",color:C.amber,marginBottom:".4rem"}}>02 — Rules you set</div>
-      <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1.15rem",color:C.offwhite,marginBottom:"1.4rem"}}>As specific as your day.</div>
-      <div style={{display:"flex",alignItems:"center",gap:"1.8rem"}}>
-        <svg width="110" height="110" viewBox="0 0 110 110" style={{flexShrink:0}}>
-          {/* Background circle */}
-          <circle cx="55" cy="55" r="44" fill="none" stroke={`${C.offwhite}12`} strokeWidth="8"/>
-          {/* Allowed arc (green) */}
-          <path d={arcPath(55,55,44,-90+blockedEnd,-90+blockedStart)} fill="none" stroke={C.sage} strokeWidth="8" strokeLinecap="round" opacity=".7"/>
-          {/* Blocked arc (amber) */}
-          <path d={arcPath(55,55,44,-90+blockedStart,-90+blockedEnd+360)} fill="none" stroke={C.amber} strokeWidth="8" strokeLinecap="round" opacity=".85"/>
-          {/* Hour hand */}
-          <line
-            x1="55" y1="55"
-            x2={55 + 28 * Math.cos((handAngle * Math.PI)/180)}
-            y2={55 + 28 * Math.sin((handAngle * Math.PI)/180)}
-            stroke={C.offwhite} strokeWidth="2.5" strokeLinecap="round"
-          />
-          {/* Centre dot */}
-          <circle cx="55" cy="55" r="3.5" fill={C.offwhite}/>
-          {/* Status dot */}
-          <circle cx="55" cy="55" r="14" fill={isBlocked?`${C.amber}22`:`${C.sage}22`}/>
-        </svg>
-        <div style={{flex:1}}>
-          {[
-            {label:"After 9pm",   status:"blocked",  color:C.amber},
-            {label:"6am – 9am",   status:"allowed",  color:C.sage},
-            {label:"Work hours",  status:"focus",    color:C.sage},
-          ].map(r => (
-            <div key={r.label} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:".35rem 0",borderBottom:`1px solid ${C.offwhite}0e`}}>
-              <span style={{fontFamily:F.sans,fontSize:".75rem",color:`${C.offwhite}88`}}>{r.label}</span>
-              <span style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".1em",textTransform:"uppercase",color:r.color}}>{r.status}</span>
+    <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
+      <PhoneShell>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-end" }}>
+          {PLAN_MSGS.slice(0, shown).map((m, i) => (
+            <div key={i} style={{ display: "flex", justifyContent: m.side === "user" ? "flex-end" : "flex-start", animation: "fadeUp .3s ease both" }}>
+              <div style={{
+                maxWidth: "88%", padding: "6px 9px", borderRadius: 10,
+                background: m.side === "user" ? C.amber : `${C.offwhite}14`,
+                border: `1px solid ${m.side === "user" ? C.amber : `${C.offwhite}18`}`,
+              }}>
+                {m.side === "eve" && <div style={{ fontFamily: F.mono, fontSize: ".45rem", color: C.amber, letterSpacing: ".1em", marginBottom: 3 }}>EVE</div>}
+                <span style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".58rem", color: m.side === "user" ? C.offwhite : `${C.offwhite}88`, lineHeight: 1.55 }}>{m.text}</span>
+              </div>
             </div>
           ))}
-          <p style={{fontFamily:F.sans,fontWeight:300,fontSize:".72rem",color:`${C.offwhite}55`,marginTop:".8rem",lineHeight:1.65}}>
-            Blocked apps stay blocked. You cannot reinstall them.
-          </p>
+          {typing && (
+            <div style={{ display: "flex", justifyContent: "flex-start" }}>
+              <div style={{ padding: "6px 9px", borderRadius: 10, background: `${C.offwhite}14`, border: `1px solid ${C.offwhite}18`, display: "flex", gap: 3 }}>
+                {[0,1,2].map(i => <div key={i} style={{ width: 4, height: 4, borderRadius: "50%", background: `${C.offwhite}55`, animation: `fadeUp .5s ${i*.14}s ease infinite alternate` }}/>)}
+              </div>
+            </div>
+          )}
         </div>
+      </PhoneShell>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontFamily: F.mono, fontSize: ".58rem", letterSpacing: ".15em", textTransform: "uppercase", color: C.sage, marginBottom: ".5rem" }}>03 — The plan</div>
+        <div style={{ fontFamily: F.display, fontWeight: 500, fontSize: "1.2rem", color: C.forest, marginBottom: ".75rem" }}>Eve recommends. You decide.</div>
+        <p style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".88rem", color: C.stone, lineHeight: 1.8 }}>Not a menu of options. A considered recommendation, built on your data. You adjust, confirm, and it's set for two weeks.</p>
       </div>
     </div>
   );
 }
 
-// ── FEATURE CARD 3 — Plan Timeline + Chat ────────────────────
-const CHAT = [
-  {side:"user", text:"No Instagram after 9pm. And I want to review in 4 weeks."},
-  {side:"mutual", text:"Got it. Instagram blocks at 9pm every night. Check-in set for 28 days from now."},
-  {side:"mutual", text:"We'll reach out when it's time. You can adjust the rules then."},
-];
-
-function PlanCard() {
-  const [shown, setShown] = useState(0);
+// Scene 4 — The change
+function Scene4() {
+  const [phase, setPhase] = useState(0);
+  // 0: before, 1: implementing, 2: greyscale done, 3: block screen
   useEffect(() => {
-    if (shown < CHAT.length) {
-      const t = setTimeout(() => setShown(n => n + 1), 1400);
-      return () => clearTimeout(t);
-    } else {
-      const t = setTimeout(() => setShown(0), 3500);
-      return () => clearTimeout(t);
-    }
-  }, [shown]);
+    const seq = [0, 1800, 3800, 6000, 9500];
+    const timers = seq.map((d, i) => setTimeout(() => setPhase(i), d));
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  const isGrey = phase >= 2;
+  const apps = [
+    { name: "Maps",      visible: true },
+    { name: "WhatsApp",  visible: true },
+    { name: "Calendar",  visible: true },
+    { name: "Mail",      visible: true },
+    { name: "Instagram", visible: phase < 1 },
+    { name: "Pinterest", visible: phase < 1 },
+    { name: "News",      visible: true },
+    { name: "Spotify",   visible: true },
+  ];
 
   return (
-    <div style={{background:C.offwhite,borderRadius:"2rem",padding:"1.8rem",border:`1px solid ${C.pale}`,minHeight:300}}>
-      <div style={{fontFamily:F.mono,fontSize:".58rem",letterSpacing:".15em",textTransform:"uppercase",color:C.sage,marginBottom:".4rem"}}>03 — Your plan</div>
-      <div style={{fontFamily:F.display,fontWeight:500,fontSize:"1.15rem",color:C.forest,marginBottom:"1.4rem"}}>Set it. We hold it. We check in.</div>
-
-      {/* Mini timeline */}
-      <div style={{display:"flex",alignItems:"center",gap:0,marginBottom:"1.4rem"}}>
-        {[{label:"Setup",active:shown>=1},{label:"Active",active:shown>=2},{label:"Check-in",active:shown>=3}].map((s,i) => (
-          <div key={s.label} style={{display:"flex",alignItems:"center",flex:i<2?1:"auto"}}>
-            <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:".2rem"}}>
-              <div style={{width:10,height:10,borderRadius:"50%",background:s.active?C.amber:C.pale,transition:"background .4s ease",border:`2px solid ${s.active?C.amber:C.pale}`}}/>
-              <span style={{fontFamily:F.mono,fontSize:".52rem",letterSpacing:".08em",textTransform:"uppercase",color:s.active?C.forest:C.stone,whiteSpace:"nowrap",transition:"color .4s ease"}}>{s.label}</span>
+    <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
+      <PhoneShell greyscale={isGrey}>
+        {phase < 3 ? (
+          <>
+            <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: isGrey ? "#aaa" : C.amber, letterSpacing: ".1em", marginBottom: 8 }}>
+              {phase === 0 ? "HOME" : phase === 1 ? "EVE — CONFIGURING..." : "WORK MODE · UNTIL 6PM"}
             </div>
-            {i<2 && <div style={{flex:1,height:1.5,background:shown>i+1?C.amber:C.pale,transition:"background .4s ease",margin:"0 .3rem",marginBottom:"1rem"}}/>}
-          </div>
-        ))}
-      </div>
-
-      {/* Chat */}
-      <div style={{display:"flex",flexDirection:"column",gap:".5rem",minHeight:120}}>
-        {CHAT.slice(0, shown).map((m, i) => (
-          <div key={i} style={{
-            display:"flex",justifyContent:m.side==="user"?"flex-end":"flex-start",
-            animation:"fadeUp .35s ease both",
-          }}>
-            <div style={{
-              maxWidth:"80%",padding:".55rem .85rem",borderRadius:12,
-              background:m.side==="user"?C.forest:C.cream,
-              border:`1px solid ${m.side==="user"?C.mossy:C.pale}`,
-            }}>
-              <span style={{fontFamily:F.sans,fontWeight:300,fontSize:".74rem",color:m.side==="user"?C.offwhite:C.stone,lineHeight:1.55}}>{m.text}</span>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 7 }}>
+              {apps.map(app => (
+                <div key={app.name} style={{
+                  aspectRatio: "1", borderRadius: 10,
+                  background: app.visible ? `${C.offwhite}${isGrey ? "18" : "14"}` : "transparent",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  transition: "all .6s cubic-bezier(.34,1.56,.64,1)",
+                  transform: app.visible ? "scale(1)" : "scale(0)",
+                  opacity: app.visible ? 1 : 0,
+                }}>
+                  {app.visible && <span style={{ fontFamily: F.mono, fontSize: ".48rem", color: isGrey ? "#888" : `${C.offwhite}88` }}>{app.name.slice(0,3)}</span>}
+                </div>
+              ))}
             </div>
+            {phase >= 2 && (
+              <div style={{ marginTop: "auto", background: `${C.offwhite}12`, borderRadius: 10, padding: "8px 10px", border: `1px solid ${C.offwhite}18`, animation: "fadeUp .5s ease both" }}>
+                <div style={{ fontFamily: F.mono, fontSize: ".45rem", color: "#aaa", letterSpacing: ".1em", marginBottom: 3 }}>EVE</div>
+                <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".55rem", color: "#aaa", lineHeight: 1.5 }}>All set. I'll check in on the 14th. Good luck.</div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "8px 0" }}>
+            <div style={{ fontFamily: F.mono, fontSize: ".48rem", color: "#888", letterSpacing: ".1em", marginBottom: 12 }}>INSTAGRAM.COM</div>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: "#333", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 10, fontSize: "1.1rem", filter: "saturate(0)" }}>📸</div>
+            <div style={{ fontFamily: F.sans, fontWeight: 500, fontSize: ".65rem", color: "#ccc", marginBottom: 6, lineHeight: 1.4 }}>Instagram is off until 6pm.</div>
+            <div style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".58rem", color: "#888", lineHeight: 1.5 }}>Enjoy the focus.</div>
           </div>
-        ))}
+        )}
+      </PhoneShell>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontFamily: F.mono, fontSize: ".58rem", letterSpacing: ".15em", textTransform: "uppercase", color: C.sage, marginBottom: ".5rem" }}>04 — The change</div>
+        <div style={{ fontFamily: F.display, fontWeight: 500, fontSize: "1.2rem", color: C.forest, marginBottom: ".75rem" }}>The phone actually changes.</div>
+        <p style={{ fontFamily: F.sans, fontWeight: 300, fontSize: ".88rem", color: C.stone, lineHeight: 1.8 }}>Apps disappear. Colour drains. The browser blocks. Not a notification. Not a reminder. The phone keeps its word.</p>
       </div>
     </div>
   );
 }
 
-// ── FEATURES SECTION ─────────────────────────────────────────
+// ── EVE DEMO SECTION ─────────────────────────────────────────
 function Differentiation() {
   useReveal();
   return (
-    <section className="section-pad" style={{padding:"7rem 3rem",background:C.cream,borderTop:`1px solid ${C.pale}`}}>
-      <div style={{maxWidth:1060,margin:"0 auto"}}>
-        <div className="reveal" style={{marginBottom:"3.5rem"}}>
-          <div style={{fontFamily:F.mono,fontSize:".72rem",letterSpacing:".2em",textTransform:"uppercase",color:C.sage,marginBottom:".75rem",fontWeight:"bold"}}>Features</div>
-          <h2 style={{fontFamily:F.display,fontSize:"clamp(2rem,4vw,3.2rem)",fontWeight:400,lineHeight:1.15,color:C.forest}}>
-            Built different.<br/>
-            <em style={{fontStyle:"italic",color:C.amber}}>By design.</em>
+    <section className="section-pad" style={{ padding: "7rem 3rem", background: C.cream, borderTop: `1px solid ${C.pale}` }}>
+      <div style={{ maxWidth: 860, margin: "0 auto" }}>
+        <div className="reveal" style={{ marginBottom: "4rem" }}>
+          <div style={{ fontFamily: F.mono, fontSize: ".72rem", letterSpacing: ".2em", textTransform: "uppercase", color: C.sage, marginBottom: ".75rem", fontWeight: "bold" }}>Meet Eve</div>
+          <h2 style={{ fontFamily: F.display, fontSize: "clamp(2rem,4vw,3.2rem)", fontWeight: 400, lineHeight: 1.15, color: C.forest }}>
+            See how it works.<br/>
+            <em style={{ fontStyle: "italic", color: C.amber }}>In your own words.</em>
           </h2>
         </div>
-        <div className="feature-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(290px,1fr))",gap:"1.2rem"}}>
-          <div className="reveal" data-d=".08"><ConversationCard /></div>
-          <div className="reveal" data-d=".18"><TimeArcCard /></div>
-          <div className="reveal" data-d=".28"><PlanCard /></div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
+          <div className="reveal" data-d=".05"><Scene1 /></div>
+          <div className="reveal" data-d=".1"><Scene2 /></div>
+          <div className="reveal" data-d=".15"><Scene3 /></div>
+          <div className="reveal" data-d=".2"><Scene4 /></div>
         </div>
       </div>
     </section>
