@@ -597,7 +597,9 @@ function EveDemo() {
   const [bq,        setBq]        = useState("");
   const [blocked,   setBlocked]   = useState(false);
   const [tapped,    setTapped]    = useState(null);
-  const idRef = useRef(0);
+  const idRef        = useRef(0);
+  const containerRef = useRef(null);
+  const hasStarted   = useRef(false);
 
   const INIT_BADGES = { whatsapp:150, instagram:20, news:12, linkedin:30, gmail:9, teams:3, messages:2, chess:2 };
 
@@ -638,16 +640,12 @@ function EveDemo() {
       await _sleep(500);
     };
 
-    const run = async () => {
-      while (!dead) {
-        // RESET
-        setScreen("home"); setMsgs([]); setInput(""); setTyping(false);
-        setAlines([]); setAnalysing(false); setHidden(new Set());
-        setBadges(INIT_BADGES); setGrey(false); setMode("");
-        setClock("10:47"); setBq(""); setBlocked(false); setTapped(null);
-        idRef.current = 0;
+    // Set initial badge state immediately so home screen looks populated
+    setBadges(INIT_BADGES);
 
-        await _sleep(1800); if (dead) return;
+    const run = async () => {
+      // Single pass — no loop. Stops at final block state.
+      await _sleep(1200); if (dead) return;
 
         // Tap Eve in dock
         setTapped("eve"); await _sleep(200); setTapped(null); await _sleep(600);
@@ -730,13 +728,23 @@ function EveDemo() {
         if (dead) return;
         await _sleep(700);
         setBlocked(true);
-        await _sleep(4500); if (dead) return;
-        await _sleep(800);
-      }
+        // Done — stays on block screen
     };
 
-    run();
-    return () => { dead = true; };
+    // Only start once, on first viewport entry
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasStarted.current) {
+          hasStarted.current = true;
+          obs.disconnect();
+          run();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (containerRef.current) obs.observe(containerRef.current);
+
+    return () => { dead = true; obs.disconnect(); };
   }, []);
 
   const onHomeScreen = screen === "home" || screen === "change";
@@ -956,7 +964,7 @@ function EveDemo() {
   };
 
   return (
-    <div style={{
+    <div ref={containerRef} style={{
       width:258,height:530,flexShrink:0,
       background:"#1A1A1A",
       borderRadius:40,
