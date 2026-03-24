@@ -271,30 +271,43 @@ function Proposition() {
 // ── EVE DEMO ──────────────────────────────────────────────────
 const _sleep = ms => new Promise(r => setTimeout(r, ms));
 
-// App icon definitions — emoji + brand colors for realism
-const APPS = [
-  { id:"eve",       name:"Eve",       bg:"#1A2E22", icon:null,  abbr:"E",    isEve:true,  dock:false },
-  { id:"instagram", name:"Instagram", bg:"linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)", icon:"📷", abbr:"",     dock:false },
-  { id:"pinterest", name:"Pinterest", bg:"#E60023", icon:"📌",  abbr:"",     dock:false },
-  { id:"whatsapp",  name:"WhatsApp",  bg:"#25D366", icon:"💬",  abbr:"",     dock:true  },
-  { id:"news",      name:"News",      bg:"#1A73E8", icon:"📰",  abbr:"",     dock:false },
-  { id:"calendar",  name:"Calendar",  bg:"#fff",    icon:null,  abbr:"17",   isCalendar:true, dock:false, border:true },
-  { id:"chrome",    name:"Chrome",    bg:"#fff",    icon:"🌐",  abbr:"",     dock:true,  border:true },
-  { id:"messages",  name:"Messages",  bg:"#34C759", icon:"💬",  abbr:"",     dock:true  },
-  { id:"maps",      name:"Maps",      bg:"#fff",    icon:"🗺️", abbr:"",     dock:false, border:true },
-  { id:"settings",  name:"Settings",  bg:"#E5E5EA", icon:"⚙️", abbr:"",     dock:true  },
-  { id:"spotify",   name:"Spotify",   bg:"#191414", icon:"🎵",  abbr:"",     dock:false },
-  { id:"mail",      name:"Mail",      bg:"#147EFB", icon:"✉️", abbr:"",     dock:false },
+// Samsung-style app set with notification badges
+const GRID_APPS = [
+  { id:"maps",      name:"Maps",      bg:"#fff",    border:true           },
+  { id:"nhs",       name:"NHS",       bg:"#005EB8"                        },
+  { id:"teams",     name:"Teams",     bg:"#4B53BC", badge:3               },
+  { id:"duolingo",  name:"Duolingo",  bg:"#58CC02"                        },
+  { id:"linkedin",  name:"LinkedIn",  bg:"#0A66C2", badge:4               },
+  { id:"youtube",   name:"YouTube",   bg:"#FF0000"                        },
+  { id:"instagram", name:"Instagram", bg:"linear-gradient(135deg,#833ab4 0%,#fd1d1d 50%,#fcb045 100%)", badge:7 },
+  { id:"pinterest", name:"Pinterest", bg:"#E60023"                        },
+  { id:"whatsapp",  name:"WhatsApp",  bg:"#25D366", badge:12              },
+  { id:"news",      name:"News",      bg:"#fff",    border:true, badge:5  },
+  { id:"calendar",  name:"Calendar",  bg:"#fff",    border:true           },
+  { id:"settings",  name:"Settings",  bg:"#eee"                           },
+  { id:"camera",    name:"Camera",    bg:"#1C1C1E"                        },
+  { id:"photos",    name:"Photos",    bg:"#fff",    border:true           },
+  { id:"calculator",name:"Calculator",bg:"#1C1C1E"                        },
+  { id:"amazon",    name:"Amazon",    bg:"#131921"                        },
+  { id:"spotify",   name:"Spotify",   bg:"#191414"                        },
+  { id:"netflix",   name:"Netflix",   bg:"#141414"                        },
+  { id:"gmail",     name:"Gmail",     bg:"#fff",    border:true, badge:9  },
+  { id:"chess",     name:"Chess",     bg:"#739552", badge:2               },
 ];
 
-const GRID_APPS = APPS.filter(a => !a.dock);
-const DOCK_APPS = APPS.filter(a => a.dock);
+const DOCK_APPS = [
+  { id:"calls",    name:"Calls",    bg:"#34C759"               },
+  { id:"chrome",   name:"Chrome",   bg:"#fff",   border:true   },
+  { id:"messages", name:"Messages", bg:"#34C759", badge:2      },
+  { id:"eve",      name:"Eve",      bg:"#1A2E22", isEve:true   },
+];
 
 const ANALYSIS = [
   { text:"Reviewing app usage — last 14 days...", kind:"head" },
   { text:"Instagram: 1h 42m average daily",       kind:"data" },
   { text:"Pinterest: 38m average daily",          kind:"data" },
-  { text:"Google News: 29m average daily",        kind:"data" },
+  { text:"LinkedIn: 34m average daily",           kind:"data" },
+  { text:"YouTube: 51m average daily",            kind:"data" },
   { text:"WhatsApp: active throughout the day",   kind:"data" },
   { text:"",                                      kind:"gap"  },
   { text:"Cross-referencing with calendar...",    kind:"head" },
@@ -303,51 +316,223 @@ const ANALYSIS = [
   { text:"Notification interruptions: avg 47 per day",    kind:"warn" },
   { text:"Most frequent unlock trigger: Instagram",       kind:"warn" },
   { text:"",                                      kind:"gap"  },
-  { text:"I think I know what's happening.",      kind:"end"  },
+  { text:"Creating a personalised plan now.",     kind:"end"  },
 ];
 
-function AppIcon({ app, hidden, tapped }) {
-  const isGradient = app.bg && app.bg.startsWith("linear");
+
+function getIconContent(id) {
+  switch(id) {
+    case "maps": return (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#EA4335"/>
+        <path d="M5 9C5 5.13 8.13 2 12 2v14S5 14.25 5 9z" fill="#C5221F" opacity=".35"/>
+        <circle cx="12" cy="9" r="2.8" fill="white"/>
+      </svg>
+    );
+    case "amex": return <span style={{fontSize:"7.5px",fontWeight:800,color:"#fff",fontFamily:"Arial,sans-serif",letterSpacing:".5px"}}>AMEX</span>;
+    case "teams": return (
+      <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
+        <rect x="4" y="8" width="13" height="2.5" rx="1.2" fill="white"/>
+        <rect x="10" y="8" width="2.5" height="9.5" rx="1.2" fill="white"/>
+        <circle cx="18" cy="6.5" r="2.8" fill="#7B83EB"/>
+        <text x="18" y="8.9" textAnchor="middle" fontSize="4.5" fontWeight="bold" fill="white" fontFamily="Arial,sans-serif">t</text>
+      </svg>
+    );
+    case "duolingo": return <span style={{fontSize:"22px",lineHeight:1}}>🦉</span>;
+    case "linkedin": return <span style={{fontSize:"16px",fontWeight:900,color:"#fff",fontFamily:"'Arial Black',Arial,sans-serif",letterSpacing:"-1px"}}>in</span>;
+    case "youtube": return (
+      <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
+        <polygon points="9,4 22,10 9,16" fill="white"/>
+      </svg>
+    );
+    case "instagram": return (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <rect x="3" y="3" width="16" height="16" rx="5" stroke="white" strokeWidth="2"/>
+        <circle cx="11" cy="11" r="4" stroke="white" strokeWidth="2"/>
+        <circle cx="16.2" cy="5.8" r="1.2" fill="white"/>
+      </svg>
+    );
+    case "pinterest": return (
+      <svg width="22" height="26" viewBox="0 0 22 26" fill="none">
+        <text x="11" y="22" textAnchor="middle" fontSize="24" fontWeight="bold" fill="white" fontFamily="Georgia,serif">P</text>
+      </svg>
+    );
+    case "whatsapp": return (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9" fill="white" opacity=".93"/>
+        <path d="M8 9.5c.15-.32.6-1.1 1.05-1.3.45-.2.7 0 .8.15l.9 1.9c.1.2 0 .45-.18.6l-.5.5c-.1.1-.1.25 0 .35.45.75 1.1 1.4 1.85 1.85.1.1.25.1.35 0l.5-.5c.2-.18.45-.28.6-.18l1.9.9c.15.1.35.35.15.8-.2.45-1 .9-1.3 1.05-.3.15-1.6.15-3.6-1.85S7.85 9.8 8 9.5z" fill="#25D366"/>
+      </svg>
+    );
+    case "news": return (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect x="2" y="2" width="9" height="9" rx="1.5" fill="#EA4335"/>
+        <rect x="13" y="2" width="9" height="9" rx="1.5" fill="#4285F4"/>
+        <rect x="2" y="13" width="9" height="9" rx="1.5" fill="#FBBC04"/>
+        <rect x="13" y="13" width="9" height="9" rx="1.5" fill="#34A853"/>
+      </svg>
+    );
+    case "calendar": return (
+      <div style={{display:"flex",flexDirection:"column",alignItems:"center",width:"100%",height:"100%",overflow:"hidden"}}>
+        <div style={{background:"#4285F4",width:"100%",padding:"2px 0",textAlign:"center",flexShrink:0,borderRadius:"10px 10px 0 0"}}>
+          <span style={{fontSize:"6px",fontWeight:600,color:"#fff",letterSpacing:".05em",fontFamily:"Roboto,Arial,sans-serif",textTransform:"uppercase"}}>Tue</span>
+        </div>
+        <div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <span style={{fontSize:"17px",fontWeight:300,color:"#1C1C1E",fontFamily:"Roboto,Arial,sans-serif",lineHeight:1}}>17</span>
+        </div>
+      </div>
+    );
+    case "settings": return (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <circle cx="11" cy="11" r="3" stroke="#555" strokeWidth="2"/>
+        <path d="M11 2v2.5M11 17.5V20M2 11h2.5M17.5 11H20M4.9 4.9l1.8 1.8M15.3 15.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 15.3l-1.8 1.8" stroke="#555" strokeWidth="1.8" strokeLinecap="round"/>
+      </svg>
+    );
+    case "camera": return (
+      <svg width="24" height="20" viewBox="0 0 24 20" fill="none">
+        <path d="M21 16a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2.5l1.5-2h6l1.5 2H19a2 2 0 012 2v9z" stroke="white" strokeWidth="1.5" fill="none"/>
+        <circle cx="12" cy="11" r="3.2" stroke="white" strokeWidth="1.5"/>
+      </svg>
+    );
+    case "photos": return (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 3.5v3" stroke="#EA4335" strokeWidth="2.5" strokeLinecap="round"/>
+        <path d="M12 17.5v3" stroke="#34A853" strokeWidth="2.5" strokeLinecap="round"/>
+        <path d="M3.5 12h3" stroke="#FBBC04" strokeWidth="2.5" strokeLinecap="round"/>
+        <path d="M17.5 12h3" stroke="#4285F4" strokeWidth="2.5" strokeLinecap="round"/>
+        <path d="M6.2 6.2l2.1 2.1" stroke="#EA4335" strokeWidth="2.2" strokeLinecap="round"/>
+        <path d="M15.7 15.7l2.1 2.1" stroke="#34A853" strokeWidth="2.2" strokeLinecap="round"/>
+        <path d="M17.8 6.2l-2.1 2.1" stroke="#4285F4" strokeWidth="2.2" strokeLinecap="round"/>
+        <path d="M8.3 15.7l-2.1 2.1" stroke="#FBBC04" strokeWidth="2.2" strokeLinecap="round"/>
+        <circle cx="12" cy="12" r="2.5" fill="#BDBDBD"/>
+      </svg>
+    );
+    case "calculator": return (
+      <svg width="20" height="22" viewBox="0 0 20 22" fill="none">
+        <rect x="2" y="2" width="16" height="18" rx="2.5" fill="#3A3A3C"/>
+        <rect x="4" y="4" width="12" height="5" rx="1" fill="#FF9500"/>
+        <rect x="4" y="11" width="3.5" height="3" rx=".7" fill="#8E8E93"/>
+        <rect x="8.3" y="11" width="3.5" height="3" rx=".7" fill="#8E8E93"/>
+        <rect x="12.5" y="11" width="3.5" height="3" rx=".7" fill="#FF9500"/>
+        <rect x="4" y="15.5" width="3.5" height="3" rx=".7" fill="#8E8E93"/>
+        <rect x="8.3" y="15.5" width="3.5" height="3" rx=".7" fill="#8E8E93"/>
+        <rect x="12.5" y="15.5" width="3.5" height="3" rx=".7" fill="#FF3B30"/>
+      </svg>
+    );
+    case "amazon": return (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <text x="12" y="15" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#FF9900" fontFamily="Arial,sans-serif">a</text>
+        <path d="M5.5 18c3.5 2 10 2 13 0" stroke="#FF9900" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M18.5 17l1.8 1.2-1.2 1.2" stroke="#FF9900" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      </svg>
+    );
+    case "spotify": return (
+      <svg width="22" height="20" viewBox="0 0 22 20" fill="none">
+        <path d="M3 5c5-2.5 12-2.5 16 0" stroke="#1DB954" strokeWidth="2.2" strokeLinecap="round"/>
+        <path d="M4.5 10c4-2 9.5-2 13 0" stroke="#1DB954" strokeWidth="2.2" strokeLinecap="round"/>
+        <path d="M6 15c3-1.2 7-1.2 10 0" stroke="#1DB954" strokeWidth="2.2" strokeLinecap="round"/>
+      </svg>
+    );
+    case "netflix": return <span style={{fontSize:"17px",fontWeight:900,color:"#E50914",fontFamily:"'Arial Black',Arial,sans-serif",letterSpacing:"-1px"}}>N</span>;
+    case "gmail": return (
+      <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
+        <path d="M1.5 2.5L13 12.5 24.5 2.5" stroke="#EA4335" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+        <rect x="1" y="2" width="2" height="15" rx="1" fill="#34A853"/>
+        <rect x="23" y="2" width="2" height="15" rx="1" fill="#FBBC04"/>
+        <path d="M1 2L13 12.5 25 2 25 17.5 1 17.5Z" stroke="#4285F4" strokeWidth="1.2" fill="none"/>
+      </svg>
+    );
+    case "chess": return <span style={{fontSize:"21px",lineHeight:1}}>♟️</span>;
+    case "nhs": return <span style={{fontSize:"10px",fontWeight:900,color:"#fff",fontFamily:"Arial,sans-serif",letterSpacing:".5px"}}>NHS</span>;
+    case "calls": return (
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path d="M5.5 2.5c0 0-2 2-2 5.5C3.5 16.5 13 21 16.5 19l-2-4-3 1.5S9 15 7.5 13.5 6.5 9 6.5 9L8 6 5.5 2.5z" fill="white"/>
+      </svg>
+    );
+    case "chrome": return (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 12L12 4A8 8 0 0 1 18.93 16Z" fill="#EA4335"/>
+        <path d="M12 12L18.93 16A8 8 0 0 1 5.07 16Z" fill="#34A853"/>
+        <path d="M12 12L5.07 16A8 8 0 0 1 12 4Z" fill="#FBBC04"/>
+        <circle cx="12" cy="12" r="5" fill="white"/>
+        <circle cx="12" cy="12" r="3.5" fill="#4285F4"/>
+      </svg>
+    );
+    case "messages": return (
+      <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
+        <path d="M3 3h18a1.5 1.5 0 011.5 1.5v9A1.5 1.5 0 0121 15H7L3.5 19.5V4.5A1.5 1.5 0 013 3z" fill="white"/>
+        <circle cx="8" cy="9.5" r="1.3" fill="#34C759"/>
+        <circle cx="12" cy="9.5" r="1.3" fill="#34C759"/>
+        <circle cx="16" cy="9.5" r="1.3" fill="#34C759"/>
+      </svg>
+    );
+    case "eve": return <span style={{fontSize:"16px",fontWeight:700,color:"#7A9E82",fontFamily:"Georgia,serif",letterSpacing:"-0.5px"}}>E</span>;
+    default: return null;
+  }
+}
+
+function WeatherWidget() {
   return (
     <div style={{
-      display:"flex",flexDirection:"column",alignItems:"center",gap:3,
-      opacity:hidden?0:1,
-      transform:hidden?"scale(0.3)":tapped===app.id?"scale(0.88)":"scale(1)",
-      transition:"all .5s cubic-bezier(.34,1.2,.64,1)",
+      gridColumn:"span 2",gridRow:"span 2",
+      background:"rgba(255,255,255,0.15)",
+      border:"1px solid rgba(255,255,255,.2)",
+      borderRadius:16,padding:"10px 13px",
+      display:"flex",flexDirection:"column",justifyContent:"space-between",
+      boxShadow:"0 2px 10px rgba(0,0,0,.18)",
     }}>
-      <div style={{
-        width:42,height:42,borderRadius:11,
-        background:isGradient?app.bg:app.bg,
-        border:app.border?"1px solid rgba(0,0,0,.11)":"none",
-        boxShadow:"0 1.5px 6px rgba(0,0,0,.14),0 0 0 0.5px rgba(0,0,0,.05)",
-        display:"flex",alignItems:"center",justifyContent:"center",
-        position:"relative",overflow:"hidden",
-      }}>
-        {app.isEve && (
-          <span style={{
-            fontSize:"16px",fontWeight:700,color:"#7A9E82",
-            fontFamily:"Georgia,serif",letterSpacing:"-0.5px",
-          }}>E</span>
-        )}
-        {app.isCalendar && (
-          <div style={{ display:"flex",flexDirection:"column",alignItems:"center",gap:0 }}>
-            <div style={{ background:"#FF3B30",width:"100%",padding:"1px 0",textAlign:"center",position:"absolute",top:0,left:0,right:0,borderRadius:"11px 11px 0 0" }}>
-              <span style={{ fontSize:"6px",fontWeight:600,color:"#fff",letterSpacing:".05em",textTransform:"uppercase",fontFamily:"-apple-system,sans-serif" }}>Tue</span>
-            </div>
-            <span style={{ fontSize:"18px",fontWeight:400,color:"#1C1C1E",fontFamily:"-apple-system,sans-serif",marginTop:8 }}>17</span>
-          </div>
-        )}
-        {!app.isEve && !app.isCalendar && app.icon && (
-          <span style={{ fontSize:"20px",lineHeight:1 }}>{app.icon}</span>
-        )}
-        {!app.isEve && !app.isCalendar && !app.icon && app.abbr && (
-          <span style={{ fontSize:"13px",fontWeight:700,color:"#fff",fontFamily:"-apple-system,sans-serif" }}>{app.abbr}</span>
+      <div>
+        <div style={{fontFamily:"Roboto,Arial,sans-serif",fontSize:"9px",color:"rgba(255,255,255,.8)",fontWeight:400,marginBottom:2}}>London</div>
+        <div style={{fontFamily:"Roboto,Arial,sans-serif",fontSize:"33px",fontWeight:200,color:"#fff",lineHeight:1}}>12°</div>
+      </div>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
+        <div>
+          <div style={{fontFamily:"Roboto,Arial,sans-serif",fontSize:"9.5px",color:"rgba(255,255,255,.9)"}}>Cloudy</div>
+          <div style={{fontFamily:"Roboto,Arial,sans-serif",fontSize:"8px",color:"rgba(255,255,255,.55)"}}>H:15°  L:8°</div>
+        </div>
+        <span style={{fontSize:"22px",lineHeight:1}}>☁️</span>
+      </div>
+    </div>
+  );
+}
+
+function AppIcon({ app, hidden, tapped, badges, onDark }) {
+  const isGradient = app.bg && app.bg.startsWith("linear");
+  const badgeCount = (badges && badges[app.id] !== undefined) ? badges[app.id] : (app.badge || 0);
+  return (
+    <div style={{
+      display:"flex",flexDirection:"column",alignItems:"center",gap:2,
+      opacity:hidden?0:1,
+      transform:hidden?"scale(0.28)":tapped===app.id?"scale(0.88)":"scale(1)",
+      transition:"opacity .65s ease, transform .65s cubic-bezier(.34,1.2,.64,1)",
+    }}>
+      <div style={{ position:"relative" }}>
+        <div style={{
+          width:44,height:44,borderRadius:12,
+          background:app.bg,
+          border:app.border?"1px solid rgba(0,0,0,.1)":"none",
+          boxShadow:"0 2px 6px rgba(0,0,0,.15)",
+          display:"flex",alignItems:"center",justifyContent:"center",
+          overflow:"hidden",
+        }}>
+          {getIconContent(app.id)}
+        </div>
+        {badgeCount > 0 && (
+          <div style={{
+            position:"absolute",top:-3,right:-3,
+            minWidth:15,height:15,borderRadius:8,
+            background:"#FF3B30",border:"1.5px solid white",
+            display:"flex",alignItems:"center",justifyContent:"center",
+            fontFamily:"Roboto,Arial,sans-serif",fontSize:"7.5px",fontWeight:700,color:"#fff",
+            padding:"0 2.5px",transition:"all .35s ease",
+          }}>{badgeCount}</div>
         )}
       </div>
       <span style={{
-        fontFamily:"-apple-system,sans-serif",fontSize:"8.5px",
-        color:"#1C1C1E",lineHeight:1,
-        maxWidth:46,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textAlign:"center",
+        fontFamily:"Roboto,Arial,sans-serif",fontSize:"8px",
+        color: onDark ? "rgba(255,255,255,.88)" : "#1C1C1E",
+        lineHeight:1,
+        textShadow: onDark ? "0 1px 3px rgba(0,0,0,.55)" : "none",
+        maxWidth:48,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textAlign:"center",
       }}>{app.name}</span>
     </div>
   );
@@ -358,24 +543,24 @@ function Bubble({ side, text }) {
     <div style={{
       display:"flex",justifyContent:side==="user"?"flex-end":"flex-start",
       alignItems:"flex-end",gap:5,
-      animation:"fadeUp .28s ease both",flexShrink:0,
+      animation:"fadeUp .3s ease both",flexShrink:0,
     }}>
       {side==="eve" && (
-        <div style={{ width:24,height:24,borderRadius:"50%",flexShrink:0,background:"#1A2E22",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:2 }}>
+        <div style={{ width:26,height:26,borderRadius:8,flexShrink:0,background:"#1A2E22",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:2 }}>
           <span style={{ fontSize:"10px",fontWeight:700,color:"#7A9E82",fontFamily:"Georgia,serif" }}>E</span>
         </div>
       )}
       <div style={{
-        maxWidth:"74%",padding:"8px 11px",
-        borderRadius:side==="user"?"17px 17px 4px 17px":"17px 17px 17px 4px",
-        background:side==="user"?"#007AFF":"#E9E9EB",
+        maxWidth:"76%",padding:"8px 11px",
+        borderRadius:side==="user"?"18px 18px 4px 18px":"18px 18px 18px 4px",
+        background:side==="user"?"#1E75FF":"#EAEAEA",
         boxShadow:"0 1px 2px rgba(0,0,0,.07)",
       }}>
         <span style={{
-          fontFamily:"-apple-system,sans-serif",
+          fontFamily:"Roboto,Arial,sans-serif",
           fontSize:"11.5px",fontWeight:400,
           color:side==="user"?"#fff":"#1C1C1E",
-          lineHeight:1.42,display:"block",
+          lineHeight:1.44,display:"block",
         }}>{text}</span>
       </div>
     </div>
@@ -385,10 +570,10 @@ function Bubble({ side, text }) {
 function TypingDots() {
   return (
     <div style={{ display:"flex",alignItems:"flex-end",gap:5,animation:"fadeUp .28s ease both",flexShrink:0 }}>
-      <div style={{ width:24,height:24,borderRadius:"50%",flexShrink:0,background:"#1A2E22",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:2 }}>
+      <div style={{ width:26,height:26,borderRadius:8,flexShrink:0,background:"#1A2E22",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:2 }}>
         <span style={{ fontSize:"10px",fontWeight:700,color:"#7A9E82",fontFamily:"Georgia,serif" }}>E</span>
       </div>
-      <div style={{ padding:"10px 13px",borderRadius:"17px 17px 17px 4px",background:"#E9E9EB",display:"flex",gap:4,alignItems:"center" }}>
+      <div style={{ padding:"10px 13px",borderRadius:"18px 18px 18px 4px",background:"#EAEAEA",display:"flex",gap:4,alignItems:"center" }}>
         {[0,1,2].map(i => (
           <div key={i} style={{ width:5,height:5,borderRadius:"50%",background:"#8E8E93",animation:`fadeUp .55s ${i*.16}s ease infinite alternate` }}/>
         ))}
@@ -405,7 +590,7 @@ function EveDemo() {
   const [alines,    setAlines]    = useState([]);
   const [analysing, setAnalysing] = useState(false);
   const [hidden,    setHidden]    = useState(new Set());
-  const [notif,     setNotif]     = useState(null);
+  const [badges,    setBadges]    = useState({});
   const [grey,      setGrey]      = useState(false);
   const [mode,      setMode]      = useState("");
   const [clock,     setClock]     = useState("10:47");
@@ -413,6 +598,8 @@ function EveDemo() {
   const [blocked,   setBlocked]   = useState(false);
   const [tapped,    setTapped]    = useState(null);
   const idRef = useRef(0);
+
+  const INIT_BADGES = { whatsapp:12, gmail:9, linkedin:4, instagram:7, teams:3, news:5, messages:2, chess:2 };
 
   useEffect(() => {
     let dead = false;
@@ -422,33 +609,33 @@ function EveDemo() {
       setMsgs(prev => [...prev, { id: ++idRef.current, side, text }]);
     };
 
-    const typeIn = async (text, setter, ms = 38) => {
+    const typeIn = async (text, setter, ms = 52) => {
       let s = "";
       for (const ch of text) {
         if (dead) return;
         s += ch; setter(s);
-        await _sleep(ms + Math.random() * 12);
+        await _sleep(ms + Math.random() * 18);
       }
     };
 
-    const eveReply = async (text, wait = 720) => {
+    const eveReply = async (text, wait = 1000) => {
       if (dead) return;
       setTyping(true);
       await _sleep(wait);
       if (dead) return;
       setTyping(false);
       addMsg("eve", text);
-      await _sleep(200);
+      await _sleep(350);
     };
 
-    const userSend = async (text, ms = 40) => {
+    const userSend = async (text, ms = 50) => {
       if (dead) return;
       await typeIn(text, setInput, ms);
       if (dead) return;
-      await _sleep(160);
+      await _sleep(220);
       setInput("");
       addMsg("user", text);
-      await _sleep(300);
+      await _sleep(500);
     };
 
     const run = async () => {
@@ -456,83 +643,91 @@ function EveDemo() {
         // RESET
         setScreen("home"); setMsgs([]); setInput(""); setTyping(false);
         setAlines([]); setAnalysing(false); setHidden(new Set());
-        setNotif(null); setGrey(false); setMode("");
+        setBadges(INIT_BADGES); setGrey(false); setMode("");
         setClock("10:47"); setBq(""); setBlocked(false); setTapped(null);
         idRef.current = 0;
 
-        await _sleep(1400); if (dead) return;
+        await _sleep(1800); if (dead) return;
 
-        // Tap Eve
-        setTapped("eve"); await _sleep(160); setTapped(null); await _sleep(440);
-        setScreen("eve"); await _sleep(460); if (dead) return;
+        // Tap Eve in dock
+        setTapped("eve"); await _sleep(200); setTapped(null); await _sleep(600);
+        setScreen("eve"); await _sleep(700); if (dead) return;
 
-        // User types opening message
-        await userSend("I've been spending too much time on my phone and I need to change that.", 36);
+        // Scene 1
+        await userSend("I've been spending too much time on my phone. I want to change that.", 50);
         if (dead) return;
 
-        // Eve replies
-        await eveReply("Let me take a look at how you've been using it.", 700);
+        await eveReply("Let me take a look at how you've been using it.", 950);
         if (dead) return;
 
-        // Analysis
-        await _sleep(460); if (dead) return;
+        // Scene 2 — analysis
+        await _sleep(700); if (dead) return;
         setAnalysing(true); setAlines([]);
         for (const line of ANALYSIS) {
           if (dead) return;
-          await _sleep(line.kind==="gap"?440:line.kind==="end"?680:line.kind==="head"?400:295);
+          await _sleep(line.kind==="gap"?900:line.kind==="end"?950:line.kind==="head"?700:620);
           if (dead) return;
           setAlines(prev => [...prev, line]);
         }
-        await _sleep(1300); if (dead) return;
+        await _sleep(1800); if (dead) return;
         setAnalysing(false);
 
-        // Plan
-        setAlines([]); setMsgs([]); await _sleep(260); if (dead) return;
+        // Scene 3 — plan
+        setAlines([]); setMsgs([]); await _sleep(400); if (dead) return;
 
-        await eveReply("Based on your usage, I'd suggest blocking Instagram and Pinterest completely during work hours and keeping WhatsApp available. Want to go further?", 560);
+        await eveReply("Based on your usage, I'd suggest blocking Instagram, Pinterest, LinkedIn and YouTube completely during work hours and keeping WhatsApp available. Want to go further?", 850);
         if (dead) return;
-        await _sleep(1900);
+        await _sleep(2600);
 
-        await userSend("Yes. Most notifications are distracting too. And make the phone less tempting to pick up.", 35);
+        await userSend("Yes. Most notifications are distracting too. And make the phone less tempting to pick up.", 48);
         if (dead) return;
 
-        await eveReply("Got it. I can silence all notifications during work hours except your boss and partner. And I can switch your phone to greyscale — less colour, less pull.", 900);
+        await eveReply("Got it. I can silence all notifications during work hours except your boss and partner. And I can switch your phone to greyscale.", 1100);
         if (dead) return;
-        await _sleep(660);
+        await _sleep(950);
 
-        await eveReply("Let's try this for two weeks. I'll check in with you on the 14th to see if it's working. You can adjust anything before then.", 600);
+        await eveReply("Let's try this for two weeks. I'll check in with you on the 14th to see if it's working. You can adjust anything before then.", 850);
         if (dead) return;
-        await _sleep(1700);
+        await _sleep(2400);
 
-        await userSend("Let's do it.", 44);
+        await userSend("Let's do it.", 55);
         if (dead) return;
-        await _sleep(700);
+        await _sleep(900);
 
-        // Change
-        setScreen("change"); await _sleep(820); if (dead) return;
+        // Scene 4 — change
+        setScreen("change"); await _sleep(1000); if (dead) return;
 
-        setHidden(new Set(["instagram","pinterest"])); await _sleep(1200); if (dead) return;
+        // 6A — apps disappear
+        setHidden(new Set(["instagram","pinterest","linkedin","youtube"]));
+        await _sleep(1600); if (dead) return;
 
-        setNotif(47);
-        for (const n of [32, 18, 6, 2]) {
-          await _sleep(360); if (dead) return; setNotif(n);
-        }
-        await _sleep(360); if (dead) return;
+        // 6B — badge animation; WhatsApp 15 → 3, others clear
+        setBadges({ whatsapp:15, gmail:3, teams:1 });
+        await _sleep(650); if (dead) return;
+        setBadges({ whatsapp:10 });
+        await _sleep(650); if (dead) return;
+        setBadges({ whatsapp:6 });
+        await _sleep(650); if (dead) return;
+        setBadges({ whatsapp:3 });
+        await _sleep(650); if (dead) return;
 
-        setGrey(true); await _sleep(1400); if (dead) return;
-        setMode("Work mode. Until 6pm."); await _sleep(1200); if (dead) return;
+        // 6C — greyscale
+        setGrey(true); await _sleep(1800); if (dead) return;
+
+        // 6D — mode label
+        setMode("No distractions until 6pm."); await _sleep(1500); if (dead) return;
 
         // Time jump
-        setClock("11:23"); await _sleep(680); if (dead) return;
+        setClock("11:23"); await _sleep(900); if (dead) return;
 
         // Browser proof
         setScreen("browser"); setBq(""); setBlocked(false);
-        await _sleep(620); if (dead) return;
-        await typeIn("instagram", setBq, 55);
+        await _sleep(800); if (dead) return;
+        await typeIn("instagram.com", setBq, 65);
         if (dead) return;
-        await _sleep(500);
+        await _sleep(700);
         setBlocked(true);
-        await _sleep(3600); if (dead) return;
+        await _sleep(4500); if (dead) return;
         await _sleep(800);
       }
     };
@@ -541,73 +736,63 @@ function EveDemo() {
     return () => { dead = true; };
   }, []);
 
-  const tc = grey ? "#555" : "#1C1C1E";
+  const onHomeScreen = screen === "home" || screen === "change";
+  const tcStatus = grey ? "#777" : (onHomeScreen ? "#fff" : "#1C1C1E");
 
-  // ── STATUS BAR ── Dynamic Island style
+  // ── SAMSUNG ONE UI STATUS BAR ──────────────────────────────────
   const StatusBar = (
-    <div style={{ position:"relative",flexShrink:0,height:44 }}>
-      {/* Dynamic Island pill */}
+    <div style={{ position:"relative",flexShrink:0,height:38,display:"flex",alignItems:"center",padding:"0 16px" }}>
+      {/* Punch-hole camera */}
       <div style={{
-        position:"absolute",top:10,left:"50%",transform:"translateX(-50%)",
-        width:88,height:26,background:"#000",borderRadius:20,zIndex:10,
-        boxShadow:"0 0 0 1px rgba(0,0,0,.2)",
+        position:"absolute",top:9,left:"50%",transform:"translateX(-50%)",
+        width:9,height:9,background:"#000",borderRadius:"50%",zIndex:10,
       }}/>
-      {/* Left: time */}
-      <div style={{ position:"absolute",left:18,top:"50%",transform:"translateY(-50%)" }}>
-        <span style={{ fontFamily:"-apple-system,sans-serif",fontSize:"13px",fontWeight:700,color:tc,letterSpacing:"-.3px" }}>{clock}</span>
-      </div>
-      {/* Right: status icons */}
-      <div style={{ position:"absolute",right:14,top:"50%",transform:"translateY(-50%)",display:"flex",gap:5,alignItems:"center" }}>
-        {/* Signal */}
-        <div style={{ display:"flex",gap:1.5,alignItems:"flex-end",height:10 }}>
-          {[4,6,8,10].map((h,i) => <div key={i} style={{ width:2.5,height:h,borderRadius:1,background:tc,opacity:i<3?1:.3 }}/>)}
+      <span style={{ fontFamily:"Roboto,Arial,sans-serif",fontSize:"12px",fontWeight:400,color:tcStatus,letterSpacing:".1px" }}>{clock}</span>
+      <div style={{ marginLeft:"auto",display:"flex",gap:5,alignItems:"center" }}>
+        <div style={{ display:"flex",gap:1.5,alignItems:"flex-end",height:9 }}>
+          {[3,5,7,9].map((h,i) => <div key={i} style={{ width:2.5,height:h,borderRadius:.8,background:tcStatus,opacity:i<3?1:.28 }}/>)}
         </div>
-        {/* WiFi */}
-        <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
-          <path d="M6.5 8.5a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8z" fill={tc}/>
-          <path d="M3.6 6.1a4.1 4.1 0 0 1 5.8 0" stroke={tc} strokeWidth="1.1" strokeLinecap="round" fill="none"/>
-          <path d="M1 3.5A7.5 7.5 0 0 1 12 3.5" stroke={tc} strokeWidth="1.1" strokeLinecap="round" fill="none" opacity=".4"/>
+        <svg width="12" height="9" viewBox="0 0 13 10" fill="none">
+          <path d="M6.5 8.2a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8z" fill={tcStatus}/>
+          <path d="M3.6 5.8a4.1 4.1 0 0 1 5.8 0" stroke={tcStatus} strokeWidth="1.1" strokeLinecap="round" fill="none"/>
+          <path d="M1 3.2A7.5 7.5 0 0 1 12 3.2" stroke={tcStatus} strokeWidth="1.1" strokeLinecap="round" fill="none" opacity=".5"/>
         </svg>
-        {/* Battery */}
-        <div style={{ display:"flex",alignItems:"center",gap:1 }}>
-          <div style={{ width:20,height:10,borderRadius:2.5,border:`1.2px solid ${tc}`,padding:"1.5px 1.5px",opacity:.8 }}>
-            <div style={{ width:"78%",height:"100%",borderRadius:1,background:tc }}/>
+        <div style={{ display:"flex",alignItems:"center" }}>
+          <div style={{ width:19,height:9,borderRadius:2,border:`1.1px solid ${tcStatus}88`,padding:"1.5px" }}>
+            <div style={{ width:"78%",height:"100%",borderRadius:1,background:tcStatus }}/>
           </div>
-          <div style={{ width:1.5,height:4.5,borderRadius:"0 1px 1px 0",background:tc,opacity:.4 }}/>
+          <div style={{ width:1.5,height:4,borderRadius:"0 1px 1px 0",background:tcStatus,opacity:.5 }}/>
         </div>
       </div>
     </div>
   );
 
   const HomeScreen = (
-    <div style={{ flex:1,display:"flex",flexDirection:"column",padding:"2px 14px 0" }}>
-      <div style={{ flex:1,display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"10px 2px",alignContent:"start",paddingTop:2 }}>
-        {GRID_APPS.map(a => <AppIcon key={a.id} app={a} hidden={false} tapped={tapped}/>)}
-      </div>
-      {/* Dock */}
+    <div style={{ flex:1,display:"flex",flexDirection:"column",padding:"4px 12px 0" }}>
       <div style={{
-        margin:"6px 4px 8px",
-        background:"rgba(255,255,255,0.72)",
-        backdropFilter:"blur(20px)",
-        borderRadius:22,
-        padding:"8px 10px",
-        display:"flex",justifyContent:"space-around",
-        boxShadow:"0 2px 12px rgba(0,0,0,.08),inset 0 0 0 0.5px rgba(255,255,255,.6)",
+        flex:1,display:"grid",
+        gridTemplateColumns:"repeat(4,1fr)",
+        gap:"9px 4px",alignContent:"start",paddingTop:2,
       }}>
-        {DOCK_APPS.map(a => <AppIcon key={a.id} app={a} hidden={false} tapped={tapped}/>)}
+        <WeatherWidget/>
+        {GRID_APPS.map(a => <AppIcon key={a.id} app={a} hidden={false} tapped={tapped} badges={badges} onDark={!grey}/>)}
+      </div>
+      {/* Samsung dock — clean divider, no frosted card */}
+      <div style={{ borderTop:"1px solid rgba(255,255,255,.12)",padding:"9px 6px 11px",display:"flex",justifyContent:"space-around" }}>
+        {DOCK_APPS.map(a => <AppIcon key={a.id} app={a} hidden={false} tapped={tapped} badges={badges} onDark={!grey}/>)}
       </div>
     </div>
   );
 
   const EveScreen = (
-    <div style={{ flex:1,display:"flex",flexDirection:"column",overflow:"hidden" }}>
-      <div style={{ padding:"5px 14px 7px",flexShrink:0,borderBottom:"1px solid rgba(0,0,0,.07)",background:"#F9F9F9",display:"flex",alignItems:"center",gap:10 }}>
-        <div style={{ width:30,height:30,borderRadius:"50%",background:"#1A2E22",display:"flex",alignItems:"center",justifyContent:"center" }}>
+    <div style={{ flex:1,display:"flex",flexDirection:"column",overflow:"hidden",background:"#fff" }}>
+      <div style={{ padding:"5px 14px 7px",flexShrink:0,borderBottom:"1px solid rgba(0,0,0,.07)",background:"#FAFAFA",display:"flex",alignItems:"center",gap:10 }}>
+        <div style={{ width:30,height:30,borderRadius:8,background:"#1A2E22",display:"flex",alignItems:"center",justifyContent:"center" }}>
           <span style={{ fontSize:"11px",fontWeight:700,color:"#7A9E82",fontFamily:"Georgia,serif" }}>E</span>
         </div>
         <div>
-          <div style={{ fontFamily:"-apple-system,sans-serif",fontWeight:600,fontSize:"13px",color:"#1C1C1E" }}>Eve</div>
-          <div style={{ fontFamily:"-apple-system,sans-serif",fontSize:"10px",color:analysing?"#FF9500":"#34C759" }}>
+          <div style={{ fontFamily:"Roboto,Arial,sans-serif",fontWeight:500,fontSize:"13px",color:"#1C1C1E" }}>Eve</div>
+          <div style={{ fontFamily:"Roboto,Arial,sans-serif",fontSize:"10px",color:analysing?"#FF9500":"#34C759" }}>
             {analysing?"Analysing…":"Active now"}
           </div>
         </div>
@@ -617,17 +802,17 @@ function EveDemo() {
           </div>
         )}
       </div>
-      <div style={{ flex:1,overflow:"hidden",position:"relative" }}>
+      <div style={{ flex:1,overflow:"hidden",position:"relative",background:"#fff" }}>
         <div style={{
           position:"absolute",bottom:0,left:0,right:0,
           display:"flex",flexDirection:"column",
           padding:analysing?"10px 14px":"8px 12px",
-          gap:analysing?2:8,
+          gap:analysing?3:8,
         }}>
           {analysing ? (
-            alines.slice(-15).map((l, i) => (
+            alines.slice(-14).map((l, i) => (
               l.kind==="gap" ? (
-                <div key={i} style={{ height:5 }}/>
+                <div key={i} style={{ height:4 }}/>
               ) : (
                 <div key={i} style={{
                   fontFamily:"ui-monospace,'SF Mono',Menlo,monospace",
@@ -636,7 +821,7 @@ function EveDemo() {
                   color:l.kind==="end"?"#1C1C1E":l.kind==="warn"?"#E53935":l.kind==="head"?"#8E8E93":"#3C3C43",
                   fontWeight:l.kind==="end"?600:400,
                   paddingLeft:(l.kind==="data"||l.kind==="warn")?10:0,
-                  animation:"fadeUp .22s ease both",
+                  animation:"fadeUp .3s ease both",
                 }}>{l.text}</div>
               )
             ))
@@ -649,20 +834,20 @@ function EveDemo() {
         </div>
       </div>
       {!analysing && (
-        <div style={{ padding:"5px 10px 8px",flexShrink:0,borderTop:"1px solid rgba(0,0,0,.07)",background:"#F9F9F9",display:"flex",alignItems:"center",gap:6 }}>
+        <div style={{ padding:"5px 10px 8px",flexShrink:0,borderTop:"1px solid rgba(0,0,0,.07)",background:"#FAFAFA",display:"flex",alignItems:"center",gap:6 }}>
           <div style={{
-            flex:1,background:"#fff",border:"1px solid #D1D1D6",borderRadius:18,
-            padding:"6px 12px",minHeight:29,
-            fontFamily:"-apple-system,sans-serif",fontSize:"11px",
-            color:input?"#1C1C1E":"#C7C7CC",
+            flex:1,background:"#fff",border:"1px solid #D1D1D6",borderRadius:22,
+            padding:"7px 12px",minHeight:30,
+            fontFamily:"Roboto,Arial,sans-serif",fontSize:"11px",
+            color:input?"#1C1C1E":"#B0B0B8",
             display:"flex",alignItems:"center",lineHeight:1.4,
           }}>
             <span style={{ flex:1 }}>{input||"Message Eve…"}</span>
-            {input && <span style={{ display:"inline-block",width:1.5,height:"0.85em",background:"#007AFF",marginLeft:1,animation:"blink 1s step-end infinite" }}/>}
+            {input && <span style={{ display:"inline-block",width:1.5,height:"0.85em",background:"#1E75FF",marginLeft:1,animation:"blink 1s step-end infinite" }}/>}
           </div>
           <div style={{
-            width:28,height:28,borderRadius:"50%",flexShrink:0,
-            background:input?"#007AFF":"#E9E9EB",
+            width:30,height:30,borderRadius:"50%",flexShrink:0,
+            background:input?"#1E75FF":"#E9E9EB",
             display:"flex",alignItems:"center",justifyContent:"center",
             transition:"background .2s ease",
           }}>
@@ -674,56 +859,55 @@ function EveDemo() {
   );
 
   const ChangeScreen = (
-    <div style={{ flex:1,display:"flex",flexDirection:"column",padding:"0 14px" }}>
+    <div style={{ flex:1,display:"flex",flexDirection:"column",padding:"0 12px",position:"relative" }}>
+      {/* Floating mode label — does not affect layout */}
       {mode && (
-        <div style={{ padding:"5px 0",borderBottom:"1px solid rgba(0,0,0,.05)",marginBottom:4,flexShrink:0,animation:"fadeUp .4s ease both" }}>
-          <span style={{ fontFamily:"-apple-system,sans-serif",fontSize:"10px",fontWeight:600,color:grey?"#3C3C43":"#2E7D32" }}>{mode}</span>
-        </div>
-      )}
-      <div style={{ flex:1,display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"10px 2px",alignContent:"start",paddingTop:4 }}>
-        {GRID_APPS.map(a => <AppIcon key={a.id} app={a} hidden={hidden.has(a.id)} tapped={tapped}/>)}
-      </div>
-      {notif !== null && (
-        <div style={{ padding:"5px 2px",borderTop:"1px solid rgba(0,0,0,.05)",display:"flex",alignItems:"center",gap:6,flexShrink:0 }}>
-          <span style={{ fontFamily:"-apple-system,sans-serif",fontSize:"9px",color:"#8E8E93",flex:1 }}>Notifications today</span>
-          <div style={{
-            background:notif>10?"#FF3B30":notif>3?"#FF9500":"#34C759",
-            borderRadius:8,padding:"1px 7px",
-            fontFamily:"-apple-system,sans-serif",fontSize:"10px",fontWeight:700,color:"#fff",
-            transition:"all .3s ease",minWidth:24,textAlign:"center",
-          }}>{notif}</div>
+        <div style={{
+          position:"absolute",top:6,left:12,right:12,zIndex:10,
+          background:grey?"rgba(60,60,60,.82)":"rgba(0,0,0,.52)",
+          backdropFilter:"blur(8px)",
+          borderRadius:10,padding:"6px 10px",
+          animation:"fadeUp .5s ease both",
+          pointerEvents:"none",
+        }}>
+          <span style={{ fontFamily:"Roboto,Arial,sans-serif",fontSize:"10px",fontWeight:500,color:"rgba(255,255,255,.92)" }}>{mode}</span>
         </div>
       )}
       <div style={{
-        margin:"6px 4px 8px",
-        background:"rgba(255,255,255,0.72)",
-        backdropFilter:"blur(20px)",
-        borderRadius:22,padding:"8px 10px",
-        display:"flex",justifyContent:"space-around",
-        boxShadow:"0 2px 12px rgba(0,0,0,.08),inset 0 0 0 0.5px rgba(255,255,255,.6)",
+        flex:1,display:"grid",
+        gridTemplateColumns:"repeat(4,1fr)",
+        gap:"9px 4px",alignContent:"start",paddingTop:4,
       }}>
-        {DOCK_APPS.map(a => <AppIcon key={a.id} app={a} hidden={false} tapped={tapped}/>)}
+        <WeatherWidget/>
+        {GRID_APPS.map(a => <AppIcon key={a.id} app={a} hidden={hidden.has(a.id)} tapped={tapped} badges={badges} onDark={!grey}/>)}
+      </div>
+      <div style={{ borderTop:"1px solid rgba(255,255,255,.12)",padding:"9px 6px 11px",display:"flex",justifyContent:"space-around" }}>
+        {DOCK_APPS.map(a => <AppIcon key={a.id} app={a} hidden={false} tapped={tapped} badges={badges} onDark={!grey}/>)}
       </div>
     </div>
   );
 
   const BrowserScreen = (
-    <div style={{ flex:1,display:"flex",flexDirection:"column" }}>
-      <div style={{ padding:"5px 12px 8px",flexShrink:0,borderBottom:"1px solid rgba(0,0,0,.07)",background:"#F9F9F9" }}>
-        <div style={{ background:"#E5E5EA",borderRadius:10,padding:"6px 12px",display:"flex",alignItems:"center",gap:6 }}>
-          <div style={{ width:9,height:9,borderRadius:"50%",background:"#8E8E93",opacity:.6,flexShrink:0 }}/>
-          <span style={{ fontFamily:"-apple-system,sans-serif",fontSize:"11px",color:"#1C1C1E",flex:1 }}>
-            {bq || <span style={{ color:"#8E8E93" }}>Search or website name</span>}
-            {bq && !blocked && <span style={{ display:"inline-block",width:1.5,height:"0.85em",background:"#007AFF",marginLeft:1,animation:"blink 1s step-end infinite" }}/>}
+    <div style={{ flex:1,display:"flex",flexDirection:"column",background:"#fff" }}>
+      <div style={{ padding:"5px 10px 8px",flexShrink:0,borderBottom:"1px solid rgba(0,0,0,.07)",background:"#F8F9FA" }}>
+        <div style={{ background:"#F1F3F4",borderRadius:20,padding:"7px 12px",display:"flex",alignItems:"center",gap:7 }}>
+          <svg width="9" height="9" viewBox="0 0 18 18" fill="none">
+            <path d="M9 1a8 8 0 100 16A8 8 0 009 1z" stroke="#5F6368" strokeWidth="2" fill="none"/>
+            <line x1="9" y1="6" x2="9" y2="9.5" stroke="#5F6368" strokeWidth="2" strokeLinecap="round"/>
+            <circle cx="9" cy="12.5" r="1.2" fill="#5F6368"/>
+          </svg>
+          <span style={{ fontFamily:"Roboto,Arial,sans-serif",fontSize:"11px",color:"#1C1C1E",flex:1 }}>
+            {bq || <span style={{ color:"#9AA0A6" }}>Search or type URL</span>}
+            {bq && !blocked && <span style={{ display:"inline-block",width:1.5,height:"0.85em",background:"#1A73E8",marginLeft:1,animation:"blink 1s step-end infinite" }}/>}
           </span>
         </div>
       </div>
       {blocked ? (
-        <div style={{ flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:20,gap:14,animation:"fadeUp .4s ease both" }}>
+        <div style={{ flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:20,gap:14,animation:"fadeUp .5s ease both" }}>
           <div style={{ width:50,height:50,borderRadius:14,background:"#F2F2F7",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"22px" }}>🔒</div>
           <div style={{ textAlign:"center" }}>
-            <div style={{ fontFamily:"-apple-system,sans-serif",fontWeight:600,fontSize:"14px",color:"#1C1C1E",marginBottom:6,lineHeight:1.3 }}>Instagram is off until 6pm.</div>
-            <div style={{ fontFamily:"-apple-system,sans-serif",fontSize:"12px",color:"#8E8E93",lineHeight:1.5 }}>Enjoy the focus.</div>
+            <div style={{ fontFamily:"Roboto,Arial,sans-serif",fontWeight:500,fontSize:"13px",color:"#1C1C1E",marginBottom:6,lineHeight:1.3 }}>Instagram is off until 6pm.</div>
+            <div style={{ fontFamily:"Roboto,Arial,sans-serif",fontSize:"11.5px",color:"#8E8E93",lineHeight:1.5 }}>Enjoy the focus.</div>
           </div>
         </div>
       ) : (
@@ -734,44 +918,43 @@ function EveDemo() {
     </div>
   );
 
-  // Phone wallpaper gradient (light, clean)
+  // Samsung Galaxy wallpaper — deep blue gradient
   const wallpaperStyle = {
     background: grey
-      ? "linear-gradient(160deg,#d0d0d0 0%,#e8e8e8 100%)"
-      : "linear-gradient(160deg,#dce9ff 0%,#f0e6ff 50%,#ffe0d5 100%)",
-    transition:"background 1.45s ease",
+      ? "linear-gradient(160deg,#c8ccd6 0%,#e2e4ea 100%)"
+      : "linear-gradient(160deg,#1a2a5e 0%,#1e3a6e 30%,#2d5ba8 60%,#4a86c8 100%)",
+    transition:"background 1.8s ease",
   };
 
   return (
     <div style={{
-      width:262,height:536,flexShrink:0,
-      background:"#1C1C1E",
-      borderRadius:52,
-      padding:"0 5px 5px",
+      width:258,height:530,flexShrink:0,
+      background:"#1A1A1A",
+      borderRadius:40,
+      padding:"0 4px 4px",
       boxShadow:[
-        "0 0 0 1px rgba(255,255,255,.12)",
-        "0 0 0 2px #000",
-        "inset 0 0 0 1px rgba(255,255,255,.06)",
-        "0 28px 72px rgba(0,0,0,.48)",
-        "0 4px 12px rgba(0,0,0,.3)",
+        "0 0 0 1px rgba(255,255,255,.08)",
+        "0 0 0 2.5px #000",
+        "inset 0 0 0 1px rgba(255,255,255,.04)",
+        "0 24px 60px rgba(0,0,0,.52)",
+        "0 4px 16px rgba(0,0,0,.28)",
       ].join(","),
       position:"relative",
     }}>
-      {/* Side buttons */}
-      <div style={{ position:"absolute",right:-3,top:88,width:3,height:28,background:"#2C2C2E",borderRadius:"0 2px 2px 0",boxShadow:"inset -1px 0 1px rgba(0,0,0,.4)" }}/>
-      <div style={{ position:"absolute",left:-3,top:78,width:3,height:22,background:"#2C2C2E",borderRadius:"2px 0 0 2px",boxShadow:"inset 1px 0 1px rgba(0,0,0,.4)" }}/>
-      <div style={{ position:"absolute",left:-3,top:110,width:3,height:36,background:"#2C2C2E",borderRadius:"2px 0 0 2px",boxShadow:"inset 1px 0 1px rgba(0,0,0,.4)" }}/>
-      <div style={{ position:"absolute",left:-3,top:155,width:3,height:36,background:"#2C2C2E",borderRadius:"2px 0 0 2px",boxShadow:"inset 1px 0 1px rgba(0,0,0,.4)" }}/>
+      {/* Samsung power button — right side */}
+      <div style={{ position:"absolute",right:-3,top:70,width:3,height:42,background:"#2A2A2A",borderRadius:"0 2px 2px 0",boxShadow:"inset -1px 0 1px rgba(0,0,0,.5)" }}/>
+      {/* Volume up */}
+      <div style={{ position:"absolute",left:-3,top:86,width:3,height:30,background:"#2A2A2A",borderRadius:"2px 0 0 2px",boxShadow:"inset 1px 0 1px rgba(0,0,0,.5)" }}/>
+      {/* Volume down */}
+      <div style={{ position:"absolute",left:-3,top:126,width:3,height:30,background:"#2A2A2A",borderRadius:"2px 0 0 2px",boxShadow:"inset 1px 0 1px rgba(0,0,0,.5)" }}/>
 
-      {/* Screen */}
       <div style={{
         width:"100%",height:"100%",
-        borderRadius:47,
-        overflow:"hidden",
+        borderRadius:36,overflow:"hidden",
         display:"flex",flexDirection:"column",
         ...wallpaperStyle,
-        filter:grey?"saturate(0.06) brightness(0.95)":"none",
-        transition:"filter 1.45s ease, background 1.45s ease",
+        filter:grey?"saturate(0.08) brightness(0.92)":"none",
+        transition:"filter 1.8s ease",
       }}>
         {StatusBar}
         <div style={{ flex:1,overflow:"hidden",display:"flex",flexDirection:"column" }}>
@@ -780,9 +963,9 @@ function EveDemo() {
           {screen==="change"  && ChangeScreen}
           {screen==="browser" && BrowserScreen}
         </div>
-        {/* Home indicator */}
-        <div style={{ height:22,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-          <div style={{ width:110,height:4.5,borderRadius:2.5,background:tc,opacity:.2 }}/>
+        {/* Samsung home indicator */}
+        <div style={{ height:18,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+          <div style={{ width:80,height:3.5,borderRadius:2,background:tcStatus,opacity:.2 }}/>
         </div>
       </div>
     </div>
@@ -797,26 +980,22 @@ function Differentiation() {
       <div style={{ maxWidth:900,margin:"0 auto" }}>
         <div className="reveal" style={{ marginBottom:"4rem" }}>
           <div style={{ fontFamily:F.mono,fontSize:".72rem",letterSpacing:".2em",textTransform:"uppercase",color:C.sage,marginBottom:".75rem",fontWeight:"bold" }}>Meet Eve</div>
-          <h2 style={{ fontFamily:F.display,fontSize:"clamp(2rem,4vw,3.2rem)",fontWeight:400,lineHeight:1.15,color:C.forest }}>
-            See how it works.<br/>
-            <em style={{ fontStyle:"italic",color:C.amber }}>In your own words.</em>
-          </h2>
         </div>
         <div className="reveal demo-layout" data-d=".1" style={{ display:"flex",gap:"3.5rem",alignItems:"flex-start",flexWrap:"wrap" }}>
           <EveDemo/>
           <div style={{ flex:1,minWidth:220,paddingTop:"1.5rem" }}>
             <div style={{ display:"flex",flexDirection:"column",gap:"1.8rem" }}>
               {[
-                { n:"01",title:"Just tell Eve.",body:"No forms. No settings. Eve listens in plain language, then gets to work." },
-                { n:"02",title:"It already knows your patterns.",body:"Before it says anything, Eve reads your usage. The plan is built on evidence, not guesswork." },
-                { n:"03",title:"Eve recommends. You decide.",body:"A considered position, not a menu. You adjust, confirm, and it's set for two weeks." },
-                { n:"04",title:"The phone actually changes.",body:"Apps disappear. Colour drains. The browser blocks. Not a notification — the phone keeps its word." },
+                { n:"01",title:"Tell Eve what you want to achieve in plain language.",body:"Eve listens in plain language, then gets to work." },
+                { n:"02",title:"Eve analyses your data usage and comes up with a plan.",body:"" },
+                { n:"03",title:"You adjust and implement it.",body:"" },
+                { n:"04",title:"The phone changes.",body:"" },
               ].map((item,i) => (
                 <div key={i} style={{ display:"flex",gap:".75rem" }}>
                   <span style={{ fontFamily:F.mono,fontSize:".6rem",color:C.sage,fontWeight:"bold",paddingTop:".2rem",flexShrink:0 }}>{item.n}</span>
                   <div>
-                    <div style={{ fontFamily:F.display,fontWeight:500,fontSize:"1rem",color:C.forest,marginBottom:".35rem" }}>{item.title}</div>
-                    <p style={{ fontFamily:F.sans,fontWeight:300,fontSize:".85rem",color:C.stone,lineHeight:1.75 }}>{item.body}</p>
+                    <div style={{ fontFamily:F.display,fontWeight:500,fontSize:"1rem",color:C.forest,marginBottom:item.body?".35rem":0 }}>{item.title}</div>
+                    {item.body && <p style={{ fontFamily:F.sans,fontWeight:300,fontSize:".85rem",color:C.stone,lineHeight:1.75 }}>{item.body}</p>}
                   </div>
                 </div>
               ))}
@@ -986,7 +1165,7 @@ function Survey() {
             You're on the list.
           </h2>
           <p style={{ fontFamily:F.sans,fontWeight:300,fontSize:"1rem",color:`${C.offwhite}77`,lineHeight:1.85,maxWidth:400,margin:"0 auto" }}>
-            We're reviewing applications and will be in touch if you're selected for the first cohort. We'll reach out via email within two weeks.
+            We will be in touch!
           </p>
         </div>
       </section>
@@ -1141,4 +1320,3 @@ export default function App() {
     </div>
   );
 }
-
