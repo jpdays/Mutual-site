@@ -518,12 +518,12 @@ function AppIcon({ app, hidden, tapped, badges, onDark }) {
         </div>
         {badgeCount > 0 && (
           <div style={{
-            position:"absolute",top:-3,right:-3,
-            minWidth:15,height:15,borderRadius:8,
+            position:"absolute",top:-4,right:-4,
+            minWidth:17,height:17,borderRadius:9,
             background:"#FF3B30",border:"1.5px solid white",
             display:"flex",alignItems:"center",justifyContent:"center",
-            fontFamily:"Roboto,Arial,sans-serif",fontSize:"7.5px",fontWeight:700,color:"#fff",
-            padding:"0 2.5px",transition:"all .35s ease",
+            fontFamily:"Roboto,Arial,sans-serif",fontSize:"9px",fontWeight:700,color:"#fff",
+            padding:"0 3px",transition:"all .35s ease",letterSpacing:"-0.3px",
           }}>{badgeCount}</div>
         )}
       </div>
@@ -599,7 +599,7 @@ function EveDemo() {
   const [tapped,    setTapped]    = useState(null);
   const idRef = useRef(0);
 
-  const INIT_BADGES = { whatsapp:12, gmail:9, linkedin:4, instagram:7, teams:3, news:5, messages:2, chess:2 };
+  const INIT_BADGES = { whatsapp:150, instagram:20, news:12, linkedin:30, gmail:9, teams:3, messages:2, chess:2 };
 
   useEffect(() => {
     let dead = false;
@@ -660,8 +660,8 @@ function EveDemo() {
         await eveReply("Let me take a look at how you've been using it.", 950);
         if (dead) return;
 
-        // Scene 2 — analysis
-        await _sleep(700); if (dead) return;
+        // Scene 2 — analysis (longer dwell so user reads Eve's reply)
+        await _sleep(2600); if (dead) return;
         setAnalysing(true); setAlines([]);
         for (const line of ANALYSIS) {
           if (dead) return;
@@ -672,8 +672,8 @@ function EveDemo() {
         await _sleep(1800); if (dead) return;
         setAnalysing(false);
 
-        // Scene 3 — plan
-        setAlines([]); setMsgs([]); await _sleep(400); if (dead) return;
+        // Scene 3 — plan (keep existing msgs so conversation is continuous)
+        setAlines([]); await _sleep(400); if (dead) return;
 
         await eveReply("Based on your usage, I'd suggest blocking Instagram, Pinterest, LinkedIn and YouTube completely during work hours and keeping WhatsApp available. Want to go further?", 850);
         if (dead) return;
@@ -692,24 +692,24 @@ function EveDemo() {
 
         await userSend("Let's do it.", 55);
         if (dead) return;
-        await _sleep(900);
+        await _sleep(3200);
 
         // Scene 4 — change
-        setScreen("change"); await _sleep(1000); if (dead) return;
+        setScreen("change"); await _sleep(1400); if (dead) return;
 
         // 6A — apps disappear
         setHidden(new Set(["instagram","pinterest","linkedin","youtube"]));
         await _sleep(1600); if (dead) return;
 
-        // 6B — badge animation; WhatsApp 15 → 3, others clear
-        setBadges({ whatsapp:15, gmail:3, teams:1 });
-        await _sleep(650); if (dead) return;
-        setBadges({ whatsapp:10 });
-        await _sleep(650); if (dead) return;
+        // 6B — badge drop: dramatic multi-step reduction
+        setBadges({ whatsapp:80, instagram:12, linkedin:18, news:7, gmail:5, teams:2 });
+        await _sleep(700); if (dead) return;
+        setBadges({ whatsapp:40, instagram:5, linkedin:6, news:3, gmail:2, teams:1 });
+        await _sleep(700); if (dead) return;
+        setBadges({ whatsapp:18, instagram:1, linkedin:2, news:1, gmail:1 });
+        await _sleep(700); if (dead) return;
         setBadges({ whatsapp:6 });
-        await _sleep(650); if (dead) return;
-        setBadges({ whatsapp:3 });
-        await _sleep(650); if (dead) return;
+        await _sleep(700); if (dead) return;
 
         // 6C — greyscale
         setGrey(true); await _sleep(1800); if (dead) return;
@@ -720,9 +720,12 @@ function EveDemo() {
         // Time jump
         setClock("11:23"); await _sleep(900); if (dead) return;
 
+        // Tap Chrome in dock — visible touch reaction
+        setTapped("chrome"); await _sleep(300); setTapped(null); await _sleep(400);
+
         // Browser proof
         setScreen("browser"); setBq(""); setBlocked(false);
-        await _sleep(800); if (dead) return;
+        await _sleep(1000); if (dead) return;
         await typeIn("instagram.com", setBq, 65);
         if (dead) return;
         await _sleep(700);
@@ -889,17 +892,24 @@ function EveDemo() {
 
   const BrowserScreen = (
     <div style={{ flex:1,display:"flex",flexDirection:"column",background:"#fff" }}>
-      <div style={{ padding:"5px 10px 8px",flexShrink:0,borderBottom:"1px solid rgba(0,0,0,.07)",background:"#F8F9FA" }}>
-        <div style={{ background:"#F1F3F4",borderRadius:20,padding:"7px 12px",display:"flex",alignItems:"center",gap:7 }}>
-          <svg width="9" height="9" viewBox="0 0 18 18" fill="none">
-            <path d="M9 1a8 8 0 100 16A8 8 0 009 1z" stroke="#5F6368" strokeWidth="2" fill="none"/>
-            <line x1="9" y1="6" x2="9" y2="9.5" stroke="#5F6368" strokeWidth="2" strokeLinecap="round"/>
-            <circle cx="9" cy="12.5" r="1.2" fill="#5F6368"/>
+      {/* Chrome address bar */}
+      <div style={{ padding:"6px 10px 7px",flexShrink:0,borderBottom:"1px solid rgba(0,0,0,.08)",background:"#F8F9FA",display:"flex",alignItems:"center",gap:6 }}>
+        {/* Chrome icon pill */}
+        <div style={{ width:20,height:20,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center" }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M12 12L12 4A8 8 0 0 1 18.93 16Z" fill="#EA4335"/>
+            <path d="M12 12L18.93 16A8 8 0 0 1 5.07 16Z" fill="#34A853"/>
+            <path d="M12 12L5.07 16A8 8 0 0 1 12 4Z" fill="#FBBC04"/>
+            <circle cx="12" cy="12" r="5" fill="white"/>
+            <circle cx="12" cy="12" r="3.5" fill="#4285F4"/>
           </svg>
+        </div>
+        <div style={{ flex:1,background:"#fff",borderRadius:20,padding:"5px 10px",border:"1px solid #E0E0E0",display:"flex",alignItems:"center",gap:5,minHeight:28 }}>
           <span style={{ fontFamily:"Roboto,Arial,sans-serif",fontSize:"11px",color:"#1C1C1E",flex:1 }}>
             {bq || <span style={{ color:"#9AA0A6" }}>Search or type URL</span>}
             {bq && !blocked && <span style={{ display:"inline-block",width:1.5,height:"0.85em",background:"#1A73E8",marginLeft:1,animation:"blink 1s step-end infinite" }}/>}
           </span>
+          {bq && <div style={{ width:9,height:9,borderRadius:"50%",background:"#5F6368",opacity:.5,flexShrink:0 }}/>}
         </div>
       </div>
       {blocked ? (
@@ -911,8 +921,27 @@ function EveDemo() {
           </div>
         </div>
       ) : (
-        <div style={{ flex:1,padding:12,display:"flex",flexDirection:"column",gap:8 }}>
-          {[72,55,88,42,65].map((w,i) => <div key={i} style={{ height:9,background:"#F2F2F7",borderRadius:4,width:`${w}%` }}/>)}
+        /* Google-style new tab page */
+        <div style={{ flex:1,display:"flex",flexDirection:"column",alignItems:"center",paddingTop:22,gap:14 }}>
+          {/* Google logo */}
+          <div style={{ display:"flex",alignItems:"center",gap:0 }}>
+            {[["#4285F4","G"],["#EA4335","o"],["#FBBC04","o"],["#4285F4","g"],["#34A853","l"],["#EA4335","e"]].map(([c,l],i)=>(
+              <span key={i} style={{ fontFamily:"Roboto,Arial,sans-serif",fontSize:"22px",fontWeight:700,color:c,lineHeight:1 }}>{l}</span>
+            ))}
+          </div>
+          {/* Fake search bar */}
+          <div style={{ width:"85%",background:"#fff",borderRadius:22,border:"1px solid #E0E0E0",padding:"7px 12px",display:"flex",alignItems:"center",gap:6,boxShadow:"0 1px 4px rgba(0,0,0,.08)" }}>
+            <svg width="11" height="11" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="#9AA0A6" strokeWidth="1.8"/><line x1="11.5" y1="11.5" x2="15" y2="15" stroke="#9AA0A6" strokeWidth="1.8" strokeLinecap="round"/></svg>
+            <span style={{ fontFamily:"Roboto,Arial,sans-serif",fontSize:"10px",color:"#9AA0A6" }}>Search Google or type a URL</span>
+          </div>
+          {/* Shortcut tiles */}
+          <div style={{ display:"flex",gap:10 }}>
+            {[["#4285F4","G"],["#FF0000","▶"],["#E60023","P"],["#1877F2","f"]].map(([c,l],i)=>(
+              <div key={i} style={{ width:36,height:36,borderRadius:10,background:"#F1F3F4",display:"flex",alignItems:"center",justifyContent:"center" }}>
+                <span style={{ fontSize:"14px",fontWeight:700,color:c }}>{l}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -953,7 +982,7 @@ function EveDemo() {
         borderRadius:36,overflow:"hidden",
         display:"flex",flexDirection:"column",
         ...wallpaperStyle,
-        filter:grey?"saturate(0.08) brightness(0.92)":"none",
+        filter:grey?"saturate(0) brightness(0.88)":"none",
         transition:"filter 1.8s ease",
       }}>
         {StatusBar}
