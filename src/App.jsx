@@ -1,5 +1,28 @@
 import { useState, useEffect, useRef } from "react";
 
+// ── SUPABASE ─────────────────────────────────────────────────
+// PROTECTED: These credentials and the submit logic below must be
+// preserved in all future edits. Do not remove or bypass.
+const SUPABASE_URL = "https://jcgelvlzwfearecpoaxg.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_dlyG3pjDXQwPt7XRSIsxgA_tN-PItUj";
+
+async function supabaseInsert(table, payload) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=minimal",
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+}
+
 // ── TOKENS ────────────────────────────────────────────────────
 const C = {
   forest:  "#243028",
@@ -248,19 +271,20 @@ function Proposition() {
 // ── EVE DEMO ──────────────────────────────────────────────────
 const _sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// App icon definitions — emoji + brand colors for realism
 const APPS = [
-  { id:"eve",       name:"Eve",       bg:"#1A2E22", fg:"#7A9E82", abbr:"Eve",  dock:false },
-  { id:"instagram", name:"Instagram", bg:"#C13584", fg:"#fff",    abbr:"IG",   dock:false },
-  { id:"pinterest", name:"Pinterest", bg:"#E60023", fg:"#fff",    abbr:"P",    dock:false },
-  { id:"whatsapp",  name:"WhatsApp",  bg:"#25D366", fg:"#fff",    abbr:"WA",   dock:true  },
-  { id:"news",      name:"News",      bg:"#1A73E8", fg:"#fff",    abbr:"News", dock:false },
-  { id:"calendar",  name:"Calendar",  bg:"#fff",    fg:"#E53935", abbr:"17",   dock:false, border:true },
-  { id:"chrome",    name:"Chrome",    bg:"#fff",    fg:"#4285F4", abbr:"Chr",  dock:true,  border:true },
-  { id:"messages",  name:"Messages",  bg:"#34C759", fg:"#fff",    abbr:"Msg",  dock:true  },
-  { id:"maps",      name:"Maps",      bg:"#fff",    fg:"#34A853", abbr:"Maps", dock:false, border:true },
-  { id:"settings",  name:"Settings",  bg:"#E5E5EA", fg:"#3C3C43", abbr:"Set",  dock:true  },
-  { id:"spotify",   name:"Spotify",   bg:"#191414", fg:"#1DB954", abbr:"Spt",  dock:false },
-  { id:"mail",      name:"Mail",      bg:"#147EFB", fg:"#fff",    abbr:"Mail", dock:false },
+  { id:"eve",       name:"Eve",       bg:"#1A2E22", icon:null,  abbr:"E",    isEve:true,  dock:false },
+  { id:"instagram", name:"Instagram", bg:"linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)", icon:"📷", abbr:"",     dock:false },
+  { id:"pinterest", name:"Pinterest", bg:"#E60023", icon:"📌",  abbr:"",     dock:false },
+  { id:"whatsapp",  name:"WhatsApp",  bg:"#25D366", icon:"💬",  abbr:"",     dock:true  },
+  { id:"news",      name:"News",      bg:"#1A73E8", icon:"📰",  abbr:"",     dock:false },
+  { id:"calendar",  name:"Calendar",  bg:"#fff",    icon:null,  abbr:"17",   isCalendar:true, dock:false, border:true },
+  { id:"chrome",    name:"Chrome",    bg:"#fff",    icon:"🌐",  abbr:"",     dock:true,  border:true },
+  { id:"messages",  name:"Messages",  bg:"#34C759", icon:"💬",  abbr:"",     dock:true  },
+  { id:"maps",      name:"Maps",      bg:"#fff",    icon:"🗺️", abbr:"",     dock:false, border:true },
+  { id:"settings",  name:"Settings",  bg:"#E5E5EA", icon:"⚙️", abbr:"",     dock:true  },
+  { id:"spotify",   name:"Spotify",   bg:"#191414", icon:"🎵",  abbr:"",     dock:false },
+  { id:"mail",      name:"Mail",      bg:"#147EFB", icon:"✉️", abbr:"",     dock:false },
 ];
 
 const GRID_APPS = APPS.filter(a => !a.dock);
@@ -283,6 +307,7 @@ const ANALYSIS = [
 ];
 
 function AppIcon({ app, hidden, tapped }) {
+  const isGradient = app.bg && app.bg.startsWith("linear");
   return (
     <div style={{
       display:"flex",flexDirection:"column",alignItems:"center",gap:3,
@@ -291,23 +316,38 @@ function AppIcon({ app, hidden, tapped }) {
       transition:"all .5s cubic-bezier(.34,1.2,.64,1)",
     }}>
       <div style={{
-        width:40,height:40,borderRadius:10,
-        background:app.bg,
-        border:app.border?"1px solid rgba(0,0,0,.12)":"none",
-        boxShadow:"0 1px 5px rgba(0,0,0,.13)",
+        width:42,height:42,borderRadius:11,
+        background:isGradient?app.bg:app.bg,
+        border:app.border?"1px solid rgba(0,0,0,.11)":"none",
+        boxShadow:"0 1.5px 6px rgba(0,0,0,.14),0 0 0 0.5px rgba(0,0,0,.05)",
         display:"flex",alignItems:"center",justifyContent:"center",
+        position:"relative",overflow:"hidden",
       }}>
-        <span style={{
-          fontSize:app.abbr.length>3?"8px":app.abbr.length>2?"9px":app.abbr.length===2?"12px":"16px",
-          fontWeight:700,color:app.fg,
-          fontFamily:app.id==="eve"?"Georgia,serif":"-apple-system,sans-serif",
-          letterSpacing:"-0.2px",
-        }}>{app.abbr}</span>
+        {app.isEve && (
+          <span style={{
+            fontSize:"16px",fontWeight:700,color:"#7A9E82",
+            fontFamily:"Georgia,serif",letterSpacing:"-0.5px",
+          }}>E</span>
+        )}
+        {app.isCalendar && (
+          <div style={{ display:"flex",flexDirection:"column",alignItems:"center",gap:0 }}>
+            <div style={{ background:"#FF3B30",width:"100%",padding:"1px 0",textAlign:"center",position:"absolute",top:0,left:0,right:0,borderRadius:"11px 11px 0 0" }}>
+              <span style={{ fontSize:"6px",fontWeight:600,color:"#fff",letterSpacing:".05em",textTransform:"uppercase",fontFamily:"-apple-system,sans-serif" }}>Tue</span>
+            </div>
+            <span style={{ fontSize:"18px",fontWeight:400,color:"#1C1C1E",fontFamily:"-apple-system,sans-serif",marginTop:8 }}>17</span>
+          </div>
+        )}
+        {!app.isEve && !app.isCalendar && app.icon && (
+          <span style={{ fontSize:"20px",lineHeight:1 }}>{app.icon}</span>
+        )}
+        {!app.isEve && !app.isCalendar && !app.icon && app.abbr && (
+          <span style={{ fontSize:"13px",fontWeight:700,color:"#fff",fontFamily:"-apple-system,sans-serif" }}>{app.abbr}</span>
+        )}
       </div>
       <span style={{
         fontFamily:"-apple-system,sans-serif",fontSize:"8.5px",
         color:"#1C1C1E",lineHeight:1,
-        maxWidth:44,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textAlign:"center",
+        maxWidth:46,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",textAlign:"center",
       }}>{app.name}</span>
     </div>
   );
@@ -503,29 +543,57 @@ function EveDemo() {
 
   const tc = grey ? "#555" : "#1C1C1E";
 
+  // ── STATUS BAR ── Dynamic Island style
   const StatusBar = (
-    <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",padding:"13px 20px 4px",flexShrink:0,zIndex:5 }}>
-      <span style={{ fontFamily:"-apple-system,sans-serif",fontSize:"13px",fontWeight:700,color:tc,letterSpacing:"-.2px" }}>{clock}</span>
-      <div style={{ display:"flex",gap:5,alignItems:"center" }}>
-        <div style={{ display:"flex",gap:2,alignItems:"flex-end",height:11 }}>
-          {[4,6,8,11].map((h,i) => <div key={i} style={{ width:3,height:h,borderRadius:1.5,background:tc,opacity:i<3?1:.32 }}/>)}
+    <div style={{ position:"relative",flexShrink:0,height:44 }}>
+      {/* Dynamic Island pill */}
+      <div style={{
+        position:"absolute",top:10,left:"50%",transform:"translateX(-50%)",
+        width:88,height:26,background:"#000",borderRadius:20,zIndex:10,
+        boxShadow:"0 0 0 1px rgba(0,0,0,.2)",
+      }}/>
+      {/* Left: time */}
+      <div style={{ position:"absolute",left:18,top:"50%",transform:"translateY(-50%)" }}>
+        <span style={{ fontFamily:"-apple-system,sans-serif",fontSize:"13px",fontWeight:700,color:tc,letterSpacing:"-.3px" }}>{clock}</span>
+      </div>
+      {/* Right: status icons */}
+      <div style={{ position:"absolute",right:14,top:"50%",transform:"translateY(-50%)",display:"flex",gap:5,alignItems:"center" }}>
+        {/* Signal */}
+        <div style={{ display:"flex",gap:1.5,alignItems:"flex-end",height:10 }}>
+          {[4,6,8,10].map((h,i) => <div key={i} style={{ width:2.5,height:h,borderRadius:1,background:tc,opacity:i<3?1:.3 }}/>)}
         </div>
+        {/* WiFi */}
+        <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
+          <path d="M6.5 8.5a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8z" fill={tc}/>
+          <path d="M3.6 6.1a4.1 4.1 0 0 1 5.8 0" stroke={tc} strokeWidth="1.1" strokeLinecap="round" fill="none"/>
+          <path d="M1 3.5A7.5 7.5 0 0 1 12 3.5" stroke={tc} strokeWidth="1.1" strokeLinecap="round" fill="none" opacity=".4"/>
+        </svg>
+        {/* Battery */}
         <div style={{ display:"flex",alignItems:"center",gap:1 }}>
-          <div style={{ width:22,height:11,borderRadius:3,border:`1.3px solid ${tc}`,opacity:.75,padding:"2px" }}>
-            <div style={{ width:"76%",height:"100%",borderRadius:1.5,background:tc }}/>
+          <div style={{ width:20,height:10,borderRadius:2.5,border:`1.2px solid ${tc}`,padding:"1.5px 1.5px",opacity:.8 }}>
+            <div style={{ width:"78%",height:"100%",borderRadius:1,background:tc }}/>
           </div>
-          <div style={{ width:2,height:5,borderRadius:"0 1px 1px 0",background:tc,opacity:.5 }}/>
+          <div style={{ width:1.5,height:4.5,borderRadius:"0 1px 1px 0",background:tc,opacity:.4 }}/>
         </div>
       </div>
     </div>
   );
 
   const HomeScreen = (
-    <div style={{ flex:1,display:"flex",flexDirection:"column",padding:"4px 14px 0" }}>
-      <div style={{ flex:1,display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"10px 4px",alignContent:"start",paddingTop:4 }}>
+    <div style={{ flex:1,display:"flex",flexDirection:"column",padding:"2px 14px 0" }}>
+      <div style={{ flex:1,display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"10px 2px",alignContent:"start",paddingTop:2 }}>
         {GRID_APPS.map(a => <AppIcon key={a.id} app={a} hidden={false} tapped={tapped}/>)}
       </div>
-      <div style={{ borderTop:"1px solid rgba(0,0,0,.06)",padding:"8px 6px 6px",display:"flex",justifyContent:"space-around" }}>
+      {/* Dock */}
+      <div style={{
+        margin:"6px 4px 8px",
+        background:"rgba(255,255,255,0.72)",
+        backdropFilter:"blur(20px)",
+        borderRadius:22,
+        padding:"8px 10px",
+        display:"flex",justifyContent:"space-around",
+        boxShadow:"0 2px 12px rgba(0,0,0,.08),inset 0 0 0 0.5px rgba(255,255,255,.6)",
+      }}>
         {DOCK_APPS.map(a => <AppIcon key={a.id} app={a} hidden={false} tapped={tapped}/>)}
       </div>
     </div>
@@ -612,7 +680,7 @@ function EveDemo() {
           <span style={{ fontFamily:"-apple-system,sans-serif",fontSize:"10px",fontWeight:600,color:grey?"#3C3C43":"#2E7D32" }}>{mode}</span>
         </div>
       )}
-      <div style={{ flex:1,display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"10px 4px",alignContent:"start",paddingTop:4 }}>
+      <div style={{ flex:1,display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"10px 2px",alignContent:"start",paddingTop:4 }}>
         {GRID_APPS.map(a => <AppIcon key={a.id} app={a} hidden={hidden.has(a.id)} tapped={tapped}/>)}
       </div>
       {notif !== null && (
@@ -626,7 +694,14 @@ function EveDemo() {
           }}>{notif}</div>
         </div>
       )}
-      <div style={{ borderTop:"1px solid rgba(0,0,0,.06)",padding:"7px 6px 6px",display:"flex",justifyContent:"space-around",flexShrink:0 }}>
+      <div style={{
+        margin:"6px 4px 8px",
+        background:"rgba(255,255,255,0.72)",
+        backdropFilter:"blur(20px)",
+        borderRadius:22,padding:"8px 10px",
+        display:"flex",justifyContent:"space-around",
+        boxShadow:"0 2px 12px rgba(0,0,0,.08),inset 0 0 0 0.5px rgba(255,255,255,.6)",
+      }}>
         {DOCK_APPS.map(a => <AppIcon key={a.id} app={a} hidden={false} tapped={tapped}/>)}
       </div>
     </div>
@@ -659,19 +734,44 @@ function EveDemo() {
     </div>
   );
 
+  // Phone wallpaper gradient (light, clean)
+  const wallpaperStyle = {
+    background: grey
+      ? "linear-gradient(160deg,#d0d0d0 0%,#e8e8e8 100%)"
+      : "linear-gradient(160deg,#dce9ff 0%,#f0e6ff 50%,#ffe0d5 100%)",
+    transition:"background 1.45s ease",
+  };
+
   return (
     <div style={{
-      width:262,height:524,flexShrink:0,
-      background:"#1C1C1E",borderRadius:46,padding:"8px 5px",
-      boxShadow:"0 2px 0 #000,inset 0 0 0 1px rgba(255,255,255,.11),0 24px 64px rgba(0,0,0,.4)",
+      width:262,height:536,flexShrink:0,
+      background:"#1C1C1E",
+      borderRadius:52,
+      padding:"0 5px 5px",
+      boxShadow:[
+        "0 0 0 1px rgba(255,255,255,.12)",
+        "0 0 0 2px #000",
+        "inset 0 0 0 1px rgba(255,255,255,.06)",
+        "0 28px 72px rgba(0,0,0,.48)",
+        "0 4px 12px rgba(0,0,0,.3)",
+      ].join(","),
       position:"relative",
     }}>
-      <div style={{ position:"absolute",top:8,left:"50%",transform:"translateX(-50%)",width:94,height:26,background:"#1C1C1E",borderRadius:"0 0 18px 18px",zIndex:10 }}/>
+      {/* Side buttons */}
+      <div style={{ position:"absolute",right:-3,top:88,width:3,height:28,background:"#2C2C2E",borderRadius:"0 2px 2px 0",boxShadow:"inset -1px 0 1px rgba(0,0,0,.4)" }}/>
+      <div style={{ position:"absolute",left:-3,top:78,width:3,height:22,background:"#2C2C2E",borderRadius:"2px 0 0 2px",boxShadow:"inset 1px 0 1px rgba(0,0,0,.4)" }}/>
+      <div style={{ position:"absolute",left:-3,top:110,width:3,height:36,background:"#2C2C2E",borderRadius:"2px 0 0 2px",boxShadow:"inset 1px 0 1px rgba(0,0,0,.4)" }}/>
+      <div style={{ position:"absolute",left:-3,top:155,width:3,height:36,background:"#2C2C2E",borderRadius:"2px 0 0 2px",boxShadow:"inset 1px 0 1px rgba(0,0,0,.4)" }}/>
+
+      {/* Screen */}
       <div style={{
-        width:"100%",height:"100%",background:"#fff",borderRadius:40,
-        overflow:"hidden",display:"flex",flexDirection:"column",
+        width:"100%",height:"100%",
+        borderRadius:47,
+        overflow:"hidden",
+        display:"flex",flexDirection:"column",
+        ...wallpaperStyle,
         filter:grey?"saturate(0.06) brightness(0.95)":"none",
-        transition:"filter 1.45s ease",
+        transition:"filter 1.45s ease, background 1.45s ease",
       }}>
         {StatusBar}
         <div style={{ flex:1,overflow:"hidden",display:"flex",flexDirection:"column" }}>
@@ -680,8 +780,9 @@ function EveDemo() {
           {screen==="change"  && ChangeScreen}
           {screen==="browser" && BrowserScreen}
         </div>
-        <div style={{ height:20,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-          <div style={{ width:100,height:4,borderRadius:2,background:"#1C1C1E",opacity:.18 }}/>
+        {/* Home indicator */}
+        <div style={{ height:22,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+          <div style={{ width:110,height:4.5,borderRadius:2.5,background:tc,opacity:.2 }}/>
         </div>
       </div>
     </div>
@@ -804,6 +905,8 @@ function Survey() {
   const [email,     setEmail]     = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [selected,  setSelected]  = useState([]);
+  // ── SUPABASE STATE ── loading must be preserved in future edits
+  const [loading,   setLoading]   = useState(false);
   useReveal();
 
   const current  = SURVEY_STEPS[step];
@@ -836,10 +939,32 @@ function Survey() {
     setSelected(answers[prev.id] || []);
   }
 
-  function handleSubmit() {
+  // ── SUPABASE SUBMIT ────────────────────────────────────────────
+  // PROTECTED: This submit handler writes to Supabase survey_responses.
+  // Do NOT remove or bypass this logic in future design/UI edits.
+  async function handleSubmit() {
     if (!email) return;
+    setLoading(true);
+
+    const payload = {
+      email: email,
+      answers: { ...answers, email },
+    };
+
+    try {
+      await supabaseInsert("survey_responses", payload);
+    } catch (error) {
+      console.error("Supabase insert error:", error);
+      setLoading(false);
+      alert("Something went wrong. Please try again.");
+      return;
+    }
+
+    setLoading(false);
+
     setSubmitted(true);
   }
+  // ── END SUPABASE SUBMIT ────────────────────────────────────────
 
   const BackBtn = step > 0 ? (
     <button onClick={goBack} style={{
@@ -955,24 +1080,32 @@ function Survey() {
               <input
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                onKeyDown={e => e.key==="Enter" && handleSubmit()}
+                onKeyDown={e => e.key==="Enter" && !loading && handleSubmit()}
                 placeholder="your@email.com"
                 type="email"
+                disabled={loading}
                 style={{
                   padding:".9rem 1.2rem",borderRadius:10,
                   background:`${C.offwhite}0e`,border:`1px solid ${C.offwhite}22`,
                   color:C.offwhite,fontSize:".9rem",outline:"none",
+                  opacity:loading?0.6:1,
                 }}
               />
               <div style={{ display:"flex",alignItems:"center",gap:".75rem" }}>
                 {BackBtn}
-                <button onClick={handleSubmit} style={{
-                  padding:".9rem 2rem",background:C.amber,color:C.offwhite,
-                  border:"none",borderRadius:999,
-                  fontFamily:F.sans,fontWeight:600,fontSize:".75rem",
-                  letterSpacing:".08em",textTransform:"uppercase",
-                }}>
-                  Submit application
+                <button
+                  onClick={handleSubmit}
+                  disabled={loading || !email}
+                  style={{
+                    padding:".9rem 2rem",background:C.amber,color:C.offwhite,
+                    border:"none",borderRadius:999,
+                    fontFamily:F.sans,fontWeight:600,fontSize:".75rem",
+                    letterSpacing:".08em",textTransform:"uppercase",
+                    opacity:loading||!email?0.65:1,
+                    transition:"opacity .2s ease",
+                  }}
+                >
+                  {loading ? "Submitting…" : "Submit application"}
                 </button>
               </div>
             </div>
@@ -1008,3 +1141,4 @@ export default function App() {
     </div>
   );
 }
+
