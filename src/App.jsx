@@ -1066,17 +1066,25 @@ function ApplyPage() {
     const style = document.createElement("style");
     style.textContent = `
       *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-      html{scroll-behavior:smooth}
-      body{background:${C.cream};color:${C.forest};font-family:"Outfit",-apple-system,sans-serif;overflow-x:hidden}
+      html{scroll-behavior:smooth;overflow-x:hidden}
+      body{background:${C.cream};color:${C.forest};font-family:"Outfit",-apple-system,sans-serif;overflow-x:hidden;max-width:100vw}
       ::-webkit-scrollbar{width:2px}
       ::-webkit-scrollbar-thumb{background:${C.pale}}
-      /* Desktop-only video sizing */
+      /* Stripe buy button — constrain width */
+      stripe-buy-button{display:block;width:100%;max-width:100%}
+      stripe-buy-button > *{max-width:100% !important}
+      /* Desktop-only video max-width */
       @media(min-width:768px){
         .apply-video-wrap{ max-width:580px !important; }
       }
+      /* Mobile overrides */
       @media(max-width:767px){
         .apply-cards{ grid-template-columns:1fr !important; }
-        .apply-video-wrap{ border-radius:10px !important; }
+        .apply-video-wrap{ border-radius:10px !important; width:100% !important; }
+        .apply-wrap{ padding-left:1.2rem !important; padding-right:1.2rem !important; }
+        .apply-card{ padding:1.6rem 1.4rem !important; }
+        .calendly-inline-widget{ min-width:0 !important; width:100% !important; }
+        stripe-buy-button{ width:100% !important; max-width:100% !important; overflow:hidden; }
       }
     `;
     document.head.appendChild(style);
@@ -1096,7 +1104,7 @@ function ApplyPage() {
         </div>
       </div>
 
-      <div style={{ maxWidth:860, margin:"0 auto", padding:"3.5rem 2rem 5rem" }}>
+      <div className="apply-wrap" style={{ maxWidth:860, margin:"0 auto", padding:"3.5rem 2rem 5rem" }}>
 
         {/* Cohort label — bolder, more prominent */}
         <div style={{ textAlign:"center", marginBottom:"2.8rem" }}>
@@ -1106,7 +1114,7 @@ function ApplyPage() {
         </div>
 
         {/* Video — smaller on desktop via CSS class, full-width on mobile */}
-        <div className="apply-video-wrap" style={{ maxWidth:"100%", margin:"0 auto 4rem", borderRadius:14, overflow:"hidden", boxShadow:"0 6px 32px rgba(0,0,0,.1)", background:"#000" }}>
+        <div className="apply-video-wrap" style={{ maxWidth:"100%", width:"100%", margin:"0 auto 4rem", borderRadius:14, overflow:"hidden", boxShadow:"0 6px 32px rgba(0,0,0,.1)", background:"#000" }}>
           <video
             width="100%"
             controls
@@ -1122,14 +1130,14 @@ function ApplyPage() {
         <div className="apply-cards" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1.5rem", alignItems:"start", marginBottom:"2.5rem" }}>
 
           {/* Payment card */}
-          <div style={{ background:C.parch, borderRadius:14, padding:"2.2rem 2.4rem", display:"flex", flexDirection:"column" }}>
+          <div className="apply-card" style={{ background:C.parch, borderRadius:14, padding:"2.2rem 2.4rem", display:"flex", flexDirection:"column", overflow:"hidden" }}>
             <h2 style={{ fontFamily:F.display, fontWeight:500, fontSize:"1.6rem", color:C.forest, marginBottom:".8rem", textAlign:"center" }}>
               Secure your spot
             </h2>
             <p style={{ fontFamily:F.sans, fontWeight:300, fontSize:".88rem", color:C.stone, lineHeight:1.8, marginBottom:"2rem", textAlign:"center" }}>
               If you don't get into the first cohort, you'll get a full refund or can roll it over to the next one.
             </p>
-            <div style={{ display:"flex", justifyContent:"center" }}>
+            <div style={{ display:"flex", justifyContent:"center", width:"100%", overflow:"hidden" }}>
               <stripe-buy-button
                 buy-button-id="buy_btn_1TH4A80WwtnXST7ey8KiM4pU"
                 publishable-key="pk_live_51TGiM40WwtnXST7eLZDccBaFY6cUo2GMSsu64qOSPvorQaAH3GS1jCOJ0XGZFtylmuFxJ7pGKvd0Yh5a1pxkLQNT00NsToG6QC"
@@ -1138,7 +1146,7 @@ function ApplyPage() {
           </div>
 
           {/* Call card */}
-          <div style={{ background:C.parch, borderRadius:14, padding:"2.2rem 2.4rem" }}>
+          <div className="apply-card" style={{ background:C.parch, borderRadius:14, padding:"2.2rem 2.4rem", overflow:"hidden" }}>
             <h2 style={{ fontFamily:F.display, fontWeight:500, fontSize:"1.6rem", color:C.forest, marginBottom:".8rem" }}>
               Book a 10 min call
             </h2>
@@ -1148,7 +1156,7 @@ function ApplyPage() {
             <div
               className="calendly-inline-widget"
               data-url="https://calendly.com/joaopmdd/quick-chat-w-joao?hide_event_type_details=1&hide_gdpr_banner=1"
-              style={{ minWidth:260, height:640 }}
+              style={{ width:"100%", minWidth:0, height:640 }}
             />
           </div>
 
