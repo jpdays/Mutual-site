@@ -1042,127 +1042,107 @@ function WhoThisIsFor() {
 // Accessible at mutual.technology/apply — standalone, no nav to main site
 function ApplyPage() {
   useEffect(() => {
-    // Load Calendly widget script
-    const script = document.createElement("script");
-    script.src = "https://assets.calendly.com/assets/external/widget.js";
-    script.async = true;
-    document.head.appendChild(script);
-    return () => document.head.removeChild(script);
+    // Calendly widget script
+    const cal = document.createElement("script");
+    cal.src = "https://assets.calendly.com/assets/external/widget.js";
+    cal.async = true;
+    document.head.appendChild(cal);
+    // Stripe buy button script
+    const stripe = document.createElement("script");
+    stripe.src = "https://js.stripe.com/v3/buy-button.js";
+    stripe.async = true;
+    document.head.appendChild(stripe);
+    return () => {
+      document.head.removeChild(cal);
+      document.head.removeChild(stripe);
+    };
   }, []);
 
   useEffect(() => {
-    // Load Google Fonts for this page
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Outfit:wght@300;400;500;600&display=swap";
+    link.href = "https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap";
     document.head.appendChild(link);
     const style = document.createElement("style");
     style.textContent = `
       *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-      body{background:#243028;color:#F4EFE6;font-family:"Outfit",-apple-system,sans-serif;overflow-x:hidden}
+      body{background:${C.cream};color:${C.forest};font-family:"Outfit",-apple-system,sans-serif;overflow-x:hidden}
       ::-webkit-scrollbar{width:2px}
-      ::-webkit-scrollbar-thumb{background:#3D5040}
+      ::-webkit-scrollbar-thumb{background:${C.pale}}
     `;
     document.head.appendChild(style);
     return () => { document.head.removeChild(link); document.head.removeChild(style); };
   }, []);
 
   return (
-    <div style={{ minHeight:"100vh", background:C.forest, color:C.cream }}>
+    <div style={{ minHeight:"100vh", background:C.cream, color:C.forest }}>
       {/* Header */}
-      <div style={{ padding:"2rem 3rem", borderBottom:`1px solid ${C.mossy}`, display:"flex", alignItems:"center" }}>
-        <span style={{ fontFamily:F.display, fontSize:"1.4rem", fontWeight:400, color:C.offwhite }}>Mutual</span>
+      <div style={{ padding:"1.8rem 3rem", borderBottom:`1px solid ${C.pale}`, display:"flex", alignItems:"center" }}>
+        <span style={{ fontFamily:F.display, fontSize:"1.4rem", fontWeight:400, color:C.forest }}>Mutual</span>
       </div>
 
       <div style={{ maxWidth:1100, margin:"0 auto", padding:"4rem 3rem" }}>
-        {/* Headline */}
-        <div style={{ textAlign:"center", marginBottom:"3.5rem" }}>
-          <div style={{ fontFamily:F.mono, fontSize:".68rem", letterSpacing:".22em", textTransform:"uppercase", color:C.sage, marginBottom:"1rem" }}>
+
+        {/* Label only — no h1 or paragraph below */}
+        <div style={{ textAlign:"center", marginBottom:"2.5rem" }}>
+          <div style={{ fontFamily:F.mono, fontSize:".68rem", letterSpacing:".22em", textTransform:"uppercase", color:C.sage }}>
             First cohort · 20 spots
           </div>
-          <h1 style={{ fontFamily:F.display, fontSize:"clamp(2.2rem,4.5vw,3.6rem)", fontWeight:400, lineHeight:1.12, color:C.offwhite, marginBottom:"1.2rem" }}>
-            Be the first to try<br/>
-            <em style={{ fontStyle:"italic", color:C.amber }}>our phone.</em>
-          </h1>
-          <p style={{ fontFamily:F.sans, fontWeight:300, fontSize:"1rem", color:`${C.offwhite}88`, maxWidth:540, margin:"0 auto", lineHeight:1.75 }}>
-            Watch the video below to see how it works, then secure your spot with a £10 commitment fee and book a call with us.
-          </p>
         </div>
 
-        {/* YouTube embed */}
-        <div style={{ marginBottom:"3.5rem", borderRadius:16, overflow:"hidden", boxShadow:"0 8px 40px rgba(0,0,0,.4)", background:"#000", aspectRatio:"16/9", maxWidth:800, margin:"0 auto 3.5rem" }}>
-          <iframe
+        {/* Self-hosted video — place video.mp4 in your /public folder */}
+        <div style={{ maxWidth:820, margin:"0 auto 3.5rem", borderRadius:16, overflow:"hidden", boxShadow:"0 8px 40px rgba(0,0,0,.12)", background:"#000" }}>
+          <video
             width="100%"
-            height="100%"
-            style={{ display:"block", aspectRatio:"16/9" }}
-            src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
-            title="Mutual — How it works"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+            controls
+            playsInline
+            style={{ display:"block" }}
+          >
+            <source src="/video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
 
-        {/* Bottom two-column: Stripe left, Calendly right */}
+        {/* Two-column: Stripe left, Calendly right */}
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"2rem", alignItems:"start" }}>
 
-          {/* Stripe payment */}
-          <div style={{ background:C.mossy, borderRadius:16, padding:"2.5rem", border:`1px solid rgba(255,255,255,.08)` }}>
-            <div style={{ fontFamily:F.mono, fontSize:".62rem", letterSpacing:".18em", textTransform:"uppercase", color:C.sage, marginBottom:"1rem" }}>
-              Step 1 · Secure your spot
-            </div>
-            <h2 style={{ fontFamily:F.display, fontWeight:500, fontSize:"1.6rem", color:C.offwhite, marginBottom:".75rem" }}>
-              £10 commitment fee
+          {/* Stripe */}
+          <div style={{ background:C.parch, borderRadius:16, padding:"2.5rem", border:`1px solid ${C.pale}` }}>
+            <h2 style={{ fontFamily:F.display, fontWeight:500, fontSize:"1.7rem", color:C.forest, marginBottom:".85rem" }}>
+              Secure your spot
             </h2>
-            <p style={{ fontFamily:F.sans, fontWeight:300, fontSize:".9rem", color:`${C.offwhite}88`, lineHeight:1.7, marginBottom:"2rem" }}>
-              Fully refundable if you're not selected. This filters out the casually curious — we only want people serious about change.
+            <p style={{ fontFamily:F.sans, fontWeight:300, fontSize:".9rem", color:C.stone, lineHeight:1.75, marginBottom:"2rem" }}>
+              Fully refundable if you don't get into the first cohort. You can also roll it over.
             </p>
-            {/* Replace YOUR_STRIPE_PAYMENT_LINK with your actual Stripe payment link */}
-            <a
-              href="https://buy.stripe.com/YOUR_STRIPE_PAYMENT_LINK"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display:"inline-block",
-                background:C.amber, color:C.offwhite,
-                fontFamily:F.sans, fontWeight:600, fontSize:".78rem",
-                letterSpacing:".1em", textTransform:"uppercase",
-                padding:".9rem 2.2rem", borderRadius:999,
-                textDecoration:"none",
-                transition:"opacity .2s ease",
-              }}
-              onMouseOver={e => e.currentTarget.style.opacity=".85"}
-              onMouseOut={e => e.currentTarget.style.opacity="1"}
-            >
-              Pay £10 to apply
-            </a>
+            {/* Stripe buy button web component */}
+            <stripe-buy-button
+              buy-button-id="buy_btn_1TH4A80WwtnXST7ey8KiM4pU"
+              publishable-key="pk_live_51TGiM40WwtnXST7eLZDccBaFY6cUo2GMSsu64qOSPvorQaAH3GS1jCOJ0XGZFtylmuFxJ7pGKvd0Yh5a1pxkLQNT00NsToG6QC"
+            />
           </div>
 
           {/* Calendly */}
-          <div style={{ background:C.mossy, borderRadius:16, padding:"2.5rem", border:`1px solid rgba(255,255,255,.08)` }}>
-            <div style={{ fontFamily:F.mono, fontSize:".62rem", letterSpacing:".18em", textTransform:"uppercase", color:C.sage, marginBottom:"1rem" }}>
-              Step 2 · Book a call
-            </div>
-            <h2 style={{ fontFamily:F.display, fontWeight:500, fontSize:"1.6rem", color:C.offwhite, marginBottom:".75rem" }}>
-              15-minute intro call
+          <div style={{ background:C.parch, borderRadius:16, padding:"2.5rem", border:`1px solid ${C.pale}` }}>
+            <h2 style={{ fontFamily:F.display, fontWeight:500, fontSize:"1.7rem", color:C.forest, marginBottom:".85rem" }}>
+              Book a call
             </h2>
-            <p style={{ fontFamily:F.sans, fontWeight:300, fontSize:".9rem", color:`${C.offwhite}88`, lineHeight:1.7, marginBottom:"1.5rem" }}>
-              We'll check you're a good fit, explain the setup, and answer any questions.
+            <p style={{ fontFamily:F.sans, fontWeight:300, fontSize:".9rem", color:C.stone, lineHeight:1.75, marginBottom:"1.5rem" }}>
+              15 minutes. We'll check you're a good fit and answer any questions.
             </p>
-            {/* Replace YOUR_CALENDLY_URL with your actual Calendly link, e.g. calendly.com/joaopmdd/30min */}
             <div
               className="calendly-inline-widget"
-              data-url="https://calendly.com/joaopmdd/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=3D5040&text_color=FAF6F0&primary_color=B8723A"
-              style={{ minWidth:280, height:620 }}
+              data-url="https://calendly.com/joaopmdd/quick-chat-w-joao?hide_event_type_details=1&hide_gdpr_banner=1"
+              style={{ minWidth:280, height:660 }}
             />
           </div>
+
         </div>
       </div>
 
       {/* Footer */}
-      <footer style={{ borderTop:`1px solid ${C.mossy}`, padding:"1.8rem 3rem", marginTop:"4rem", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-        <span style={{ fontFamily:F.display, fontSize:".9rem", color:`${C.offwhite}44` }}>Mutual</span>
-        <span style={{ fontFamily:F.mono, fontSize:".52rem", letterSpacing:".12em", textTransform:"uppercase", color:`${C.offwhite}22` }}>© 2026</span>
+      <footer style={{ borderTop:`1px solid ${C.pale}`, padding:"1.8rem 3rem", marginTop:"4rem", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+        <span style={{ fontFamily:F.display, fontSize:".9rem", color:`${C.forest}66` }}>Mutual</span>
+        <span style={{ fontFamily:F.mono, fontSize:".52rem", letterSpacing:".12em", textTransform:"uppercase", color:`${C.stone}88` }}>© 2026</span>
       </footer>
     </div>
   );
