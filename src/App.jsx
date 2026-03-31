@@ -1181,10 +1181,10 @@ function ApplyPage() {
               }}
             />
             <button
-              onClick={() => {
+              onClick={async() => {
                 if (fallback.trim()) {
-                  // basic submission — replace with your own handler
-                  alert("Thanks — we'll be in touch.");
+                  await supabaseInsert ("leads", { contact: fallback.trim() } );
+                  alert("Thanks! We'll be in touch.");
                   setFallback("");
                 }
               }}
