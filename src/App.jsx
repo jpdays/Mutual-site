@@ -1041,13 +1041,13 @@ function WhoThisIsFor() {
 // ── APPLY PAGE ────────────────────────────────────────────────
 // Accessible at mutual.technology/apply — standalone, no nav to main site
 function ApplyPage() {
+  const [fallback, setFallback] = useState("");
+
   useEffect(() => {
-    // Calendly widget script
     const cal = document.createElement("script");
     cal.src = "https://assets.calendly.com/assets/external/widget.js";
     cal.async = true;
     document.head.appendChild(cal);
-    // Stripe buy button script
     const stripe = document.createElement("script");
     stripe.src = "https://js.stripe.com/v3/buy-button.js";
     stripe.async = true;
@@ -1061,14 +1061,23 @@ function ApplyPage() {
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap";
+    link.href = "https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap";
     document.head.appendChild(link);
     const style = document.createElement("style");
     style.textContent = `
       *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+      html{scroll-behavior:smooth}
       body{background:${C.cream};color:${C.forest};font-family:"Outfit",-apple-system,sans-serif;overflow-x:hidden}
       ::-webkit-scrollbar{width:2px}
       ::-webkit-scrollbar-thumb{background:${C.pale}}
+      /* Desktop-only video sizing */
+      @media(min-width:768px){
+        .apply-video-wrap{ max-width:580px !important; }
+      }
+      @media(max-width:767px){
+        .apply-cards{ grid-template-columns:1fr !important; }
+        .apply-video-wrap{ border-radius:10px !important; }
+      }
     `;
     document.head.appendChild(style);
     return () => { document.head.removeChild(link); document.head.removeChild(style); };
@@ -1076,22 +1085,28 @@ function ApplyPage() {
 
   return (
     <div style={{ minHeight:"100vh", background:C.cream, color:C.forest }}>
-      {/* Header */}
-      <div style={{ padding:"1.8rem 3rem", borderBottom:`1px solid ${C.pale}`, display:"flex", alignItems:"center" }}>
-        <span style={{ fontFamily:F.display, fontSize:"1.4rem", fontWeight:400, color:C.forest }}>Mutual</span>
+
+      {/* Header — centered wordmark + subtitle, no border */}
+      <div style={{ padding:"3rem 3rem 0", textAlign:"center" }}>
+        <div style={{ fontFamily:F.display, fontSize:"1.55rem", fontWeight:400, color:C.forest, letterSpacing:".01em" }}>
+          Mutual
+        </div>
+        <div style={{ fontFamily:F.sans, fontWeight:300, fontSize:".72rem", color:C.stone, letterSpacing:".22em", textTransform:"uppercase", marginTop:".45rem" }}>
+          A Smartphone Company
+        </div>
       </div>
 
-      <div style={{ maxWidth:1100, margin:"0 auto", padding:"4rem 3rem" }}>
+      <div style={{ maxWidth:860, margin:"0 auto", padding:"3.5rem 2rem 5rem" }}>
 
-        {/* Label only — no h1 or paragraph below */}
-        <div style={{ textAlign:"center", marginBottom:"2.5rem" }}>
-          <div style={{ fontFamily:F.mono, fontSize:".68rem", letterSpacing:".22em", textTransform:"uppercase", color:C.sage }}>
-            First cohort · 20 spots
+        {/* Cohort label — bolder, more prominent */}
+        <div style={{ textAlign:"center", marginBottom:"2.8rem" }}>
+          <div style={{ fontFamily:F.mono, fontSize:".72rem", letterSpacing:".26em", textTransform:"uppercase", color:C.forest, fontWeight:"bold" }}>
+            First Cohort · 20 Spots
           </div>
         </div>
 
-        {/* Self-hosted video — place video.mp4 in your /public folder */}
-        <div style={{ maxWidth:820, margin:"0 auto 3.5rem", borderRadius:16, overflow:"hidden", boxShadow:"0 8px 40px rgba(0,0,0,.12)", background:"#000" }}>
+        {/* Video — smaller on desktop via CSS class, full-width on mobile */}
+        <div className="apply-video-wrap" style={{ maxWidth:"100%", margin:"0 auto 4rem", borderRadius:14, overflow:"hidden", boxShadow:"0 6px 32px rgba(0,0,0,.1)", background:"#000" }}>
           <video
             width="100%"
             controls
@@ -1103,46 +1118,87 @@ function ApplyPage() {
           </video>
         </div>
 
-        {/* Two-column: Stripe left, Calendly right */}
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"2rem", alignItems:"start" }}>
+        {/* Cards — stacked: payment first, call second */}
+        <div className="apply-cards" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1.5rem", alignItems:"start", marginBottom:"2.5rem" }}>
 
-          {/* Stripe */}
-          <div style={{ background:C.parch, borderRadius:16, padding:"2.5rem", border:`1px solid ${C.pale}` }}>
-            <h2 style={{ fontFamily:F.display, fontWeight:500, fontSize:"1.7rem", color:C.forest, marginBottom:".85rem" }}>
+          {/* Payment card */}
+          <div style={{ background:C.parch, borderRadius:14, padding:"2.2rem 2.4rem", display:"flex", flexDirection:"column" }}>
+            <h2 style={{ fontFamily:F.display, fontWeight:500, fontSize:"1.6rem", color:C.forest, marginBottom:".8rem", textAlign:"center" }}>
               Secure your spot
             </h2>
-            <p style={{ fontFamily:F.sans, fontWeight:300, fontSize:".9rem", color:C.stone, lineHeight:1.75, marginBottom:"2rem" }}>
-              Fully refundable if you don't get into the first cohort. You can also roll it over.
+            <p style={{ fontFamily:F.sans, fontWeight:300, fontSize:".88rem", color:C.stone, lineHeight:1.8, marginBottom:"2rem", textAlign:"center" }}>
+              If you don't get into the first cohort, you'll get a full refund or can roll it over to the next one.
             </p>
-            {/* Stripe buy button web component */}
-            <stripe-buy-button
-              buy-button-id="buy_btn_1TH4A80WwtnXST7ey8KiM4pU"
-              publishable-key="pk_live_51TGiM40WwtnXST7eLZDccBaFY6cUo2GMSsu64qOSPvorQaAH3GS1jCOJ0XGZFtylmuFxJ7pGKvd0Yh5a1pxkLQNT00NsToG6QC"
-            />
+            <div style={{ display:"flex", justifyContent:"center" }}>
+              <stripe-buy-button
+                buy-button-id="buy_btn_1TH4A80WwtnXST7ey8KiM4pU"
+                publishable-key="pk_live_51TGiM40WwtnXST7eLZDccBaFY6cUo2GMSsu64qOSPvorQaAH3GS1jCOJ0XGZFtylmuFxJ7pGKvd0Yh5a1pxkLQNT00NsToG6QC"
+              />
+            </div>
           </div>
 
-          {/* Calendly */}
-          <div style={{ background:C.parch, borderRadius:16, padding:"2.5rem", border:`1px solid ${C.pale}` }}>
-            <h2 style={{ fontFamily:F.display, fontWeight:500, fontSize:"1.7rem", color:C.forest, marginBottom:".85rem" }}>
-              Book a call
+          {/* Call card */}
+          <div style={{ background:C.parch, borderRadius:14, padding:"2.2rem 2.4rem" }}>
+            <h2 style={{ fontFamily:F.display, fontWeight:500, fontSize:"1.6rem", color:C.forest, marginBottom:".8rem" }}>
+              Book a 10 min call
             </h2>
-            <p style={{ fontFamily:F.sans, fontWeight:300, fontSize:".9rem", color:C.stone, lineHeight:1.75, marginBottom:"1.5rem" }}>
-              15 minutes. We'll check you're a good fit and answer any questions.
+            <p style={{ fontFamily:F.sans, fontWeight:300, fontSize:".88rem", color:C.stone, lineHeight:1.8, marginBottom:"1.5rem" }}>
+              Want to understand how it works first? Book a quick 10 min call.
             </p>
             <div
               className="calendly-inline-widget"
               data-url="https://calendly.com/joaopmdd/quick-chat-w-joao?hide_event_type_details=1&hide_gdpr_banner=1"
-              style={{ minWidth:280, height:660 }}
+              style={{ minWidth:260, height:640 }}
             />
           </div>
 
         </div>
+
+        {/* Fallback contact */}
+        <div style={{ textAlign:"center", paddingTop:"2rem", borderTop:`1px solid ${C.pale}` }}>
+          <p style={{ fontFamily:F.sans, fontWeight:300, fontSize:".88rem", color:C.stone, marginBottom:"1.2rem" }}>
+            Or leave your email or phone number and we'll reach out.
+          </p>
+          <div style={{ display:"flex", justifyContent:"center", gap:".75rem", flexWrap:"wrap" }}>
+            <input
+              type="text"
+              value={fallback}
+              onChange={e => setFallback(e.target.value)}
+              placeholder="your@email.com  or  +44 7700…"
+              style={{
+                width:320, padding:".85rem 1.2rem",
+                background:C.parch, border:`1px solid ${C.pale}`,
+                borderRadius:999, fontFamily:F.sans, fontWeight:300,
+                fontSize:".88rem", color:C.forest, outline:"none",
+              }}
+            />
+            <button
+              onClick={() => {
+                if (fallback.trim()) {
+                  // basic submission — replace with your own handler
+                  alert("Thanks — we'll be in touch.");
+                  setFallback("");
+                }
+              }}
+              style={{
+                padding:".85rem 1.8rem",
+                background:C.forest, color:C.offwhite,
+                border:"none", borderRadius:999,
+                fontFamily:F.sans, fontWeight:500, fontSize:".8rem",
+                letterSpacing:".06em", cursor:"pointer",
+              }}
+            >
+              Send
+            </button>
+          </div>
+        </div>
+
       </div>
 
       {/* Footer */}
-      <footer style={{ borderTop:`1px solid ${C.pale}`, padding:"1.8rem 3rem", marginTop:"4rem", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-        <span style={{ fontFamily:F.display, fontSize:".9rem", color:`${C.forest}66` }}>Mutual</span>
-        <span style={{ fontFamily:F.mono, fontSize:".52rem", letterSpacing:".12em", textTransform:"uppercase", color:`${C.stone}88` }}>© 2026</span>
+      <footer style={{ borderTop:`1px solid ${C.pale}`, padding:"1.6rem 3rem", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+        <span style={{ fontFamily:F.display, fontSize:".9rem", color:`${C.forest}55` }}>Mutual</span>
+        <span style={{ fontFamily:F.mono, fontSize:".5rem", letterSpacing:".12em", textTransform:"uppercase", color:`${C.stone}66` }}>© 2026</span>
       </footer>
     </div>
   );
