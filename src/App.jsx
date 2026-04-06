@@ -469,6 +469,7 @@ export default function App() {
                     <p>Which apps, at what times, for how long? <em>No Instagram after 9pm. Weekends: 30 minutes max.</em> You decide.</p>
                   </div>
                   <CardDeck images={['/image-2a.png', '/image-2b.png', '/image-2c.png']} />
+                </div>
 
                 <div className="beat">
                   <div className="beat-text" data-a="">
@@ -476,7 +477,7 @@ export default function App() {
                     <p>Not an app, the phone itself. Enforced at the Operating System level. You choose how long it holds: a day, two weeks, indefinitely?</p>
                   </div>
                   <div className="beat-illus" style={{padding:0,overflow:'hidden'}}>
-                    <img src="/image-3.png" alt="System configured" style={{width:'100%',height:'100%',objectFit:'contain',display:'block'}} onError={(e)=>{e.target.style.display='none';e.target.parentNode.innerHTML='<div class="num-placeholder">3</div>';}} />
+                    <img src="/image-3.png" alt="System configured" style={{width:'100%',height:'100%',objectFit:'contain',display:'block'}} onError={(e)=>{e.target.replaceWith(Object.assign(document.createElement('div'),{className:'num-placeholder',textContent:'3'}));}} />
                   </div>
                 </div>
 
@@ -486,7 +487,7 @@ export default function App() {
                     <p>We review what's working together. If the plan doesn't work, we adjust. The goal isn't restriction, it's finding the configuration that sticks for you.</p>
                   </div>
                   <div className="beat-illus" style={{padding:0,overflow:'hidden'}}>
-                    <img src="/image-4.png" alt="Check in" style={{width:'100%',height:'100%',objectFit:'contain',display:'block'}} onError={(e)=>{e.target.style.display='none';e.target.parentNode.innerHTML='<div class="num-placeholder">4</div>';}} />
+                    <img src="/image-4.png" alt="Check in" style={{width:'100%',height:'100%',objectFit:'contain',display:'block'}} onError={(e)=>{e.target.replaceWith(Object.assign(document.createElement('div'),{className:'num-placeholder',textContent:'4'}));}} />
                   </div>
                 </div>
 
