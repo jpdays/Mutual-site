@@ -90,11 +90,11 @@ p{line-height:1.85;}
 .story-stat strong{color:var(--ink);font-size:15px;font-weight:600;}
 .story-illus{width:100%;aspect-ratio:4/3;background:var(--surface);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:12px;text-align:center;padding:28px;border:1px solid var(--border);}
 
-.s-statement{padding:96px 0;}
+.s-statement{padding:40px 0 0;}
 .statement-inner{max-width:640px;margin:0 auto;padding:0 40px;text-align:center;}
 .statement-inner h2{font-size:clamp(26px,3vw,40px);margin-bottom:20px;color:var(--ink);}
 
-.s-hiw{padding:96px 0;}
+.s-hiw{padding:56px 0 96px;}
 .hiw-inner{max-width:760px;margin:0 auto;padding:0 40px;}
 .hiw-hdr{margin-bottom:56px;text-align:center;}
 .hiw-hdr .label{font-size:13px;letter-spacing:.2em;}
@@ -155,6 +155,27 @@ p{line-height:1.85;}
 .tally-card{background:var(--white);border-radius:16px;border:1px solid var(--border);padding:36px;margin-bottom:18px;}
 .deposit-card{background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:18px 22px;font-size:14px;color:var(--muted);line-height:1.7;}
 
+.founders{display:flex;gap:48px;justify-content:flex-start;margin-top:32px;}
+.founder{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.founder-circle{width:100px;height:100px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);overflow:hidden;}
+.founder-circle img{width:100%;height:100%;object-fit:cover;}
+.founder-name{font-size:13px;font-weight:500;color:var(--ink);letter-spacing:-.01em;}
+
+.num-placeholder{width:100%;aspect-ratio:3/2;background:var(--surface);border-radius:12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:600;color:var(--border);font-family:var(--serif);}
+
+.card-deck{position:relative;width:100%;aspect-ratio:3/2;cursor:pointer;}
+.deck-card{position:absolute;inset:0;background:var(--white);border-radius:12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:transform .4s cubic-bezier(0.34,1.56,0.64,1),filter .4s,opacity .4s;}
+.deck-card img{width:100%;height:100%;object-fit:cover;display:block;}
+.deck-card.behind-1{transform:translateY(10px) scale(0.95);filter:blur(2px);opacity:.7;z-index:1;}
+.deck-card.behind-2{transform:translateY(18px) scale(0.9);filter:blur(4px);opacity:.45;z-index:0;}
+.deck-card.front{transform:translateY(0) scale(1);filter:none;opacity:1;z-index:2;}
+.deck-hint{position:absolute;bottom:-24px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted);letter-spacing:.06em;}
+
+.video-modal-overlay{position:fixed;inset:0;background:rgba(15,15,14,.85);z-index:10000;display:flex;align-items:center;justify-content:center;padding:24px;}
+.video-modal{background:var(--void);border-radius:16px;width:100%;max-width:720px;overflow:hidden;position:relative;}
+.video-modal video{width:100%;display:block;}
+.video-modal-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.1);border:none;color:white;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
 [data-a]{opacity:0;transform:translateY(32px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out);}
 [data-a="1"]{transition-delay:.1s;}
 [data-a="2"]{transition-delay:.18s;}
@@ -205,10 +226,42 @@ function FaqItem({ question, answer }) {
   );
 }
 
+function CardDeck({ images }) {
+  const [order, setOrder] = useState([0, 1, 2]);
+  const advance = () => {
+    setOrder(prev => {
+      const next = [...prev];
+      next.push(next.shift());
+      return next;
+    });
+  };
+  const getClass = (pos) => {
+    if (pos === 0) return 'deck-card front';
+    if (pos === 1) return 'deck-card behind-1';
+    return 'deck-card behind-2';
+  };
+  return (
+    <div style={{position:'relative',paddingBottom:'32px'}}>
+      <div className="card-deck" onClick={advance}>
+        {order.map((imgIdx, pos) => (
+          <div key={imgIdx} className={getClass(pos)}>
+            {images[imgIdx]
+              ? <img src={images[imgIdx]} alt={`Example ${imgIdx + 1}`} />
+              : <div className="num-placeholder">{imgIdx + 1}</div>
+            }
+          </div>
+        ))}
+      </div>
+      <p className="deck-hint">TAP TO SEE MORE</p>
+    </div>
+  );
+}
+
 export default function App() {
   const [page, setPage] = useState('main');
   const [tbOk, setTbOk] = useState(false);
   const [footerOk, setFooterOk] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
   const tbEmailRef = useRef();
   const footerEmailRef = useRef();
   const heroRef = useRef();
@@ -252,7 +305,14 @@ export default function App() {
     return () => io.disconnect();
   }, [page]);
 
-  const handleTbSubmit = (e) => {
+  // Listen for Tally form submission to show video
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.data && e.data.type === 'tally-form-submitted') setShowVideo(true);
+    };
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, []);
     e.preventDefault();
     console.log('Waitlist:', tbEmailRef.current.value);
     setTbOk(true);
@@ -340,20 +400,7 @@ export default function App() {
                 <p>Current solutions are not up to the task.</p>
               </div>
               <div className="story-illus" data-a="1">
-                <svg width="120" height="140" viewBox="0 0 120 140" fill="none">
-                  <rect x="10" y="60" width="100" height="60" rx="8" fill="#F1EFE9" stroke="#E2DDD6" strokeWidth="1"/>
-                  <ellipse cx="60" cy="62" rx="22" ry="22" fill="#E2DDD6"/>
-                  <rect x="38" y="90" width="44" height="28" rx="4" fill="#E8DDD6"/>
-                  <rect x="30" y="100" width="12" height="18" rx="6" fill="#D8D3CC"/>
-                  <rect x="78" y="100" width="12" height="18" rx="6" fill="#D8D3CC"/>
-                  <rect x="44" y="26" width="32" height="52" rx="6" fill="#0F0F0E"/>
-                  <rect x="47" y="30" width="26" height="40" rx="4" fill="#1C1B19"/>
-                  <rect x="51" y="35" width="18" height="3" rx="1.5" fill="#E8A030" fillOpacity="0.6"/>
-                  <rect x="51" y="42" width="14" height="2" rx="1" fill="#3a3938"/>
-                  <rect x="51" y="48" width="16" height="2" rx="1" fill="#3a3938"/>
-                  <rect x="51" y="54" width="12" height="2" rx="1" fill="#3a3938"/>
-                </svg>
-                <p>Illustration: person scrolling in bed at night</p>
+                <img src="/image-1.png" alt="The problem" style={{width:'100%',height:'100%',objectFit:'contain',borderRadius:'16px'}} onError={(e)=>{e.target.replaceWith(Object.assign(document.createElement('div'),{className:'num-placeholder',textContent:'1'}));}} />
               </div>
             </div>
           </section>
@@ -371,21 +418,7 @@ export default function App() {
                 </div>
               </div>
               <div className="story-illus" data-a="1">
-                <svg width="80" height="130" viewBox="0 0 80 130" fill="none">
-                  <rect x="5" y="5" width="70" height="120" rx="10" fill="#0F0F0E"/>
-                  <rect x="9" y="12" width="62" height="106" rx="7" fill="#1C1B19"/>
-                  <rect x="16" y="22" width="48" height="6" rx="3" fill="#2a2a29"/>
-                  <rect x="16" y="38" width="48" height="36" rx="5" fill="#262625"/>
-                  <rect x="22" y="44" width="36" height="4" rx="2" fill="#3a3938"/>
-                  <rect x="22" y="52" width="28" height="3" rx="1.5" fill="#2f2e2d"/>
-                  <rect x="16" y="82" width="48" height="10" rx="4" fill="#2a2a29"/>
-                  <rect x="20" y="86" width="22" height="3" rx="1.5" fill="#4a4948"/>
-                  <rect x="16" y="97" width="48" height="10" rx="4" fill="#2a2a29"/>
-                  <rect x="20" y="101" width="28" height="3" rx="1.5" fill="#4a4948"/>
-                  <rect x="16" y="112" width="48" height="10" rx="4" fill="#E8A030" fillOpacity="0.8"/>
-                  <text x="40" y="120" fontFamily="sans-serif" fontSize="5.5" fill="#0F0F0E" textAnchor="middle" fontWeight="600">Ignore limit for today</text>
-                </svg>
-                <p>Illustration: screen time bypass popup</p>
+                <img src="/image-2.png" alt="App blockers fail" style={{width:'100%',height:'100%',objectFit:'contain',borderRadius:'16px'}} onError={(e)=>{e.target.replaceWith(Object.assign(document.createElement('div'),{className:'num-placeholder',textContent:'2'}));}} />
               </div>
             </div>
           </section>
@@ -400,20 +433,7 @@ export default function App() {
                 <p>Most people who try it come back. Because modern life requires a modern phone.</p>
               </div>
               <div className="story-illus" data-a="1">
-                <svg width="130" height="110" viewBox="0 0 130 110" fill="none">
-                  <circle cx="55" cy="38" r="20" fill="#F1EFE9" stroke="#E2DDD6" strokeWidth="1"/>
-                  <line x1="55" y1="58" x2="55" y2="76" stroke="#E2DDD6" strokeWidth="2"/>
-                  <line x1="55" y1="76" x2="40" y2="95" stroke="#E2DDD6" strokeWidth="2"/>
-                  <line x1="55" y1="76" x2="70" y2="95" stroke="#E2DDD6" strokeWidth="2"/>
-                  <line x1="55" y1="65" x2="36" y2="58" stroke="#E2DDD6" strokeWidth="2"/>
-                  <line x1="55" y1="65" x2="74" y2="58" stroke="#E2DDD6" strokeWidth="2"/>
-                  <circle cx="105" cy="28" r="18" fill="#F8F7F4" stroke="#E2DDD6" strokeWidth="1"/>
-                  <text x="105" y="35" fontFamily="Georgia,serif" fontSize="18" fill="#C8891F" textAnchor="middle">?</text>
-                  <rect x="82" y="60" width="36" height="22" rx="4" fill="#F1EFE9" stroke="#E2DDD6" strokeWidth="1"/>
-                  <rect x="87" y="66" width="26" height="3" rx="1.5" fill="#E2DDD6"/>
-                  <rect x="87" y="73" width="18" height="3" rx="1.5" fill="#E2DDD6"/>
-                </svg>
-                <p>Illustration: stranded without modern apps</p>
+                <img src="/image-3.png" alt="Dumb phones fail" style={{width:'100%',height:'100%',objectFit:'contain',borderRadius:'16px'}} onError={(e)=>{e.target.replaceWith(Object.assign(document.createElement('div'),{className:'num-placeholder',textContent:'3'}));}} />
               </div>
             </div>
           </section>
@@ -421,7 +441,6 @@ export default function App() {
           {/* SOLUTION */}
           <section className="s-statement" id="solution">
             <div className="statement-inner" data-a="">
-              <span className="label">The answer</span>
               <h2>A phone that understands your objectives and helps you achieve them.</h2>
             </div>
           </section>
@@ -449,36 +468,15 @@ export default function App() {
                     <h3>You tell us your objective.</h3>
                     <p>Which apps, at what times, for how long? <em>No Instagram after 9pm. Weekends: 30 minutes max.</em> You decide.</p>
                   </div>
-                  <div className="beat-illus" data-a="1">
-                    <svg width="60" height="100" viewBox="0 0 60 100" fill="none">
-                      <rect x="5" y="5" width="50" height="90" rx="9" fill="white" stroke="#E2DDD6" strokeWidth="1"/>
-                      <rect x="13" y="16" width="34" height="7" rx="3.5" fill="#E8A030" fillOpacity="0.6"/>
-                      <rect x="13" y="29" width="24" height="3.5" rx="1.5" fill="#E2DDD6"/>
-                      <rect x="13" y="37" width="30" height="3.5" rx="1.5" fill="#F1EFE9"/>
-                      <rect x="13" y="45" width="20" height="3.5" rx="1.5" fill="#F1EFE9"/>
-                      <rect x="13" y="58" width="34" height="22" rx="5" fill="#F1EFE9"/>
-                      <rect x="18" y="64" width="20" height="3" rx="1.5" fill="#E2DDD6"/>
-                      <rect x="18" y="71" width="26" height="3" rx="1.5" fill="#E2DDD6"/>
-                    </svg>
-                    <p>Configuration setup</p>
-                  </div>
-                </div>
+                  <CardDeck images={['/image-2a.png', '/image-2b.png', '/image-2c.png']} />
 
                 <div className="beat">
                   <div className="beat-text" data-a="">
                     <h3>We configure it at the system level.</h3>
                     <p>Not an app, the phone itself. Enforced at the Operating System level. You choose how long it holds: a day, two weeks, indefinitely?</p>
                   </div>
-                  <div className="beat-illus" data-a="1">
-                    <svg width="54" height="96" viewBox="0 0 54 96" fill="none">
-                      <rect x="2" y="2" width="50" height="92" rx="10" fill="#0F0F0E"/>
-                      <rect x="6" y="10" width="42" height="74" rx="6" fill="#1C1B19"/>
-                      <circle cx="27" cy="48" r="15" fill="none" stroke="#E8A030" strokeWidth="2"/>
-                      <path d="M21 48 L26 53 L34 43" stroke="#E8A030" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                      <rect x="14" y="71" width="26" height="4" rx="2" fill="#2a2a29"/>
-                      <circle cx="27" cy="90" r="3.5" fill="#2a2a29"/>
-                    </svg>
-                    <p>System configured</p>
+                  <div className="beat-illus" style={{padding:0,overflow:'hidden'}}>
+                    <img src="/image-3.png" alt="System configured" style={{width:'100%',height:'100%',objectFit:'contain',display:'block'}} onError={(e)=>{e.target.style.display='none';e.target.parentNode.innerHTML='<div class="num-placeholder">3</div>';}} />
                   </div>
                 </div>
 
@@ -487,19 +485,8 @@ export default function App() {
                     <h3>We check in.</h3>
                     <p>We review what's working together. If the plan doesn't work, we adjust. The goal isn't restriction, it's finding the configuration that sticks for you.</p>
                   </div>
-                  <div className="beat-illus" data-a="1">
-                    <svg width="110" height="72" viewBox="0 0 110 72" fill="none">
-                      <rect x="4" y="6" width="44" height="60" rx="8" fill="white" stroke="#E2DDD6" strokeWidth="1"/>
-                      <rect x="11" y="18" width="30" height="6" rx="3" fill="#E8A030" fillOpacity="0.5"/>
-                      <rect x="11" y="29" width="22" height="3" rx="1.5" fill="#E2DDD6"/>
-                      <rect x="11" y="36" width="26" height="3" rx="1.5" fill="#F1EFE9"/>
-                      <rect x="62" y="6" width="44" height="60" rx="8" fill="white" stroke="#E2DDD6" strokeWidth="1"/>
-                      <rect x="69" y="18" width="30" height="6" rx="3" fill="#E2DDD6"/>
-                      <rect x="69" y="29" width="18" height="3" rx="1.5" fill="#F1EFE9"/>
-                      <rect x="69" y="46" width="30" height="5" rx="2.5" fill="#E8A030" fillOpacity="0.28"/>
-                      <rect x="69" y="54" width="18" height="5" rx="2.5" fill="#E8A030" fillOpacity="0.65"/>
-                    </svg>
-                    <p>Check-in and adjust</p>
+                  <div className="beat-illus" style={{padding:0,overflow:'hidden'}}>
+                    <img src="/image-4.png" alt="Check in" style={{width:'100%',height:'100%',objectFit:'contain',display:'block'}} onError={(e)=>{e.target.style.display='none';e.target.parentNode.innerHTML='<div class="num-placeholder">4</div>';}} />
                   </div>
                 </div>
 
@@ -528,7 +515,20 @@ export default function App() {
                 <p>We're two founders building in London. We're looking for the right people to build this with.</p>
               </div>
               <div className="about-media" data-a="1">
-                <video src="/BetaIntroVideo.mp4" controls style={{width:'100%',borderRadius:'12px',display:'block'}} />
+                <div className="founders">
+                  <div className="founder">
+                    <div className="founder-circle">
+                      <img src="/joao.png" alt="João" onError={(e)=>{e.target.style.display='none';}} />
+                    </div>
+                    <span className="founder-name">João</span>
+                  </div>
+                  <div className="founder">
+                    <div className="founder-circle">
+                      <img src="/ali.png" alt="Ali" onError={(e)=>{e.target.style.display='none';}} />
+                    </div>
+                    <span className="founder-name">Ali</span>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -567,6 +567,16 @@ export default function App() {
             </div>
           </footer>
 
+        </div>
+      )}
+
+      {/* VIDEO MODAL — shown after Tally form submission */}
+      {showVideo && (
+        <div className="video-modal-overlay" onClick={() => setShowVideo(false)}>
+          <div className="video-modal" onClick={e => e.stopPropagation()}>
+            <button className="video-modal-close" onClick={() => setShowVideo(false)}>✕</button>
+            <video src="/BetaIntroVideo.mp4" controls autoPlay style={{width:'100%',display:'block'}} />
+          </div>
         </div>
       )}
 
