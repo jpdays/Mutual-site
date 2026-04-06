@@ -440,7 +440,7 @@ export default function App() {
                     <p>Once accepted into the early access cohort, we send you a pre-configured Samsung device.</p>
                   </div>
                   <div className="beat-illus" style={{background:'var(--surface)',padding:'16px',overflow:'hidden'}}>
-                    <img src="public/Delivery.png" alt="Phone delivered by post" style={{width:'100%',height:'100%',objectFit:'contain',display:'block'}} />
+                    <img src="/Delivery.png" alt="Phone delivered by post" style={{width:'100%',height:'100%',objectFit:'contain',display:'block'}} />
                   </div>
                 </div>
 
@@ -528,7 +528,7 @@ export default function App() {
                 <p>We're two founders building in London. We're looking for the right people to build this with.</p>
               </div>
               <div className="about-media" data-a="1">
-                <video src="public/BetaIntroVideo.mp4" controls style={{width:'100%',borderRadius:'12px',display:'block'}} />
+                <video src="/BetaIntroVideo.mp4" controls style={{width:'100%',borderRadius:'12px',display:'block'}} />
               </div>
             </div>
           </section>
