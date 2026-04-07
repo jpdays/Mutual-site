@@ -313,6 +313,8 @@ export default function App() {
     window.addEventListener('message', handler);
     return () => window.removeEventListener('message', handler);
   }, []);
+
+  const handleTbSubmit = (e) => {
     e.preventDefault();
     console.log('Waitlist:', tbEmailRef.current.value);
     setTbOk(true);
