@@ -1,4 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  "https://jcgelvlzwfearecpoaxg.supabase.co",
+  "sb_publishable_dlyG3pjDXQwPt7XRSIsxgA_tN-PItUj"
+);
+
+const STRIPE_LINK = "https://buy.stripe.com/bJeaEP6cO13LfKF0EBgMw02";
 
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
@@ -146,22 +154,11 @@ p{line-height:1.85;}
 .footer-links a{color:inherit;text-decoration:none;transition:color .2s;}
 .footer-links a:hover{color:rgba(249,248,245,.5);}
 
-.apply-nav{background:var(--bg);border-bottom:1px solid var(--border);padding:0 40px;position:sticky;top:0;z-index:100;}
-.apply-nav-inner{max-width:720px;margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;}
-.apply-body{max-width:720px;margin:0 auto;padding:72px 40px 96px;}
-.apply-body h1{font-size:clamp(28px,4vw,46px);letter-spacing:-0.03em;line-height:1.1;margin-bottom:14px;}
-.apply-body h1 em{font-family:var(--serif);font-style:italic;font-weight:400;}
-.apply-sub{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:48px;max-width:480px;}
-.tally-card{background:var(--white);border-radius:16px;border:1px solid var(--border);padding:36px;margin-bottom:18px;}
-.deposit-card{background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:18px 22px;font-size:14px;color:var(--muted);line-height:1.7;}
-
 .founders{display:flex;gap:48px;justify-content:flex-start;margin-top:32px;}
 .founder{display:flex;flex-direction:column;align-items:center;gap:10px;}
 .founder-circle{width:100px;height:100px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);overflow:hidden;}
 .founder-circle img{width:100%;height:100%;object-fit:cover;}
 .founder-name{font-size:13px;font-weight:500;color:var(--ink);letter-spacing:-.01em;}
-
-.num-placeholder{width:100%;aspect-ratio:3/2;background:var(--surface);border-radius:12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:600;color:var(--border);font-family:var(--serif);}
 
 .card-deck{position:relative;width:100%;aspect-ratio:3/2;cursor:pointer;}
 .deck-card{position:absolute;inset:0;background:var(--white);border-radius:12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:transform .4s cubic-bezier(0.34,1.56,0.64,1),filter .4s,opacity .4s;}
@@ -171,10 +168,25 @@ p{line-height:1.85;}
 .deck-card.front{transform:translateY(0) scale(1);filter:none;opacity:1;z-index:2;}
 .deck-hint{position:absolute;bottom:-24px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted);letter-spacing:.06em;}
 
-.video-modal-overlay{position:fixed;inset:0;background:rgba(15,15,14,.85);z-index:10000;display:flex;align-items:center;justify-content:center;padding:24px;}
-.video-modal{background:var(--void);border-radius:16px;width:100%;max-width:720px;overflow:hidden;position:relative;}
-.video-modal video{width:100%;display:block;}
-.video-modal-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.1);border:none;color:white;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.apply-nav{background:var(--bg);border-bottom:1px solid var(--border);padding:0 40px;position:sticky;top:0;z-index:100;}
+.apply-nav-inner{max-width:720px;margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;}
+.apply-body{max-width:720px;margin:0 auto;padding:72px 40px 96px;}
+.apply-body h1{font-size:clamp(28px,4vw,46px);letter-spacing:-0.03em;line-height:1.1;margin-bottom:14px;}
+.apply-body h1 em{font-family:var(--serif);font-style:italic;font-weight:400;}
+.apply-sub{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:48px;max-width:480px;}
+.tally-card{background:var(--white);border-radius:16px;border:1px solid var(--border);padding:36px;margin-bottom:18px;}
+.deposit-card{background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:18px 22px;font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px;}
+
+.stripe-section{text-align:center;padding:36px;background:var(--white);border-radius:16px;border:1px solid var(--border);}
+.stripe-section p{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.7;}
+.btn-stripe{display:inline-flex;align-items:center;gap:10px;background:var(--void);color:var(--bg);border:none;border-radius:100px;padding:14px 32px;font-family:var(--sans);font-size:15px;font-weight:500;cursor:pointer;text-decoration:none;transition:background .2s,transform .15s;}
+.btn-stripe:hover{background:#262624;transform:scale(1.02);}
+
+.video-overlay{position:fixed;inset:0;background:rgba(15,15,14,.88);z-index:10000;display:flex;align-items:center;justify-content:center;padding:24px;}
+.video-box{background:var(--void);border-radius:16px;width:100%;max-width:720px;overflow:hidden;position:relative;}
+.video-box video{width:100%;display:block;}
+.video-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.12);border:none;color:white;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.video-close:hover{background:rgba(255,255,255,.22);}
 
 [data-a]{opacity:0;transform:translateY(32px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out);}
 [data-a="1"]{transition-delay:.1s;}
@@ -245,10 +257,7 @@ function CardDeck({ images }) {
       <div className="card-deck" onClick={advance}>
         {order.map((imgIdx, pos) => (
           <div key={imgIdx} className={getClass(pos)}>
-            {images[imgIdx]
-              ? <img src={images[imgIdx]} alt={`Example ${imgIdx + 1}`} />
-              : <div className="num-placeholder">{imgIdx + 1}</div>
-            }
+            <img src={images[imgIdx]} alt={`Example ${imgIdx + 1}`} style={{width:'100%',height:'100%',objectFit:'cover'}} />
           </div>
         ))}
       </div>
@@ -271,7 +280,6 @@ export default function App() {
   const goApply = () => { setPage('apply'); window.scrollTo({top:0,behavior:'instant'}); };
   const goMain  = () => { setPage('main');  window.scrollTo({top:0,behavior:'instant'}); };
 
-  // Nav + topbar scroll behavior
   useEffect(() => {
     if (page !== 'main') return;
     const hero = heroRef.current;
@@ -293,7 +301,6 @@ export default function App() {
     return () => io.disconnect();
   }, [page]);
 
-  // Scroll animations
   useEffect(() => {
     const els = document.querySelectorAll('[data-a]');
     const io = new IntersectionObserver((entries) => {
@@ -305,7 +312,6 @@ export default function App() {
     return () => io.disconnect();
   }, [page]);
 
-  // Listen for Tally form submission to show video
   useEffect(() => {
     const handler = (e) => {
       if (e.data && e.data.type === 'tally-form-submitted') setShowVideo(true);
@@ -314,18 +320,20 @@ export default function App() {
     return () => window.removeEventListener('message', handler);
   }, []);
 
-  const handleTbSubmit = (e) => {
-    e.preventDefault();
-    console.log('Waitlist:', tbEmailRef.current.value);
-    setTbOk(true);
-    /* TODO: POST to Supabase leads table */
+  const saveEmail = async (email, source) => {
+    await supabase.from('leads').insert({ contact: email, source });
   };
 
-  const handleFooterSubmit = (e) => {
+  const handleTbSubmit = async (e) => {
     e.preventDefault();
-    console.log('Footer waitlist:', footerEmailRef.current.value);
+    await saveEmail(tbEmailRef.current.value, 'topbar');
+    setTbOk(true);
+  };
+
+  const handleFooterSubmit = async (e) => {
+    e.preventDefault();
+    await saveEmail(footerEmailRef.current.value, 'footer');
     setFooterOk(true);
-    /* TODO: POST to Supabase leads table */
   };
 
   const scrollTo = (id) => {
@@ -349,7 +357,6 @@ export default function App() {
       <style>{css}</style>
       <div id="noise" aria-hidden="true" />
 
-      {/* TOP BAR */}
       <div id="topBar" ref={topBarRef}>
         <div className="tb">
           <span className="tb-label"><strong>Stay Updated</strong>&ensp;News on spot openings and product development</span>
@@ -364,11 +371,9 @@ export default function App() {
         </div>
       </div>
 
-      {/* MAIN PAGE */}
       {page === 'main' && (
         <div id="page-main">
 
-          {/* NAV */}
           <nav id="nav" className="init" ref={navRef}>
             <div className="nav-inner">
               <a className="logo" href="#" onClick={(e) => { e.preventDefault(); goMain(); }}>mutual.</a>
@@ -381,7 +386,6 @@ export default function App() {
             </div>
           </nav>
 
-          {/* HERO */}
           <section className="s-hero" id="hero" ref={heroRef}>
             <div className="hero-content">
               <h1 className="hero-h" data-a="">The first smartphone<br />that <em>enforces your rules.</em></h1>
@@ -392,7 +396,6 @@ export default function App() {
             </div>
           </section>
 
-          {/* PROBLEM */}
           <section className="s" id="why">
             <div className="story-beat" data-a="">
               <div className="story-text">
@@ -402,12 +405,24 @@ export default function App() {
                 <p>Current solutions are not up to the task.</p>
               </div>
               <div className="story-illus" data-a="1">
-                <img src="/image-1.png" alt="The problem" style={{width:'100%',height:'100%',objectFit:'contain',borderRadius:'16px'}} onError={(e)=>{e.target.replaceWith(Object.assign(document.createElement('div'),{className:'num-placeholder',textContent:'1'}));}} />
+                <svg width="120" height="140" viewBox="0 0 120 140" fill="none">
+                  <rect x="10" y="60" width="100" height="60" rx="8" fill="#F1EFE9" stroke="#E2DDD6" strokeWidth="1"/>
+                  <ellipse cx="60" cy="62" rx="22" ry="22" fill="#E2DDD6"/>
+                  <rect x="38" y="90" width="44" height="28" rx="4" fill="#E8DDD6"/>
+                  <rect x="30" y="100" width="12" height="18" rx="6" fill="#D8D3CC"/>
+                  <rect x="78" y="100" width="12" height="18" rx="6" fill="#D8D3CC"/>
+                  <rect x="44" y="26" width="32" height="52" rx="6" fill="#0F0F0E"/>
+                  <rect x="47" y="30" width="26" height="40" rx="4" fill="#1C1B19"/>
+                  <rect x="51" y="35" width="18" height="3" rx="1.5" fill="#E8A030" fillOpacity="0.6"/>
+                  <rect x="51" y="42" width="14" height="2" rx="1" fill="#3a3938"/>
+                  <rect x="51" y="48" width="16" height="2" rx="1" fill="#3a3938"/>
+                  <rect x="51" y="54" width="12" height="2" rx="1" fill="#3a3938"/>
+                </svg>
+                <p>Person scrolling in bed at night</p>
               </div>
             </div>
           </section>
 
-          {/* APP BLOCKERS */}
           <section className="s">
             <div className="story-beat flip" data-a="">
               <div className="story-text">
@@ -420,12 +435,25 @@ export default function App() {
                 </div>
               </div>
               <div className="story-illus" data-a="1">
-                <img src="/image-2.png" alt="App blockers fail" style={{width:'100%',height:'100%',objectFit:'contain',borderRadius:'16px'}} onError={(e)=>{e.target.replaceWith(Object.assign(document.createElement('div'),{className:'num-placeholder',textContent:'2'}));}} />
+                <svg width="80" height="130" viewBox="0 0 80 130" fill="none">
+                  <rect x="5" y="5" width="70" height="120" rx="10" fill="#0F0F0E"/>
+                  <rect x="9" y="12" width="62" height="106" rx="7" fill="#1C1B19"/>
+                  <rect x="16" y="22" width="48" height="6" rx="3" fill="#2a2a29"/>
+                  <rect x="16" y="38" width="48" height="36" rx="5" fill="#262625"/>
+                  <rect x="22" y="44" width="36" height="4" rx="2" fill="#3a3938"/>
+                  <rect x="22" y="52" width="28" height="3" rx="1.5" fill="#2f2e2d"/>
+                  <rect x="16" y="82" width="48" height="10" rx="4" fill="#2a2a29"/>
+                  <rect x="20" y="86" width="22" height="3" rx="1.5" fill="#4a4948"/>
+                  <rect x="16" y="97" width="48" height="10" rx="4" fill="#2a2a29"/>
+                  <rect x="20" y="101" width="28" height="3" rx="1.5" fill="#4a4948"/>
+                  <rect x="16" y="112" width="48" height="10" rx="4" fill="#E8A030" fillOpacity="0.8"/>
+                  <text x="40" y="120" fontFamily="sans-serif" fontSize="5.5" fill="#0F0F0E" textAnchor="middle" fontWeight="600">Ignore limit for today</text>
+                </svg>
+                <p>Screen time bypass popup</p>
               </div>
             </div>
           </section>
 
-          {/* DUMB PHONES */}
           <section className="s">
             <div className="story-beat" data-a="">
               <div className="story-text">
@@ -435,19 +463,30 @@ export default function App() {
                 <p>Most people who try it come back. Because modern life requires a modern phone.</p>
               </div>
               <div className="story-illus" data-a="1">
-                <img src="/image-3.png" alt="Dumb phones fail" style={{width:'100%',height:'100%',objectFit:'contain',borderRadius:'16px'}} onError={(e)=>{e.target.replaceWith(Object.assign(document.createElement('div'),{className:'num-placeholder',textContent:'3'}));}} />
+                <svg width="130" height="110" viewBox="0 0 130 110" fill="none">
+                  <circle cx="55" cy="38" r="20" fill="#F1EFE9" stroke="#E2DDD6" strokeWidth="1"/>
+                  <line x1="55" y1="58" x2="55" y2="76" stroke="#E2DDD6" strokeWidth="2"/>
+                  <line x1="55" y1="76" x2="40" y2="95" stroke="#E2DDD6" strokeWidth="2"/>
+                  <line x1="55" y1="76" x2="70" y2="95" stroke="#E2DDD6" strokeWidth="2"/>
+                  <line x1="55" y1="65" x2="36" y2="58" stroke="#E2DDD6" strokeWidth="2"/>
+                  <line x1="55" y1="65" x2="74" y2="58" stroke="#E2DDD6" strokeWidth="2"/>
+                  <circle cx="105" cy="28" r="18" fill="#F8F7F4" stroke="#E2DDD6" strokeWidth="1"/>
+                  <text x="105" y="35" fontFamily="Georgia,serif" fontSize="18" fill="#C8891F" textAnchor="middle">?</text>
+                  <rect x="82" y="60" width="36" height="22" rx="4" fill="#F1EFE9" stroke="#E2DDD6" strokeWidth="1"/>
+                  <rect x="87" y="66" width="26" height="3" rx="1.5" fill="#E2DDD6"/>
+                  <rect x="87" y="73" width="18" height="3" rx="1.5" fill="#E2DDD6"/>
+                </svg>
+                <p>Stranded without modern apps</p>
               </div>
             </div>
           </section>
 
-          {/* SOLUTION */}
           <section className="s-statement" id="solution">
             <div className="statement-inner" data-a="">
               <h2>A phone that understands your objectives and helps you achieve them.</h2>
             </div>
           </section>
 
-          {/* HOW IT WORKS */}
           <section className="s-hiw" id="how-it-works">
             <div className="hiw-inner">
               <div className="hiw-hdr" data-a="">
@@ -478,8 +517,16 @@ export default function App() {
                     <h3>We configure it at the system level.</h3>
                     <p>Not an app, the phone itself. Enforced at the Operating System level. You choose how long it holds: a day, two weeks, indefinitely?</p>
                   </div>
-                  <div className="beat-illus" style={{padding:0,overflow:'hidden'}}>
-                    <img src="/image-3.png" alt="System configured" style={{width:'100%',height:'100%',objectFit:'contain',display:'block'}} onError={(e)=>{e.target.replaceWith(Object.assign(document.createElement('div'),{className:'num-placeholder',textContent:'3'}));}} />
+                  <div className="beat-illus" data-a="1">
+                    <svg width="54" height="96" viewBox="0 0 54 96" fill="none">
+                      <rect x="2" y="2" width="50" height="92" rx="10" fill="#0F0F0E"/>
+                      <rect x="6" y="10" width="42" height="74" rx="6" fill="#1C1B19"/>
+                      <circle cx="27" cy="48" r="15" fill="none" stroke="#E8A030" strokeWidth="2"/>
+                      <path d="M21 48 L26 53 L34 43" stroke="#E8A030" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                      <rect x="14" y="71" width="26" height="4" rx="2" fill="#2a2a29"/>
+                      <circle cx="27" cy="90" r="3.5" fill="#2a2a29"/>
+                    </svg>
+                    <p>System configured</p>
                   </div>
                 </div>
 
@@ -488,8 +535,19 @@ export default function App() {
                     <h3>We check in.</h3>
                     <p>We review what's working together. If the plan doesn't work, we adjust. The goal isn't restriction, it's finding the configuration that sticks for you.</p>
                   </div>
-                  <div className="beat-illus" style={{padding:0,overflow:'hidden'}}>
-                    <img src="/image-4.png" alt="Check in" style={{width:'100%',height:'100%',objectFit:'contain',display:'block'}} onError={(e)=>{e.target.replaceWith(Object.assign(document.createElement('div'),{className:'num-placeholder',textContent:'4'}));}} />
+                  <div className="beat-illus" data-a="1">
+                    <svg width="110" height="72" viewBox="0 0 110 72" fill="none">
+                      <rect x="4" y="6" width="44" height="60" rx="8" fill="white" stroke="#E2DDD6" strokeWidth="1"/>
+                      <rect x="11" y="18" width="30" height="6" rx="3" fill="#E8A030" fillOpacity="0.5"/>
+                      <rect x="11" y="29" width="22" height="3" rx="1.5" fill="#E2DDD6"/>
+                      <rect x="11" y="36" width="26" height="3" rx="1.5" fill="#F1EFE9"/>
+                      <rect x="62" y="6" width="44" height="60" rx="8" fill="white" stroke="#E2DDD6" strokeWidth="1"/>
+                      <rect x="69" y="18" width="30" height="6" rx="3" fill="#E2DDD6"/>
+                      <rect x="69" y="29" width="18" height="3" rx="1.5" fill="#F1EFE9"/>
+                      <rect x="69" y="46" width="30" height="5" rx="2.5" fill="#E8A030" fillOpacity="0.28"/>
+                      <rect x="69" y="54" width="18" height="5" rx="2.5" fill="#E8A030" fillOpacity="0.65"/>
+                    </svg>
+                    <p>Check-in and adjust</p>
                   </div>
                 </div>
 
@@ -497,7 +555,6 @@ export default function App() {
             </div>
           </section>
 
-          {/* EARLY ACCESS */}
           <section className="s-ea" id="early-access">
             <div data-a="">
               <span className="label-lt">Early access</span>
@@ -508,7 +565,6 @@ export default function App() {
             </div>
           </section>
 
-          {/* ABOUT */}
           <section className="s-about" id="about">
             <div className="about-grid">
               <div className="about-text" data-a="">
@@ -521,13 +577,13 @@ export default function App() {
                 <div className="founders">
                   <div className="founder">
                     <div className="founder-circle">
-                      <img src="/joao.png" alt="João" onError={(e)=>{e.target.style.display='none';}} />
+                      <img src="/joao.png" alt="João" onError={(e) => { e.target.style.display = 'none'; }} />
                     </div>
                     <span className="founder-name">João</span>
                   </div>
                   <div className="founder">
                     <div className="founder-circle">
-                      <img src="/ali.png" alt="Ali" onError={(e)=>{e.target.style.display='none';}} />
+                      <img src="/ali.png" alt="Ali" onError={(e) => { e.target.style.display = 'none'; }} />
                     </div>
                     <span className="founder-name">Ali</span>
                   </div>
@@ -536,7 +592,6 @@ export default function App() {
             </div>
           </section>
 
-          {/* FAQ */}
           <section className="s-faq" id="faq">
             <div className="faq-inner">
               <h2 data-a="">Frequently asked questions</h2>
@@ -546,7 +601,6 @@ export default function App() {
             </div>
           </section>
 
-          {/* FOOTER */}
           <footer className="site-footer">
             <div className="wrap">
               <div className="footer-wl" id="footer-wl" data-a="">
@@ -573,17 +627,15 @@ export default function App() {
         </div>
       )}
 
-      {/* VIDEO MODAL — shown after Tally form submission */}
       {showVideo && (
-        <div className="video-modal-overlay" onClick={() => setShowVideo(false)}>
-          <div className="video-modal" onClick={e => e.stopPropagation()}>
-            <button className="video-modal-close" onClick={() => setShowVideo(false)}>✕</button>
+        <div className="video-overlay" onClick={() => setShowVideo(false)}>
+          <div className="video-box" onClick={e => e.stopPropagation()}>
+            <button className="video-close" onClick={() => setShowVideo(false)}>✕</button>
             <video src="/BetaIntroVideo.mp4" controls autoPlay style={{width:'100%',display:'block'}} />
           </div>
         </div>
       )}
 
-      {/* APPLY PAGE */}
       {page === 'apply' && (
         <div id="page-apply">
           <nav className="apply-nav">
@@ -608,6 +660,12 @@ export default function App() {
             </div>
             <div className="deposit-card">
               If you're not selected for the first cohort, you'll receive a full refund or we'll roll it to the next opening. Whichever you prefer.
+            </div>
+            <div className="stripe-section">
+              <p>Ready to secure your spot? A £10 deposit confirms your place in the first cohort.</p>
+              <a href={STRIPE_LINK} target="_blank" rel="noopener noreferrer" className="btn-stripe">
+                Secure my spot →
+              </a>
             </div>
           </div>
         </div>
