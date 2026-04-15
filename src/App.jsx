@@ -102,17 +102,81 @@ p{line-height:1.85;}
 .statement-inner{max-width:640px;margin:0 auto;padding:0 40px;text-align:center;}
 .statement-inner h2{font-size:clamp(26px,3vw,40px);margin-bottom:20px;color:var(--ink);}
 
-.s-hiw{padding:56px 0 96px;}
-.hiw-inner{max-width:760px;margin:0 auto;padding:0 40px;}
-.hiw-hdr{margin-bottom:56px;text-align:center;}
-.hiw-hdr .label{font-size:13px;letter-spacing:.2em;}
-.beats{display:flex;flex-direction:column;}
-.beat{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;padding:52px 0;}
-.beat:last-child{padding-bottom:0;}
-.beat-text h3{font-size:clamp(18px,1.8vw,22px);margin-bottom:12px;color:var(--ink);}
-.beat-text p{font-size:15px;color:var(--muted);line-height:1.85;}
-.beat-text p em{font-family:var(--serif);font-style:italic;color:var(--ink);font-size:16px;}
-.beat-illus{width:100%;aspect-ratio:3/2;background:var(--surface);border-radius:12px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted);font-size:11px;text-align:center;padding:20px;}
+/* ─── ADAPTS TO YOUR LIFE ─── */
+.s-adapts{padding:112px 0 96px;background:var(--bg);}
+.adapts-wrap{max-width:1080px;margin:0 auto;padding:0 40px;}
+.adapts-hdr{margin-bottom:56px;}
+.adapts-eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:block;}
+.adapts-h{font-family:var(--sans);font-size:clamp(28px,3.8vw,44px);font-weight:600;letter-spacing:-0.03em;color:var(--ink);line-height:1.1;margin:0;}
+.adapts-h em{font-family:var(--serif);font-style:italic;font-weight:400;}
+.adapts-grid{display:grid;grid-template-columns:420px 1fr;gap:64px;align-items:start;}
+.adapts-panel{background:var(--white);border:1px solid var(--border);border-radius:28px;padding:36px;box-shadow:0 8px 40px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);}
+.adapts-moments{display:flex;flex-direction:column;gap:6px;margin-bottom:32px;}
+.adapts-btn{background:none;border:1.5px solid transparent;border-radius:100px;padding:10px 20px;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;text-align:left;letter-spacing:-0.01em;transition:color 200ms cubic-bezier(0.25,0.46,0.45,0.94),background 200ms cubic-bezier(0.25,0.46,0.45,0.94),border-color 200ms cubic-bezier(0.25,0.46,0.45,0.94),transform 200ms cubic-bezier(0.25,0.46,0.45,0.94),box-shadow 200ms cubic-bezier(0.25,0.46,0.45,0.94);user-select:none;}
+.adapts-btn:hover{color:var(--ink);background:var(--surface);transform:translateY(-1px) scale(1.02);}
+.adapts-btn:active{transform:scale(0.98);}
+.adapts-btn.active{color:var(--ink);background:var(--surface);border-color:var(--border);font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.adapts-divider{height:1px;background:var(--border);margin-bottom:28px;}
+.adapts-fade{transition:opacity 180ms ease,transform 180ms ease;}
+.adapts-fade.out{opacity:0;transform:translateY(8px);}
+.adapts-dyn-title{font-family:var(--sans);font-size:18px;font-weight:600;letter-spacing:-0.025em;color:var(--ink);line-height:1.3;margin:0 0 10px;}
+.adapts-dyn-body{font-family:var(--sans);font-size:14px;color:var(--muted);line-height:1.7;margin:0 0 3px;letter-spacing:-0.005em;}
+.adapts-tag{display:inline-flex;align-items:center;gap:6px;margin-top:20px;padding:5px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;font-family:var(--sans);font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.04em;}
+.adapts-tag-dot{width:5px;height:5px;border-radius:50%;background:var(--signal);flex-shrink:0;}
+.adapts-image-outer{background:var(--white);border:1px solid var(--border);border-radius:28px;box-shadow:0 8px 40px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);overflow:hidden;aspect-ratio:4/3;position:relative;transition:opacity 180ms ease,transform 180ms ease;}
+.adapts-image-outer.out{opacity:0;transform:translateY(8px);}
+.adapts-img-inner{position:absolute;inset:0;display:flex;flex-direction:column;padding:32px;gap:16px;}
+.adapts-ph-bar{border-radius:100px;background:var(--surface);border:1px solid var(--border);}
+.adapts-ph-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:4px;}
+.adapts-ph-chip{border-radius:12px;aspect-ratio:1;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;transition:opacity .22s,filter .22s;}
+.adapts-ph-chip.dim{opacity:.18;filter:grayscale(1);}
+.adapts-rule-row{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.adapts-rule-dot{width:7px;height:7px;border-radius:50%;background:var(--signal);flex-shrink:0;box-shadow:0 0 5px rgba(232,160,48,.5);}
+.adapts-rule-text{font-family:var(--sans);font-size:12px;font-weight:500;color:var(--ink);letter-spacing:-.01em;flex:1;}
+.adapts-rule-tag{font-family:var(--sans);font-size:10px;color:var(--muted);background:var(--border);border-radius:100px;padding:2px 8px;white-space:nowrap;}
+.adapts-bottom{font-family:var(--sans);font-size:13px;color:var(--muted);text-align:center;margin-top:56px;opacity:.65;letter-spacing:-.005em;}
+@media(max-width:860px){
+  .adapts-grid{grid-template-columns:1fr;gap:32px;}
+  .adapts-image-outer{aspect-ratio:3/2;}
+}
+
+/* ─── HOW MUTUAL WORKS ─── */
+.s-product{padding:96px 0;}
+.product-inner{max-width:1080px;margin:0 auto;padding:0 40px;}
+.product-hdr{margin-bottom:52px;}
+.product-hdr h2{font-size:clamp(28px,3.5vw,44px);letter-spacing:-0.025em;margin-bottom:8px;}
+.product-hdr p{font-size:15px;color:var(--muted);max-width:480px;}
+.product-layout{display:grid;grid-template-columns:1fr 1.5fr;gap:56px;align-items:start;}
+.product-steps{display:flex;flex-direction:column;}
+.product-step{display:flex;align-items:flex-start;gap:16px;padding:18px 0;cursor:pointer;border-top:1px solid var(--border);user-select:none;}
+.product-step:last-child{border-bottom:1px solid var(--border);}
+.product-step-num{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--muted);flex-shrink:0;transition:background .25s,border-color .25s,color .25s;}
+.product-step.active .product-step-num{background:var(--signal);border-color:var(--signal);color:var(--void);}
+.product-step-body{flex:1;padding-top:5px;}
+.product-step-title{font-size:15px;font-weight:500;color:var(--muted);letter-spacing:-0.01em;line-height:1.3;transition:color .25s;display:block;}
+.product-step.active .product-step-title{color:var(--ink);}
+.product-step-bar{height:2px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden;}
+.product-step-fill{height:100%;background:var(--signal);border-radius:2px;transition:width 40ms linear;}
+.product-panel{background:var(--signal);border-radius:24px;padding:48px 32px;display:flex;align-items:center;justify-content:center;min-height:460px;position:sticky;top:120px;}
+.product-phone{width:170px;background:var(--void);border-radius:32px;aspect-ratio:9/19.5;position:relative;overflow:hidden;box-shadow:0 28px 56px rgba(0,0,0,.25);}
+.product-phone::before{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:36px;height:5px;background:rgba(255,255,255,.08);border-radius:3px;z-index:2;}
+.product-phone-screen{position:absolute;inset:3px;background:#111;border-radius:30px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.product-phone-screen img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .2s;}
+.product-phone-num{position:absolute;font-family:var(--serif);font-style:italic;font-size:52px;color:rgba(255,255,255,.07);pointer-events:none;}
+
+/* ─── JOIN EARLY ACCESS PROCESS ─── */
+.s-process{padding:96px 0;}
+.process-inner{max-width:1080px;margin:0 auto;padding:0 40px;}
+.process-hdr{margin-bottom:52px;}
+.process-hdr h2{font-size:clamp(26px,3vw,38px);letter-spacing:-0.025em;margin-bottom:8px;}
+.process-hdr p{font-size:15px;color:var(--muted);}
+.process-track{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.process-line{position:absolute;top:26px;left:12.5%;right:12.5%;border-top:1.5px dashed var(--border);z-index:0;pointer-events:none;}
+.process-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:28px 22px 24px;position:relative;z-index:1;transition:border-color .2s,box-shadow .2s;}
+.process-card:hover{border-color:rgba(232,160,48,.4);box-shadow:0 4px 16px rgba(0,0,0,.06);}
+.process-num{font-family:var(--serif);font-style:italic;font-size:26px;color:var(--border);line-height:1;margin-bottom:18px;}
+.process-card-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:6px;letter-spacing:-0.01em;line-height:1.3;}
+.process-card-desc{font-size:13px;color:var(--muted);line-height:1.65;}
 
 .s-ea{padding:104px 40px;text-align:center;background:var(--ink);color:var(--bg);}
 .s-ea h2{font-size:clamp(30px,4vw,52px);margin-bottom:18px;color:var(--bg);font-weight:700;letter-spacing:-0.03em;}
@@ -194,14 +258,59 @@ p{line-height:1.85;}
 [data-a="3"]{transition-delay:.26s;}
 [data-a].in{opacity:1;transform:translateY(0);}
 
+.story-illus{position:relative;overflow:hidden;}
+
+.notif-scene{width:100%;height:100%;position:relative;display:flex;align-items:center;justify-content:center;}
+.notif-phone{width:88px;height:156px;background:var(--void);border-radius:16px;position:relative;flex-shrink:0;}
+.notif-screen{position:absolute;inset:4px;background:#1a1a18;border-radius:13px;}
+.notif-pill{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:28px;height:5px;background:#2a2a28;border-radius:3px;}
+.notif-stack{position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;}
+.notif-toast{position:absolute;left:108px;right:0;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:opacity .25s,transform .25s;pointer-events:all;}
+.notif-toast.exiting{opacity:0;transform:translateX(12px);}
+.notif-app{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);}
+.notif-msg{font-size:11px;color:var(--ink);line-height:1.4;}
+.notif-hint{text-align:center;font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:8px;}
+
+.bypass-wrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.bypass-phone{width:120px;height:200px;background:var(--void);border-radius:20px;position:relative;overflow:hidden;flex-shrink:0;}
+.bypass-screen{position:absolute;inset:5px;background:#111;border-radius:16px;display:flex;align-items:center;justify-content:center;}
+.bypass-modal{background:var(--white);border-radius:12px;width:88px;padding:12px 10px;text-align:center;display:flex;flex-direction:column;gap:8px;transition:opacity .2s,transform .2s;}
+.bypass-modal.hidden{opacity:0;transform:scale(.95);pointer-events:none;}
+.bypass-icon{font-size:18px;line-height:1;}
+.bypass-title{font-size:9px;font-weight:700;color:var(--ink);letter-spacing:.02em;}
+.bypass-sub{font-size:8px;color:var(--muted);line-height:1.4;}
+.bypass-btn-ok{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 0;font-size:8px;font-weight:600;color:var(--muted);cursor:pointer;width:100%;}
+.bypass-btn-ignore{background:var(--signal);border:none;border-radius:6px;padding:5px 0;font-size:8px;font-weight:700;color:var(--void);cursor:pointer;width:100%;transition:background .15s;}
+.bypass-btn-ignore:hover{background:var(--signal-dk);}
+.bypass-success{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;opacity:0;transition:opacity .25s;}
+.bypass-success.show{opacity:1;}
+.bypass-success-icon{font-size:22px;}
+.bypass-success-text{font-size:9px;color:rgba(255,255,255,.45);text-align:center;line-height:1.4;}
+
+.minimal-phone{width:130px;height:210px;background:var(--void);border-radius:22px;position:relative;overflow:hidden;flex-shrink:0;}
+.minimal-screen{position:absolute;inset:5px;background:#0d0d0c;border-radius:18px;padding:14px 10px 10px;display:flex;flex-direction:column;gap:0;}
+.minimal-time{font-size:18px;font-weight:300;color:rgba(255,255,255,.9);text-align:center;letter-spacing:.02em;margin-bottom:12px;}
+.minimal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.minimal-app{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+.minimal-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:transform .15s;}
+.minimal-app:active .minimal-icon{transform:scale(.9);}
+.minimal-icon.unavail{opacity:.28;}
+.minimal-app-name{font-size:7px;color:rgba(255,255,255,.5);text-align:center;}
+.minimal-toast{position:absolute;bottom:10px;left:8px;right:8px;background:rgba(255,255,255,.08);border-radius:8px;padding:6px 8px;text-align:center;font-size:8px;color:rgba(255,255,255,.55);line-height:1.4;transition:opacity .3s;}
+.minimal-toast.hide{opacity:0;}
+
 @media(max-width:860px){
-  .story-beat,.beat{grid-template-columns:1fr;gap:32px;}
+  .story-beat{grid-template-columns:1fr;gap:32px;}
   .story-beat.flip{direction:ltr;}
-  .story-illus,.beat-illus{display:none;}
+  .story-illus{display:none;}
   .about-grid{grid-template-columns:1fr;padding:0 24px;}
   .about-media{display:none;}
   .story-text h2,.story-text p{max-width:100%;}
   .about-text h2,.about-text p{max-width:100%;}
+  .product-layout{grid-template-columns:1fr;}
+  .product-panel{display:none;}
+  .process-track{grid-template-columns:1fr 1fr;}
+  .process-line{display:none;}
 }
 @media(max-width:640px){
   #topBar{padding:8px 20px;}
@@ -211,12 +320,13 @@ p{line-height:1.85;}
   .nav-links{display:none;}
   .s-hero{padding:140px 24px 80px;}
   .wrap,.wrap-narrow,.wrap-mid{padding:0 24px;}
-  .story-beat,.hiw-inner,.faq-inner,.statement-inner{padding:0 24px;}
+  .story-beat,.faq-inner,.statement-inner,.product-inner,.process-inner{padding:0 24px;}
   .site-footer{padding:64px 24px 40px;}
   .tally-card{padding:24px 20px;}
   .apply-nav,.apply-body{padding-left:24px;padding-right:24px;}
   .s-ea{padding:80px 24px;}
-  .s,.s-hiw,.s-faq,.s-about,.s-statement{padding:72px 0;}
+  .s,.s-product,.s-process,.s-faq,.s-about,.s-statement{padding:72px 0;}
+  .process-track{grid-template-columns:1fr;}
 }
 `;
 
@@ -263,6 +373,430 @@ function CardDeck({ images }) {
       </div>
       <p className="deck-hint">TAP TO SEE MORE</p>
     </div>
+  );
+}
+
+function NotificationProblemDemo() {
+  const NOTIFS = [
+    { app: 'Instagram', msg: 'Sarah liked your photo' },
+    { app: 'Twitter', msg: 'Breaking: Markets react to...' },
+    { app: 'YouTube', msg: 'New video from a channel you follow' },
+    { app: 'Messages', msg: 'Mum: Are you coming Sunday?' },
+    { app: 'Reddit', msg: 'Your post is trending in r/london' },
+    { app: 'LinkedIn', msg: '12 people viewed your profile' },
+  ];
+  const [visible, setVisible] = useState([]);
+  const [exiting, setExiting] = useState([]);
+  const nextId = useRef(0);
+  const queueRef = useRef(0);
+
+  useEffect(() => {
+    const add = () => {
+      setVisible(v => {
+        if (v.length >= 3) return v;
+        const id = nextId.current++;
+        const notif = { ...NOTIFS[queueRef.current % NOTIFS.length], id };
+        queueRef.current++;
+        return [...v, notif];
+      });
+    };
+    add();
+    const t = setInterval(add, 2200);
+    return () => clearInterval(t);
+  }, []);
+
+  const dismiss = (id) => {
+    setExiting(e => [...e, id]);
+    setTimeout(() => {
+      setVisible(v => v.filter(n => n.id !== id));
+      setExiting(e => e.filter(x => x !== id));
+    }, 260);
+  };
+
+  return (
+    <div className="story-illus" style={{padding:'24px 20px',flexDirection:'column',gap:0}}>
+      <div className="notif-scene" style={{flex:1,position:'relative'}}>
+        <div className="notif-phone">
+          <div className="notif-screen"><div className="notif-pill" /></div>
+        </div>
+        <div className="notif-stack">
+          {visible.map((n, i) => (
+            <div
+              key={n.id}
+              className={`notif-toast${exiting.includes(n.id) ? ' exiting' : ''}`}
+              style={{top:`${i * 56}px`}}
+              onClick={() => dismiss(n.id)}
+            >
+              <span className="notif-app">{n.app}</span>
+              <span className="notif-msg">{n.msg}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="notif-hint">tap to dismiss</p>
+    </div>
+  );
+}
+
+function BypassProblemDemo() {
+  const [phase, setPhase] = useState('modal');
+
+  const ignore = () => {
+    setPhase('bypassed');
+    setTimeout(() => setPhase('modal'), 2800);
+  };
+
+  return (
+    <div className="story-illus" style={{padding:'24px 20px',flexDirection:'column',gap:10}}>
+      <div className="bypass-wrap" style={{flex:1}}>
+        <div className="bypass-phone">
+          <div className="bypass-screen">
+            <div className={`bypass-modal${phase === 'bypassed' ? ' hidden' : ''}`}>
+              <div className="bypass-icon">⏳</div>
+              <div className="bypass-title">Time Limit</div>
+              <div className="bypass-sub">You've reached your limit on Instagram</div>
+              <button className="bypass-btn-ok">OK</button>
+              <button className="bypass-btn-ignore" onClick={ignore}>Ignore for today</button>
+            </div>
+            <div className={`bypass-success${phase === 'bypassed' ? ' show' : ''}`}>
+              <div className="bypass-success-icon">📱</div>
+              <div className="bypass-success-text">Limit ignored.<br />Back to scrolling.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style={{textAlign:'center',fontSize:'10px',color:'var(--muted)',letterSpacing:'.06em',textTransform:'uppercase'}}>
+        {phase === 'modal' ? 'try clicking ignore' : 'resets in a moment…'}
+      </p>
+    </div>
+  );
+}
+
+function MinimalPhoneProblemDemo() {
+  const [toast, setToast] = useState('');
+  const [toastVisible, setToastVisible] = useState(false);
+  const timerRef = useRef(null);
+
+  const APPS = [
+    { name: 'Call',     icon: '📞', color: '#2d6a4f', avail: true },
+    { name: 'SMS',      icon: '💬', color: '#1b4332', avail: true },
+    { name: 'Maps',     icon: '🗺️',  color: '#555',   avail: false },
+    { name: 'Uber',     icon: '🚗',  color: '#555',   avail: false },
+    { name: 'Banking',  icon: '🏦',  color: '#555',   avail: false },
+    { name: 'WhatsApp', icon: '💚',  color: '#555',   avail: false },
+  ];
+
+  const tap = (app) => {
+    if (app.avail) return;
+    if (timerRef.current) clearTimeout(timerRef.current);
+    setToast(`${app.name} not available`);
+    setToastVisible(true);
+    timerRef.current = setTimeout(() => setToastVisible(false), 1800);
+  };
+
+  return (
+    <div className="story-illus" style={{padding:'24px 20px',flexDirection:'column',gap:8}}>
+      <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center'}}>
+        <div className="minimal-phone">
+          <div className="minimal-screen">
+            <div className="minimal-time">09:41</div>
+            <div className="minimal-grid">
+              {APPS.map(app => (
+                <div className="minimal-app" key={app.name} onClick={() => tap(app)}>
+                  <div className={`minimal-icon${!app.avail ? ' unavail' : ''}`} style={{background: app.avail ? app.color : '#333'}}>
+                    {app.icon}
+                  </div>
+                  <span className="minimal-app-name">{app.name}</span>
+                </div>
+              ))}
+            </div>
+            <div className={`minimal-toast${toastVisible ? '' : ' hide'}`}>{toast}</div>
+          </div>
+        </div>
+      </div>
+      <p style={{textAlign:'center',fontSize:'10px',color:'var(--muted)',letterSpacing:'.06em',textTransform:'uppercase'}}>tap an app</p>
+    </div>
+  );
+}
+
+const ATYL_MOMENTS = [
+  {
+    id: 'work', label: 'During work',
+    title: 'Stay focused during work',
+    body: ['Work apps stay accessible. Everything else is locked away.', 'No decisions, no willpower needed.'],
+    descriptor: 'Apps · Notifications · Time (9am–5pm)',
+    ruleLabel: 'Focus mode active',
+    apps: [
+      { icon: '💬', on: true  }, { icon: '📧', on: true  },
+      { icon: '📅', on: true  }, { icon: '🗺️', on: true  },
+      { icon: '📸', on: false }, { icon: '🎵', on: false },
+      { icon: '▶️', on: false }, { icon: '🐦', on: false },
+    ],
+  },
+  {
+    id: 'night', label: 'At night',
+    title: 'Wind down without distractions',
+    body: ['Your phone quiets down. Notifications stop.', 'Only what matters gets through.'],
+    descriptor: 'Notifications · Time · Reduced interruptions',
+    ruleLabel: 'Night mode active',
+    apps: [
+      { icon: '⏰', on: true  }, { icon: '🎵', on: true  },
+      { icon: '📖', on: true  }, { icon: '💬', on: false },
+      { icon: '📧', on: false }, { icon: '📸', on: false },
+      { icon: '▶️', on: false }, { icon: '🎵', on: false },
+    ],
+  },
+  {
+    id: 'home', label: 'At home',
+    title: 'Use your phone more intentionally at home',
+    body: ['No endless scrolling. Just the apps you actually need.'],
+    descriptor: 'Apps · Location · Home',
+    ruleLabel: 'Home rules active',
+    apps: [
+      { icon: '💬', on: true  }, { icon: '🗺️', on: true  },
+      { icon: '🎵', on: true  }, { icon: '📧', on: true  },
+      { icon: '🎵', on: false }, { icon: '🐦', on: false },
+      { icon: '▶️', on: false }, { icon: '📸', on: false },
+    ],
+  },
+  {
+    id: 'out', label: 'Out and about',
+    title: "Stay present when you're outside",
+    body: ["Only essentials stay. No distractions while you're out."],
+    descriptor: 'Apps · Location · Outside',
+    ruleLabel: 'Outside rules active',
+    apps: [
+      { icon: '🗺️', on: true  }, { icon: '💬', on: true  },
+      { icon: '📞', on: true  }, { icon: '💳', on: true  },
+      { icon: '📸', on: false }, { icon: '🎵', on: false },
+      { icon: '💬', on: false }, { icon: '▶️', on: false },
+    ],
+  },
+  {
+    id: 'weekend', label: 'Weekend',
+    title: 'Let your phone adapt to your week',
+    body: ['Different rules for different days. Built around your routine.'],
+    descriptor: 'Apps · Days · Weekend',
+    ruleLabel: 'Weekend mode active',
+    apps: [
+      { icon: '💬', on: true }, { icon: '🗺️', on: true },
+      { icon: '🎵', on: true }, { icon: '🖼️', on: true },
+      { icon: '📸', on: true }, { icon: '▶️', on: true },
+      { icon: '💬', on: false }, { icon: '📧', on: false },
+    ],
+  },
+];
+
+function AdaptsToYourLife() {
+  const [active, setActive] = useState('work');
+  const [fading, setFading] = useState(false);
+  const m = ATYL_MOMENTS.find(x => x.id === active);
+
+  const select = (id) => {
+    if (id === active) return;
+    setFading(true);
+    setTimeout(() => { setActive(id); setFading(false); }, 180);
+  };
+
+  return (
+    <section className="s-adapts">
+      <div className="adapts-wrap">
+
+        {/* Header */}
+        <div className="adapts-hdr" data-a="">
+          <span className="adapts-eyebrow">Adapts to your life</span>
+          <h2 className="adapts-h">
+            Your rules, built around{' '}
+            <em>how you actually live.</em>
+          </h2>
+        </div>
+
+        {/* Grid */}
+        <div className="adapts-grid" data-a="1">
+
+          {/* LEFT — surface card */}
+          <div className="adapts-panel">
+            {/* Moment buttons */}
+            <div className="adapts-moments">
+              {ATYL_MOMENTS.map(x => (
+                <button
+                  key={x.id}
+                  className={`adapts-btn${active === x.id ? ' active' : ''}`}
+                  onClick={() => select(x.id)}
+                >
+                  {x.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Divider */}
+            <div className="adapts-divider" />
+
+            {/* Dynamic text */}
+            <div className={`adapts-fade${fading ? ' out' : ''}`}>
+              <h3 className="adapts-dyn-title">{m.title}</h3>
+              {m.body.map((line, i) => (
+                <p key={i} className="adapts-dyn-body">{line}</p>
+              ))}
+              <div className="adapts-tag">
+                <span className="adapts-tag-dot" />
+                {m.descriptor}
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT — grounded image placeholder */}
+          <div className={`adapts-image-outer${fading ? ' out' : ''}`}>
+            <div className="adapts-img-inner">
+              {/* Top bar */}
+              <div className="adapts-ph-bar" style={{ height: 36, display: 'flex', alignItems: 'center', padding: '0 14px', gap: 8 }}>
+                <div className="adapts-rule-dot" />
+                <span className="adapts-rule-text">{m.ruleLabel}</span>
+                <span className="adapts-rule-tag">{m.id === 'work' ? '9am–5pm' : m.id === 'night' ? 'After 10pm' : m.id === 'weekend' ? 'Sat–Sun' : 'Active now'}</span>
+              </div>
+
+              {/* App grid */}
+              <div className="adapts-ph-grid">
+                {m.apps.map((app, i) => (
+                  <div key={i} className={`adapts-ph-chip${!app.on ? ' dim' : ''}`}>
+                    {app.icon}
+                  </div>
+                ))}
+              </div>
+
+              {/* Bottom rule rows */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 'auto' }}>
+                <div className="adapts-rule-row">
+                  <div className="adapts-rule-dot" />
+                  <span className="adapts-rule-text">{m.descriptor.split(' · ')[0]} rules enforced</span>
+                  <span className="adapts-rule-tag">on</span>
+                </div>
+                <div className="adapts-rule-row" style={{ opacity: 0.45 }}>
+                  <div className="adapts-rule-dot" style={{ background: 'var(--border)', boxShadow: 'none' }} />
+                  <span className="adapts-rule-text" style={{ color: 'var(--muted)' }}>No overrides available</span>
+                  <span className="adapts-rule-tag">locked</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Bottom line */}
+        <p className="adapts-bottom">
+          Mix apps, notifications, websites, time, location, and days — however you want.
+        </p>
+
+      </div>
+    </section>
+  );
+}
+
+function HowMutualWorks() {
+  const STEPS = [
+    { n: 1, title: 'Choose your apps', desc: 'Select which apps Mutual will manage. Everything else stays exactly as it was.' },
+    { n: 2, title: 'Schedule your rules', desc: 'Set time-based rules for each app. No Instagram after 9pm. No YouTube on weekday mornings. You decide.' },
+    { n: 3, title: 'Define location rules', desc: 'Your phone adapts to where you are. Different rules for home, work, and everywhere else.' },
+    { n: 4, title: 'Confirm and commit', desc: 'Lock in your configuration. You choose how long it holds before we review together.' },
+    { n: 5, title: 'We adjust together', desc: "We check in to see what's working. If something isn't landing, we adjust the plan — together." },
+  ];
+
+  const [active, setActive] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const stateRef = useRef({ active: 0, progress: 0 });
+
+  const jumpTo = (i) => {
+    stateRef.current.active = i;
+    stateRef.current.progress = 0;
+    setActive(i);
+    setProgress(0);
+  };
+
+  useEffect(() => {
+    const DURATION = 5000;
+    const TICK = 40;
+    const interval = setInterval(() => {
+      stateRef.current.progress += (TICK / DURATION) * 100;
+      if (stateRef.current.progress >= 100) {
+        stateRef.current.progress = 0;
+        stateRef.current.active = (stateRef.current.active + 1) % STEPS.length;
+        setActive(stateRef.current.active);
+      }
+      setProgress(stateRef.current.progress);
+    }, TICK);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section className="s-product" id="how-it-works">
+      <div className="product-inner">
+        <div className="product-hdr" data-a="">
+          <h2>How Mutual works</h2>
+          <p>A phone configured around what you actually want from it — and held there.</p>
+        </div>
+        <div className="product-layout">
+          <div className="product-steps">
+            {STEPS.map((step, i) => (
+              <div key={i} className={`product-step${active === i ? ' active' : ''}`} onClick={() => jumpTo(i)}>
+                <div className="product-step-num">{step.n}</div>
+                <div className="product-step-body">
+                  <span className="product-step-title">{step.title}</span>
+                  {active === i && (
+                    <div className="product-step-bar">
+                      <div className="product-step-fill" style={{width:`${progress}%`}} />
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="product-panel">
+            <div className="product-phone">
+              <div className="product-phone-screen">
+                <img
+                  key={active}
+                  src={`/hiw-${active + 1}.png`}
+                  alt={STEPS[active].title}
+                  style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+                <div className="product-phone-num">{active + 1}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function JoinEarlyAccess() {
+  const CARDS = [
+    { n: '1', title: 'Apply to early access', desc: 'Fill out a short application. We read every one personally.' },
+    { n: '2', title: 'We review and confirm', desc: 'If you are a fit, we confirm your spot and send next steps within 48 hours.' },
+    { n: '3', title: 'Your phone arrives', desc: 'A pre-configured Samsung device arrives at your door, ready to go.' },
+    { n: '4', title: 'You use it, we adjust', desc: 'We check in regularly and refine the configuration together until it sticks.' },
+  ];
+
+  return (
+    <section className="s-process" id="join">
+      <div className="process-inner">
+        <div className="process-hdr" data-a="">
+          <h2>How to join</h2>
+          <p>Early access is selective. Here is what happens after you apply.</p>
+        </div>
+        <div className="process-track" data-a="1">
+          <div className="process-line" />
+          {CARDS.map((card, i) => (
+            <div key={i} className="process-card">
+              <div className="process-num">{card.n}</div>
+              <div className="process-card-title">{card.title}</div>
+              <div className="process-card-desc">{card.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -396,6 +930,10 @@ export default function App() {
             </div>
           </section>
 
+          <AdaptsToYourLife />
+
+          <HowMutualWorks />
+
           <section className="s" id="why">
             <div className="story-beat" data-a="">
               <div className="story-text">
@@ -404,22 +942,7 @@ export default function App() {
                 <p>The apps are designed by people whose job is to keep you there. You're fighting a billion-dollar engagement machine.</p>
                 <p>Current solutions are not up to the task.</p>
               </div>
-              <div className="story-illus" data-a="1">
-                <svg width="120" height="140" viewBox="0 0 120 140" fill="none">
-                  <rect x="10" y="60" width="100" height="60" rx="8" fill="#F1EFE9" stroke="#E2DDD6" strokeWidth="1"/>
-                  <ellipse cx="60" cy="62" rx="22" ry="22" fill="#E2DDD6"/>
-                  <rect x="38" y="90" width="44" height="28" rx="4" fill="#E8DDD6"/>
-                  <rect x="30" y="100" width="12" height="18" rx="6" fill="#D8D3CC"/>
-                  <rect x="78" y="100" width="12" height="18" rx="6" fill="#D8D3CC"/>
-                  <rect x="44" y="26" width="32" height="52" rx="6" fill="#0F0F0E"/>
-                  <rect x="47" y="30" width="26" height="40" rx="4" fill="#1C1B19"/>
-                  <rect x="51" y="35" width="18" height="3" rx="1.5" fill="#E8A030" fillOpacity="0.6"/>
-                  <rect x="51" y="42" width="14" height="2" rx="1" fill="#3a3938"/>
-                  <rect x="51" y="48" width="16" height="2" rx="1" fill="#3a3938"/>
-                  <rect x="51" y="54" width="12" height="2" rx="1" fill="#3a3938"/>
-                </svg>
-                <p>Person scrolling in bed at night</p>
-              </div>
+              <NotificationProblemDemo />
             </div>
           </section>
 
@@ -434,23 +957,7 @@ export default function App() {
                   <strong>70%</strong> said screen time limits were too easy to bypass
                 </div>
               </div>
-              <div className="story-illus" data-a="1">
-                <svg width="80" height="130" viewBox="0 0 80 130" fill="none">
-                  <rect x="5" y="5" width="70" height="120" rx="10" fill="#0F0F0E"/>
-                  <rect x="9" y="12" width="62" height="106" rx="7" fill="#1C1B19"/>
-                  <rect x="16" y="22" width="48" height="6" rx="3" fill="#2a2a29"/>
-                  <rect x="16" y="38" width="48" height="36" rx="5" fill="#262625"/>
-                  <rect x="22" y="44" width="36" height="4" rx="2" fill="#3a3938"/>
-                  <rect x="22" y="52" width="28" height="3" rx="1.5" fill="#2f2e2d"/>
-                  <rect x="16" y="82" width="48" height="10" rx="4" fill="#2a2a29"/>
-                  <rect x="20" y="86" width="22" height="3" rx="1.5" fill="#4a4948"/>
-                  <rect x="16" y="97" width="48" height="10" rx="4" fill="#2a2a29"/>
-                  <rect x="20" y="101" width="28" height="3" rx="1.5" fill="#4a4948"/>
-                  <rect x="16" y="112" width="48" height="10" rx="4" fill="#E8A030" fillOpacity="0.8"/>
-                  <text x="40" y="120" fontFamily="sans-serif" fontSize="5.5" fill="#0F0F0E" textAnchor="middle" fontWeight="600">Ignore limit for today</text>
-                </svg>
-                <p>Screen time bypass popup</p>
-              </div>
+              <BypassProblemDemo />
             </div>
           </section>
 
@@ -462,98 +969,11 @@ export default function App() {
                 <p>No TikTok, but also no Uber, no banking apps, no boarding pass, no WhatsApp.</p>
                 <p>Most people who try it come back. Because modern life requires a modern phone.</p>
               </div>
-              <div className="story-illus" data-a="1">
-                <svg width="130" height="110" viewBox="0 0 130 110" fill="none">
-                  <circle cx="55" cy="38" r="20" fill="#F1EFE9" stroke="#E2DDD6" strokeWidth="1"/>
-                  <line x1="55" y1="58" x2="55" y2="76" stroke="#E2DDD6" strokeWidth="2"/>
-                  <line x1="55" y1="76" x2="40" y2="95" stroke="#E2DDD6" strokeWidth="2"/>
-                  <line x1="55" y1="76" x2="70" y2="95" stroke="#E2DDD6" strokeWidth="2"/>
-                  <line x1="55" y1="65" x2="36" y2="58" stroke="#E2DDD6" strokeWidth="2"/>
-                  <line x1="55" y1="65" x2="74" y2="58" stroke="#E2DDD6" strokeWidth="2"/>
-                  <circle cx="105" cy="28" r="18" fill="#F8F7F4" stroke="#E2DDD6" strokeWidth="1"/>
-                  <text x="105" y="35" fontFamily="Georgia,serif" fontSize="18" fill="#C8891F" textAnchor="middle">?</text>
-                  <rect x="82" y="60" width="36" height="22" rx="4" fill="#F1EFE9" stroke="#E2DDD6" strokeWidth="1"/>
-                  <rect x="87" y="66" width="26" height="3" rx="1.5" fill="#E2DDD6"/>
-                  <rect x="87" y="73" width="18" height="3" rx="1.5" fill="#E2DDD6"/>
-                </svg>
-                <p>Stranded without modern apps</p>
-              </div>
+              <MinimalPhoneProblemDemo />
             </div>
           </section>
 
-          <section className="s-statement" id="solution">
-            <div className="statement-inner" data-a="">
-              <h2>A phone that understands your objectives and helps you achieve them.</h2>
-            </div>
-          </section>
-
-          <section className="s-hiw" id="how-it-works">
-            <div className="hiw-inner">
-              <div className="hiw-hdr" data-a="">
-                <span className="label">How it works</span>
-              </div>
-              <div className="beats">
-
-                <div className="beat">
-                  <div className="beat-text" data-a="">
-                    <h3>You receive the phone.</h3>
-                    <p>Once accepted into the early access cohort, we send you a pre-configured Samsung device.</p>
-                  </div>
-                  <div className="beat-illus" style={{background:'var(--surface)',padding:'16px',overflow:'hidden'}}>
-                    <img src="/Delivery.png" alt="Phone delivered by post" style={{width:'100%',height:'100%',objectFit:'contain',display:'block'}} />
-                  </div>
-                </div>
-
-                <div className="beat">
-                  <div className="beat-text" data-a="">
-                    <h3>You tell us your objective.</h3>
-                    <p>Which apps, at what times, for how long? <em>No Instagram after 9pm. Weekends: 30 minutes max.</em> You decide.</p>
-                  </div>
-                  <CardDeck images={['/image-2a.png', '/image-2b.png', '/image-2c.png']} />
-                </div>
-
-                <div className="beat">
-                  <div className="beat-text" data-a="">
-                    <h3>We configure it at the system level.</h3>
-                    <p>Not an app, the phone itself. Enforced at the Operating System level. You choose how long it holds: a day, two weeks, indefinitely?</p>
-                  </div>
-                  <div className="beat-illus" data-a="1">
-                    <svg width="54" height="96" viewBox="0 0 54 96" fill="none">
-                      <rect x="2" y="2" width="50" height="92" rx="10" fill="#0F0F0E"/>
-                      <rect x="6" y="10" width="42" height="74" rx="6" fill="#1C1B19"/>
-                      <circle cx="27" cy="48" r="15" fill="none" stroke="#E8A030" strokeWidth="2"/>
-                      <path d="M21 48 L26 53 L34 43" stroke="#E8A030" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                      <rect x="14" y="71" width="26" height="4" rx="2" fill="#2a2a29"/>
-                      <circle cx="27" cy="90" r="3.5" fill="#2a2a29"/>
-                    </svg>
-                    <p>System configured</p>
-                  </div>
-                </div>
-
-                <div className="beat">
-                  <div className="beat-text" data-a="">
-                    <h3>We check in.</h3>
-                    <p>We review what's working together. If the plan doesn't work, we adjust. The goal isn't restriction, it's finding the configuration that sticks for you.</p>
-                  </div>
-                  <div className="beat-illus" data-a="1">
-                    <svg width="110" height="72" viewBox="0 0 110 72" fill="none">
-                      <rect x="4" y="6" width="44" height="60" rx="8" fill="white" stroke="#E2DDD6" strokeWidth="1"/>
-                      <rect x="11" y="18" width="30" height="6" rx="3" fill="#E8A030" fillOpacity="0.5"/>
-                      <rect x="11" y="29" width="22" height="3" rx="1.5" fill="#E2DDD6"/>
-                      <rect x="11" y="36" width="26" height="3" rx="1.5" fill="#F1EFE9"/>
-                      <rect x="62" y="6" width="44" height="60" rx="8" fill="white" stroke="#E2DDD6" strokeWidth="1"/>
-                      <rect x="69" y="18" width="30" height="6" rx="3" fill="#E2DDD6"/>
-                      <rect x="69" y="29" width="18" height="3" rx="1.5" fill="#F1EFE9"/>
-                      <rect x="69" y="46" width="30" height="5" rx="2.5" fill="#E8A030" fillOpacity="0.28"/>
-                      <rect x="69" y="54" width="18" height="5" rx="2.5" fill="#E8A030" fillOpacity="0.65"/>
-                    </svg>
-                    <p>Check-in and adjust</p>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </section>
+          <JoinEarlyAccess />
 
           <section className="s-ea" id="early-access">
             <div data-a="">
