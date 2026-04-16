@@ -55,22 +55,8 @@ p{line-height:1.85;}
 .btn-md{padding:12px 26px;font-size:14px;}
 .btn-lg{padding:15px 34px;font-size:15px;}
 
-/* TOP BAR */
-#topBar{background:var(--void);padding:9px 32px;z-index:500;position:fixed;top:0;left:0;right:0;transition:transform .35s var(--ease-out);}
-#topBar.hidden{transform:translateY(-100%);}
-.tb{max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;}
-.tb-label{font-size:12px;color:rgba(249,248,245,.65);}
-.tb-label strong{color:rgba(249,248,245,.9);font-weight:500;}
-.tb-form{display:flex;align-items:center;border:1px solid rgba(249,248,245,.15);border-radius:100px;overflow:hidden;}
-.tb-form input{background:transparent;border:none;outline:none;color:var(--bg);padding:5px 14px;font-size:12px;font-family:var(--sans);width:180px;}
-.tb-form input::placeholder{color:rgba(249,248,245,.3);}
-.tb-form button{background:var(--signal);border:none;color:var(--void);width:28px;height:28px;border-radius:50%;margin:2px;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0;}
-.tb-form button:hover{background:var(--signal-dk);}
-.tb-ok{display:none;align-items:center;gap:6px;font-size:12px;color:var(--signal);}
-.tb-ok.show{display:flex;}
-
 /* NAV */
-#nav{position:fixed;top:46px;left:0;right:0;z-index:400;padding:0 32px;transition:background .4s var(--ease-out),border-color .4s var(--ease-out),backdrop-filter .4s,top .35s var(--ease-out);border-bottom:1px solid transparent;}
+#nav{position:fixed;top:0;left:0;right:0;z-index:400;padding:0 32px;transition:background .4s var(--ease-out),border-color .4s var(--ease-out),backdrop-filter .4s;border-bottom:1px solid transparent;}
 #nav.init{background:transparent;}
 #nav.scrolled{background:rgba(249,248,245,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom-color:rgba(226,221,214,.5);top:0;}
 .nav-inner{max-width:var(--max);margin:0 auto;height:66px;display:flex;align-items:center;justify-content:space-between;}
@@ -134,8 +120,9 @@ p{line-height:1.85;}
 .pe-content{display:flex;flex-direction:column;max-width:420px;width:100%;}
 
 /* Headline block */
+.pe-headline-mobile{display:none;}
 .pe-headline{margin-bottom:28px;}
-.pe-headline h2{font-size:clamp(24px,2.6vw,32px);font-weight:600;letter-spacing:-0.03em;line-height:1.2;color:var(--ink);margin:0;}
+.pe-headline h2,.pe-headline-mobile h2{font-size:clamp(24px,2.6vw,32px);font-weight:600;letter-spacing:-0.03em;line-height:1.2;color:var(--ink);margin:0;}
 
 /* Cohort status */
 .pe-status{margin-bottom:32px;}
@@ -178,6 +165,9 @@ p{line-height:1.85;}
   .pricing-panel{grid-template-columns:1fr;justify-content:center;justify-items:center;}
   .pricing-content{width:min(100%,520px);margin:0 auto;padding:0 4px;}
   .pe-content{max-width:100%;}
+  .pe-headline-mobile{display:block;width:min(100%,520px);margin:0 auto 24px;padding:0 4px;}
+  .pe-headline{display:none;}
+  .pe-btn-primary{font-size:12px;padding:0 14px;}
   .s-howitworks{padding:84px 0 88px;}
   .hiw-header{max-width:100%;padding:0 24px 40px;}
   .hiw-frame{width:min(640px,calc(100vw - 48px));aspect-ratio:auto;display:grid;grid-template-columns:1fr;gap:52px;}
@@ -226,6 +216,24 @@ p{line-height:1.85;}
 .faq-item.open .chev{transform:rotate(180deg);}
 .faq-a{font-size:14px;line-height:1.8;color:var(--muted);max-height:0;overflow:hidden;transition:max-height .4s var(--ease-out),padding-bottom .4s;}
 .faq-item.open .faq-a{max-height:300px;padding-bottom:22px;}
+
+/* NAV WAITLIST */
+.nav-waitlist{display:flex;align-items:center;gap:10px;}
+.nav-waitlist-label{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:-.01em;white-space:nowrap;}
+.nav-waitlist-form{display:flex;align-items:center;border:1px solid var(--border);border-radius:100px;overflow:hidden;background:var(--white);transition:border-color .2s,box-shadow .2s;}
+.nav-waitlist-form:focus-within{border-color:rgba(28,27,25,.3);box-shadow:0 0 0 3px rgba(28,27,25,.06);}
+.nav-waitlist-input{border:none;outline:none;background:transparent;padding:8px 14px;font-family:var(--sans);font-size:13px;color:var(--ink);width:168px;}
+.nav-waitlist-input::placeholder{color:rgba(122,119,116,.55);}
+.nav-waitlist-btn{background:none;border:none;border-left:1px solid var(--border);padding:0 12px;height:34px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:color .18s,background .18s;}
+.nav-waitlist-btn:hover{color:var(--ink);background:rgba(28,27,25,.04);}
+.nav-waitlist-btn:active{background:rgba(28,27,25,.08);}
+.nav-waitlist-btn svg{width:14px;height:14px;display:block;}
+.nav-waitlist-ok{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:#22863a;letter-spacing:-.01em;white-space:nowrap;}
+.nav-waitlist-ok svg{width:15px;height:15px;flex-shrink:0;}
+@media(max-width:640px){
+  .nav-waitlist-label{display:none;}
+  .nav-waitlist-input{width:130px;}
+}
 
 /* FOOTER */
 .site-footer{background:var(--ink);padding:80px 40px 44px;}
@@ -314,6 +322,7 @@ p{line-height:1.85;}
   .apply-nav{padding:0 20px;}
   .apply-left{padding:44px 24px 40px;}
   .apply-right{padding:40px 24px 56px;}
+  .apply-form-card iframe{height:560px;}
 }
 
 /* VIDEO OVERLAY */
@@ -378,9 +387,6 @@ p{line-height:1.85;}
   .pricing-device{max-width:560px;margin:0 auto;}
 }
 @media(max-width:640px){
-  #topBar{padding:8px 20px;}
-  .tb-label{display:none;}
-  .tb{justify-content:center;}
   #nav{padding:0 20px;}
   .nav-links{display:none;}
   .s-hero{padding:140px 24px 80px;}
@@ -415,21 +421,10 @@ function FaqItem({ question, answer }) {
   );
 }
 
-function SiteFooter({ ok, emailRef, onSubmit }) {
+function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="wrap">
-        <div className="footer-wl" data-a="">
-          <p>Leave your email and we'll keep you updated.</p>
-          {!ok ? (
-            <form className="footer-form" onSubmit={onSubmit}>
-              <input type="email" placeholder="Email address" required ref={emailRef} />
-              <button type="submit">Stay updated</button>
-            </form>
-          ) : (
-            <p className="footer-form-ok show">✓ You're on the list</p>
-          )}
-        </div>
         <div className="footer-btm">
           <span>© mutual. 2026</span>
           <div className="footer-links">
@@ -610,20 +605,20 @@ const HOW_STEPS = [
     w: 330, h: 372, x: 972, y: 214,
   },
   {
+    id: "rules",
+    title: "We set the rules together",
+    images: ["/4a.png", "/4b.png"],
+    alt: "Your rules",
+    fit: "contain",
+    w: 370, h: 338, x: 574, y: 506,
+  },
+  {
     id: "adjust",
     title: "We adjust over time",
     images: ["/5.png"],
     alt: "Ongoing refinement",
     fit: "contain",
     w: 286, h: 338, x: 104, y: 472,
-  },
-  {
-    id: "rules",
-    title: "We set the rules together",
-    images: ["/4a.png"],
-    alt: "Your rules",
-    fit: "contain",
-    w: 370, h: 338, x: 574, y: 506,
   },
 ];
 
@@ -634,7 +629,7 @@ function HowItWorksSection({ goApply }) {
 
   useEffect(() => {
     const rotatingSteps = HOW_STEPS.filter(
-      (step) => (step.id === "tell" || step.id === "adjust") && step.images.length > 1
+      (step) => (step.id === "tell" || step.id === "adjust" || step.id === "rules") && step.images.length > 1
     );
     const interval = setInterval(() => {
       setStepImageIndexes((current) => {
@@ -890,11 +885,16 @@ function SpecTabs() {
   );
 }
 
-function Pricing({ goLearnMore }) {
+function Pricing({ goLearnMore, goApply }) {
   return (
     <section className="s-pricing" id="pricing">
       <div className="pricing-shell">
         <div className="pricing-panel">
+          {/* Mobile-only headline — shown above phone on small screens */}
+          <div className="pe-headline-mobile">
+            <h2>Take control of your phone.<br /><em>For 50p a day.</em></h2>
+          </div>
+
           {/* Left: phone image */}
           <div className="pricing-media">
             <div className="pricing-device">
@@ -942,12 +942,14 @@ function Pricing({ goLearnMore }) {
 
               {/* CTA */}
               <div className="pe-cta">
-                <a href={STRIPE_PREORDER} className="pe-btn-primary">Reserve Your Spot</a>
-                {/* {goLearnMore
+                {goApply
+                  ? <button className="pe-btn-primary" onClick={goApply}>Reserve Your Spot</button>
+                  : <a href={STRIPE_PREORDER} className="pe-btn-primary">Reserve Your Spot</a>
+                }
+                {goLearnMore
                   ? <button className="pe-btn-secondary" onClick={goLearnMore}>Learn More</button>
                   : <a href="#faqs" className="pe-btn-secondary">Learn More</a>
-                } */}
-                <a href="https://mutual.technology/learn" className="pe-btn-secondary">Learn More</a>
+                }
               </div>
 
             </div>
@@ -959,16 +961,15 @@ function Pricing({ goLearnMore }) {
 }
 
 export default function App() {
-  const [page,      setPage]      = useState('main');
-  const [tbOk,      setTbOk]      = useState(false);
-  const [footerOk,  setFooterOk]  = useState(false);
-  const [showVideo, setShowVideo] = useState(false);
+  const [page,         setPage]         = useState('main');
+  const [footerOk,     setFooterOk]     = useState(false);
+  const [navWaitlistOk, setNavWaitlistOk] = useState(false);
+  const [showVideo,    setShowVideo]    = useState(false);
 
-  const tbEmailRef     = useRef();
   const footerEmailRef = useRef();
+  const navEmailRef    = useRef();
   const heroRef        = useRef();
   const navRef         = useRef();
-  const topBarRef      = useRef();
 
   const goPage  = (p) => { setPage(p); window.scrollTo({top:0,behavior:'instant'}); };
   const goApply = ()  => goPage('apply');
@@ -978,15 +979,12 @@ export default function App() {
     if (page !== 'main') return;
     const hero = heroRef.current;
     const nav  = navRef.current;
-    const bar  = topBarRef.current;
-    if (!hero || !nav || !bar) return;
+    if (!hero || !nav) return;
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) {
-        bar.classList.remove('hidden');
         nav.classList.remove('scrolled');
         nav.classList.add('init');
       } else {
-        bar.classList.add('hidden');
         nav.classList.remove('init');
         nav.classList.add('scrolled');
       }
@@ -1018,26 +1016,24 @@ export default function App() {
     await supabase.from('leads').insert({ contact: email, source });
   };
 
-  const handleTbSubmit = async (e) => {
-    e.preventDefault();
-    await saveEmail(tbEmailRef.current.value, 'topbar');
-    setTbOk(true);
-  };
-
   const handleFooterSubmit = async (e) => {
     e.preventDefault();
     await saveEmail(footerEmailRef.current.value, 'footer');
     setFooterOk(true);
   };
 
+  const handleNavWaitlistSubmit = async (e) => {
+    e.preventDefault();
+    await saveEmail(navEmailRef.current.value, 'nav-waitlist');
+    setNavWaitlistOk(true);
+  };
+
   const faqs = [
-    { q: 'What phone will I receive?',                        a: 'A Samsung Galaxy A17, pre-configured by us before it arrives. No setup required on your end.' },
     { q: 'What happens to my current phone?',                 a: "You keep it. Most users keep their current device as a backup, especially for the first week. You're not giving anything up." },
     { q: 'Can I still use WhatsApp, maps, and banking apps?', a: "Yes. Mutual removes what pulls you away — not what you actually need. You tell us what stays, and it stays." },
     { q: 'Can I still download and delete apps?',             a: "Yes, with one exception. You can download and delete anything freely, except the apps you specifically asked us to manage." },
     { q: 'What if I want to change something?',               a: "You message us. We make the adjustment. The friction is intentional, it keeps you accountable, but we're here to make it work for you, not to be dogmatic about it." },
     { q: 'How long does this last?',                          a: "A few weeks. Enough time to actually feel a difference. After that, you decide whether to continue, adjust, or stop." },
-    { q: 'Why is there a £10 deposit?',                       a: "To make sure the people who apply actually mean it. If you're not selected for this cohort, you'll receive a full refund or we'll roll it to the next opening — your choice." },
     { q: "What if it's not working for me?",                  a: "That's exactly the feedback we need. We'll work with you to understand what's not working and adjust. This cohort is as much about us learning as it is about you changing." },
   ];
 
@@ -1051,7 +1047,7 @@ export default function App() {
   );
 
   const footer = (
-    <SiteFooter ok={footerOk} emailRef={footerEmailRef} onSubmit={handleFooterSubmit} />
+    <SiteFooter />
   );
 
   return (
@@ -1059,21 +1055,6 @@ export default function App() {
       <style>{css}</style>
       <div id="noise" aria-hidden="true" />
 
-      {page === 'main' && (
-        <div id="topBar" ref={topBarRef}>
-          <div className="tb">
-            <span className="tb-label"><strong>Stay Updated</strong>&ensp;News on spot openings and product development</span>
-            {!tbOk ? (
-              <form className="tb-form" onSubmit={handleTbSubmit}>
-                <input type="email" placeholder="Email address" required ref={tbEmailRef} />
-                <button type="submit">→</button>
-              </form>
-            ) : (
-              <span className="tb-ok show">✓ You're on the list</span>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* MAIN PAGE */}
       {page === 'main' && (
@@ -1083,13 +1064,32 @@ export default function App() {
               <div className="nav-logo-group">
                 <a className="logo" href="#" onClick={(e) => { e.preventDefault(); goMain(); }}>mutual.</a>
                 <div className="nav-links">
-                  {/* <a href="#" onClick={(e) => { e.preventDefault(); goPage('why'); }}>Our Story</a> */}
-                  <a href="https://mutual.technology/about">Our Story</a>
-                  {/* <a href="#" onClick={(e) => { e.preventDefault(); goPage('learn-more'); }}>Learn More</a> */}
-                  <a href="https://mutual.technology/learn">Learn More</a>
+                  <a href="#" onClick={(e) => { e.preventDefault(); goPage('why'); }}>Our Story</a>
+                  <a href="#" onClick={(e) => { e.preventDefault(); goPage('learn-more'); }}>Learn More</a>
                 </div>
               </div>
-              <button className="btn btn-void btn-sm" onClick={goApply}>Early Membership</button>
+              {navWaitlistOk ? (
+                <div className="nav-waitlist-ok">
+                  <svg viewBox="0 0 15 15" fill="none"><path d="M2.5 7.5L6 11L12.5 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  You're on the list.
+                </div>
+              ) : (
+                <div className="nav-waitlist">
+                  <span className="nav-waitlist-label">Join the Waitlist</span>
+                  <form className="nav-waitlist-form" onSubmit={handleNavWaitlistSubmit}>
+                    <input
+                      ref={navEmailRef}
+                      type="email"
+                      className="nav-waitlist-input"
+                      placeholder="Email Address"
+                      required
+                    />
+                    <button type="submit" className="nav-waitlist-btn" aria-label="Submit">
+                      <svg viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </button>
+                  </form>
+                </div>
+              )}
             </div>
           </nav>
 
@@ -1098,13 +1098,13 @@ export default function App() {
               <h1 className="hero-h" data-a="">The first smartphone<br />that <em>enforces your rules.</em></h1>
               <p className="hero-sub" data-a="1">You decide which apps you want and when. The phone makes sure it stays that way.</p>
               <div data-a="2">
-                <button className="btn btn-void btn-lg" onClick={goApply}>Early Membership →</button>
+                <button className="btn btn-void btn-lg" onClick={goApply}>Reserve your Spot</button>
               </div>
             </div>
           </section>
 
           <HowItWorksSection goApply={goApply} />
-          <Pricing goLearnMore={() => goPage('learn-more')} />
+          <Pricing goLearnMore={() => goPage('learn-more')} goApply={goApply} />
           {footer}
         </div>
       )}
@@ -1142,12 +1142,6 @@ export default function App() {
                 </ul>
                 <a href={STRIPE_APPLY} target="_blank" rel="noopener noreferrer" className="apply-cta">
                   Reserve your spot
-                </a>
-                {/* <button className="apply-cta-secondary" onClick={() => goPage('learn-more')}>
-                  Learn More
-                </button> */}
-                <a href="https://mutual.technology/learn" className="apply-cta-secondary">
-                  Learn More
                 </a>
               </div>
             </div>
