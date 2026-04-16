@@ -26,14 +26,14 @@ button,a{cursor:pointer;}
   --display:'Geist',var(--sans);
   --ease-out:cubic-bezier(0.215,0.61,0.355,1);
   --ease-mag:cubic-bezier(0.25,0.46,0.45,0.94);
-  --max:1160px;
+  --max:1280px;
 }
 
 body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:16px;line-height:1.75;overflow-x:hidden;}
 
 #noise{position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:0.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:200px 200px;}
 
-.wrap{max-width:1080px;margin:0 auto;padding:0 40px;}
+.wrap{max-width:1240px;margin:0 auto;padding:0 40px;}
 .label{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:block;}
 
 h1,h2,h3{font-family:var(--sans);font-weight:600;letter-spacing:-0.025em;line-height:1.15;}
@@ -82,7 +82,7 @@ p{line-height:1.85;}
 
 /* HERO */
 .s-hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:160px 40px 100px;background:var(--bg);position:relative;}
-.hero-content{max-width:640px;text-align:center;margin:0 auto;}
+.hero-content{max-width:760px;text-align:center;margin:0 auto;}
 .hero-h{font-family:var(--sans);font-weight:700;font-size:clamp(38px,5.5vw,68px);line-height:1.08;letter-spacing:-0.03em;margin-bottom:22px;color:var(--ink);}
 .hero-h em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--ink);}
 .hero-sub{font-size:clamp(16px,1.6vw,18px);color:var(--muted);line-height:1.75;margin-bottom:40px;max-width:480px;margin-left:auto;margin-right:auto;font-weight:400;}
@@ -90,7 +90,7 @@ p{line-height:1.85;}
 .s{padding:96px 0;}
 
 /* STORY BEATS */
-.story-beat{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;padding:0 40px;max-width:1080px;margin:0 auto;}
+.story-beat{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;padding:0 40px;max-width:var(--max);margin:0 auto;}
 .story-beat.flip{direction:rtl;}
 .story-beat.flip > *{direction:ltr;}
 .story-text .label{margin-bottom:20px;}
@@ -103,20 +103,29 @@ p{line-height:1.85;}
 
 /* HOW IT WORKS */
 .s-howitworks{width:100%;overflow:hidden;background:#FFFFFF;border-top:1px solid var(--border);padding:100px 0 120px;}
-.hiw-header{max-width:1440px;margin:0 auto;padding:0 90px 72px;}
-.hiw-header h2{font-size:clamp(28px,2.4vw,40px);font-weight:600;letter-spacing:-0.03em;line-height:1.2;margin-top:8px;}
-.hiw-frame{position:relative;width:1440px;height:880px;margin:0 auto;}
+.hiw-header{max-width:min(1680px,calc(100vw - 64px));margin:0 auto;padding:0 32px 72px;}
+.hiw-header h2{font-size:clamp(30px,2.8vw,46px);font-weight:600;letter-spacing:-0.03em;line-height:1.18;margin-top:8px;max-width:760px;}
+.hiw-frame{position:relative;width:min(1680px,calc(100vw - 64px));aspect-ratio:1440 / 880;height:auto;margin:0 auto;}
 .hiw-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
-.hiw-node{position:absolute;border-radius:20px;overflow:hidden;z-index:2;}
-.hiw-node-img{width:100%;background:transparent;}
-.hiw-node-label{padding:14px 18px 0;}
-.hiw-node-title{font-size:14px;font-weight:500;letter-spacing:-0.01em;line-height:1.35;color:var(--ink);}
+.hiw-node{position:absolute;left:var(--node-x);top:var(--node-y);width:var(--node-w);height:var(--node-h);display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;z-index:2;}
+.hiw-node-img{flex:1;display:flex;align-items:center;justify-content:center;width:100%;padding:6px 6px 0;background:transparent;min-height:0;overflow:hidden;}
+.hiw-node-slide{flex:0 0 100%;height:100%;display:flex;align-items:center;justify-content:center;padding:0 8px;}
+.hiw-node-slide img,
+.hiw-node-img > img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;}
+.hiw-node-track{display:flex;height:100%;width:100%;transition:transform .9s cubic-bezier(.22,.61,.36,1);will-change:transform;}
+.hiw-node-label{padding:0 10px 16px;display:flex;justify-content:center;text-align:center;order:-1;}
+.hiw-node-title{font-size:clamp(14px,1.15vw,18px);font-weight:500;letter-spacing:-0.01em;line-height:1.3;color:var(--ink);width:100%;}
+.hiw-node-dots{display:flex;align-items:center;justify-content:center;gap:8px;padding-top:14px;}
+.hiw-node-dot{width:8px;height:8px;border:none;border-radius:999px;background:rgba(28,27,25,.18);padding:0;transition:transform .24s var(--ease-mag),background-color .24s var(--ease-out),width .24s var(--ease-out);}
+.hiw-node-dot:hover{background:rgba(28,27,25,.34);transform:scale(1.08);}
+.hiw-node-dot:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(28,27,25,.08);}
+.hiw-node-dot.active{width:22px;background:var(--ink);}
 
 /* PRICING */
 .s-pricing{padding:clamp(80px,12vh,140px) 0 clamp(64px,10vh,120px);background:#FFFFFF;scroll-margin-top:66px;}
 .pricing-shell{max-width:min(1180px,calc(100vw - 64px));margin:0 auto;padding:0;}
 .pricing-panel{display:grid;grid-template-columns:minmax(320px,460px) minmax(380px,460px);justify-content:center;align-items:center;column-gap:clamp(40px,6vw,88px);row-gap:32px;}
-.pricing-media{display:flex;justify-content:center;align-items:center;}
+.pricing-media{display:flex;justify-content:center;align-items:center;justify-self:center;width:100%;}
 .pricing-device{width:clamp(400px,42vw,470px);}
 .pricing-device img{width:100%;height:auto;display:block;max-height:calc(85vh - 66px);object-fit:contain;filter:drop-shadow(0 30px 40px rgba(17,16,14,.16));}
 .pricing-content{width:min(100%,440px);}
@@ -166,18 +175,35 @@ p{line-height:1.85;}
   .pricing-panel{column-gap:clamp(32px,4vw,48px);}
 }
 @media(max-width:860px){
-  .pricing-panel{grid-template-columns:1fr;justify-content:start;}
-  .pricing-content{width:min(100%,480px);margin:0 auto;}
+  .pricing-panel{grid-template-columns:1fr;justify-content:center;justify-items:center;}
+  .pricing-content{width:min(100%,520px);margin:0 auto;padding:0 4px;}
+  .pe-content{max-width:100%;}
+  .s-howitworks{padding:84px 0 88px;}
+  .hiw-header{max-width:100%;padding:0 24px 40px;}
+  .hiw-frame{width:min(640px,calc(100vw - 48px));aspect-ratio:auto;display:grid;grid-template-columns:1fr;gap:52px;}
+  .hiw-svg{display:none;}
+  .hiw-node{position:relative;left:auto;top:auto;width:100%;height:auto;}
+  .hiw-node-label{padding:0 0 14px;}
+  .hiw-node-title{font-size:16px;}
+  .hiw-node-img{padding:0;aspect-ratio:4 / 3;min-height:250px;}
+  .hiw-node-dots{padding-top:16px;}
 }
 @media(max-width:640px){
   .s-pricing{padding:60px 0 72px;}
-  .pricing-shell{padding:0 20px;}
+  .pricing-shell{padding:0 16px;}
   .pe-price{font-size:clamp(30px,8vw,38px);}
+  .hiw-header{padding:0 24px 32px;}
+  .hiw-header h2{max-width:12ch;}
+  .hiw-header h2 em{display:block;}
+  .hiw-frame{width:calc(100vw - 48px);gap:44px;}
+  .hiw-node-img{min-height:220px;}
+  .pricing-device{width:min(100%,420px);margin:0 auto;}
+  .pricing-content{padding:0 2px;}
 }
 
 /* ABOUT */
 .s-about{padding:96px 0;}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1080px;margin:0 auto;padding:0 40px;}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:var(--max);margin:0 auto;padding:0 40px;}
 .about-text h2{font-size:clamp(24px,2.8vw,36px);margin-bottom:24px;max-width:380px;}
 .about-text p{font-size:15px;line-height:1.9;color:var(--muted);margin-bottom:18px;max-width:380px;}
 .about-text p:last-child{margin-bottom:0;}
@@ -190,7 +216,7 @@ p{line-height:1.85;}
 
 /* FAQ */
 .s-faq{padding:96px 0;}
-.faq-inner{max-width:640px;margin:0 auto;padding:0 40px;}
+.faq-inner{max-width:760px;margin:0 auto;padding:0 40px;}
 .faq-inner h2{font-size:clamp(24px,2.8vw,36px);margin-bottom:48px;}
 .faq-item{border-top:1px solid var(--border);}
 .faq-item:last-child{border-bottom:1px solid var(--border);}
@@ -219,11 +245,11 @@ p{line-height:1.85;}
 
 /* SUBPAGE NAV */
 .sub-nav{background:var(--bg);border-bottom:1px solid var(--border);padding:0 40px;position:sticky;top:0;z-index:100;}
-.sub-nav-inner{max-width:1080px;margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;}
+.sub-nav-inner{max-width:var(--max);margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;}
 
 /* SPEC TABS */
 .s-specs{padding:80px 0 96px;background:var(--bg);}
-.specs-shell{max-width:1080px;margin:0 auto;padding:0 40px;}
+.specs-shell{max-width:var(--max);margin:0 auto;padding:0 40px;}
 .specs-header{margin-bottom:48px;}
 .specs-header h2{font-size:clamp(22px,2.4vw,30px);font-weight:600;letter-spacing:-0.025em;color:var(--ink);}
 .spec-tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:40px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
@@ -240,11 +266,11 @@ p{line-height:1.85;}
 @media(max-width:480px){.spec-grid{grid-template-columns:1fr;gap:24px;}.spec-tab{padding:10px 14px;font-size:13px;}.specs-shell{padding:0 24px;}}
 
 /* LEARN MORE hero divider */
-.lm-divider{height:1px;background:var(--border);max-width:1080px;margin:0 auto;}
+.lm-divider{height:1px;background:var(--border);max-width:var(--max);margin:0 auto;}
 
 /* APPLY PAGE */
 .apply-nav{background:var(--void);border-bottom:1px solid rgba(249,248,245,.08);padding:0 40px;position:sticky;top:0;z-index:100;}
-.apply-nav-inner{max-width:1080px;margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;}
+.apply-nav-inner{max-width:var(--max);margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;}
 .apply-nav .logo{color:var(--bg);}
 .apply-nav .btn-ghost{color:rgba(249,248,245,.72);}
 .apply-nav .btn-ghost:hover{color:var(--bg);}
@@ -565,7 +591,7 @@ const HOW_STEPS = [
     images: ["/1.png"],
     alt: "Phone delivery",
     fit: "contain",
-    w: 320, h: 320, x: 90,  y: 40,
+    w: 360, h: 360, x: 70,  y: 34,
   },
   {
     id: "tell",
@@ -573,31 +599,31 @@ const HOW_STEPS = [
     images: ["/2a.png", "/2b.png", "/2c.png"],
     alt: "Your objective",
     fit: "contain",
-    w: 300, h: 280, x: 520, y: 90,
+    w: 352, h: 318, x: 494, y: 82,
   },
   {
     id: "look",
     title: "We look at your data",
     images: ["/3.png"],
     alt: "Data analysis",
-    fit: "cover",
-    w: 280, h: 320, x: 960, y: 250,
+    fit: "contain",
+    w: 330, h: 372, x: 972, y: 214,
   },
   {
     id: "adjust",
     title: "We adjust over time",
     images: ["/5.png"],
     alt: "Ongoing refinement",
-    fit: "cover",
-    w: 240, h: 300, x: 130, y: 470,
+    fit: "contain",
+    w: 286, h: 338, x: 104, y: 472,
   },
   {
     id: "rules",
     title: "We set the rules together",
     images: ["/4a.png"],
     alt: "Your rules",
-    fit: "cover",
-    w: 320, h: 300, x: 610, y: 520,
+    fit: "contain",
+    w: 370, h: 338, x: 574, y: 506,
   },
 ];
 
@@ -607,8 +633,8 @@ function HowItWorksSection({ goApply }) {
   );
 
   useEffect(() => {
-    const rotatingSteps = HOW_STEPS.filter((step) =>
-      step.id === "tell" || step.id === "adjust"
+    const rotatingSteps = HOW_STEPS.filter(
+      (step) => (step.id === "tell" || step.id === "adjust") && step.images.length > 1
     );
     const interval = setInterval(() => {
       setStepImageIndexes((current) => {
@@ -621,10 +647,17 @@ function HowItWorksSection({ goApply }) {
         });
         return next;
       });
-    }, 2600);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, []);
+
+  const setStepImageIndex = (stepId, nextIndex) => {
+    setStepImageIndexes((current) => ({
+      ...current,
+      [stepId]: nextIndex,
+    }));
+  };
 
   return (
     <section className="s-howitworks" id="how-it-works">
@@ -672,33 +705,71 @@ function HowItWorksSection({ goApply }) {
 
         {/* Nodes — transparent containers, absolutely positioned */}
         {HOW_STEPS.map((step) => {
-          const imgH = Math.round(step.h * 0.72);
-          const activeImage = step.images[stepImageIndexes[step.id] ?? 0] ?? step.images[0];
+          const activeIndex = stepImageIndexes[step.id] ?? 0;
+          const hasCarousel = step.images.length > 1;
           return (
             <div
               key={step.id}
               className="hiw-node"
-              style={{ width: step.w, height: step.h, left: step.x, top: step.y }}
+              style={{
+                "--node-w": `${(step.w / 1440) * 100}%`,
+                "--node-h": `${(step.h / 880) * 100}%`,
+                "--node-x": `${(step.x / 1440) * 100}%`,
+                "--node-y": `${(step.y / 880) * 100}%`,
+              }}
             >
-              <div
-                className="hiw-node-img"
-                style={{ height: imgH }}
-              >
-                <img
-                  src={activeImage}
-                  alt={step.alt}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: step.fit,
-                    display: "block",
-                  }}
-                  onError={(e) => { e.currentTarget.style.display = "none"; }}
-                />
-              </div>
               <div className="hiw-node-label">
                 <p className="hiw-node-title">{step.title}</p>
               </div>
+              <div
+                className="hiw-node-img"
+              >
+                {hasCarousel ? (
+                  <div
+                    className="hiw-node-track"
+                    style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+                  >
+                    {step.images.map((image, index) => (
+                      <div key={`${step.id}-${image}`} className="hiw-node-slide">
+                        <img
+                          src={image}
+                          alt={`${step.alt} ${index + 1}`}
+                          style={{
+                            objectFit: step.fit,
+                          }}
+                          onError={(e) => { e.currentTarget.style.display = "none"; }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <img
+                    src={step.images[0]}
+                    alt={step.alt}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: step.fit,
+                      display: "block",
+                    }}
+                    onError={(e) => { e.currentTarget.style.display = "none"; }}
+                  />
+                )}
+              </div>
+              {hasCarousel && (
+                <div className="hiw-node-dots" aria-label={`${step.title} image selector`}>
+                  {step.images.map((_, index) => (
+                    <button
+                      key={`${step.id}-dot-${index}`}
+                      type="button"
+                      className={`hiw-node-dot${index === activeIndex ? " active" : ""}`}
+                      aria-label={`Show ${step.title} image ${index + 1}`}
+                      aria-pressed={index === activeIndex}
+                      onClick={() => setStepImageIndex(step.id, index)}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           );
         })}
@@ -872,10 +943,11 @@ function Pricing({ goLearnMore }) {
               {/* CTA */}
               <div className="pe-cta">
                 <a href={STRIPE_PREORDER} className="pe-btn-primary">Reserve Your Spot</a>
-                {goLearnMore
+                {/* {goLearnMore
                   ? <button className="pe-btn-secondary" onClick={goLearnMore}>Learn More</button>
                   : <a href="#faqs" className="pe-btn-secondary">Learn More</a>
-                }
+                } */}
+                <a href="https://mutual.technology/learn" className="pe-btn-secondary">Learn More</a>
               </div>
 
             </div>
@@ -1011,8 +1083,10 @@ export default function App() {
               <div className="nav-logo-group">
                 <a className="logo" href="#" onClick={(e) => { e.preventDefault(); goMain(); }}>mutual.</a>
                 <div className="nav-links">
-                  <a href="#" onClick={(e) => { e.preventDefault(); goPage('why'); }}>Our Story</a>
-                  <a href="#" onClick={(e) => { e.preventDefault(); goPage('learn-more'); }}>Learn More</a>
+                  {/* <a href="#" onClick={(e) => { e.preventDefault(); goPage('why'); }}>Our Story</a> */}
+                  <a href="https://mutual.technology/about">Our Story</a>
+                  {/* <a href="#" onClick={(e) => { e.preventDefault(); goPage('learn-more'); }}>Learn More</a> */}
+                  <a href="https://mutual.technology/learn">Learn More</a>
                 </div>
               </div>
               <button className="btn btn-void btn-sm" onClick={goApply}>Early Membership</button>
@@ -1069,9 +1143,12 @@ export default function App() {
                 <a href={STRIPE_APPLY} target="_blank" rel="noopener noreferrer" className="apply-cta">
                   Reserve your spot
                 </a>
-                <button className="apply-cta-secondary" onClick={() => goPage('learn-more')}>
+                {/* <button className="apply-cta-secondary" onClick={() => goPage('learn-more')}>
                   Learn More
-                </button>
+                </button> */}
+                <a href="https://mutual.technology/learn" className="apply-cta-secondary">
+                  Learn More
+                </a>
               </div>
             </div>
 
@@ -1123,45 +1200,6 @@ export default function App() {
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-
-          <section className="s">
-            <div className="story-beat" data-a="">
-              <div className="story-text">
-                <span className="label">The problem</span>
-                <h2>Smartphones are affecting our sleep, focus and attention span.</h2>
-                <p>The apps are designed by people whose job is to keep you there. You're fighting a billion-dollar engagement machine.</p>
-                <p>Current solutions are not up to the task.</p>
-              </div>
-              <NotificationProblemDemo />
-            </div>
-          </section>
-
-          <section className="s">
-            <div className="story-beat flip" data-a="">
-              <div className="story-text">
-                <span className="label">Why app blockers fail</span>
-                <h2>The bypass button is always right there.</h2>
-                <p>One tap to ignore the limit. Two taps to uninstall.</p>
-                <p>And you're right back at square one.</p>
-                <div className="story-stat">
-                  <strong>70%</strong> said screen time limits were too easy to bypass
-                </div>
-              </div>
-              <BypassProblemDemo />
-            </div>
-          </section>
-
-          <section className="s">
-            <div className="story-beat" data-a="">
-              <div className="story-text">
-                <span className="label">Why dumb or minimal phones fail</span>
-                <h2>A minimal phone solves distraction by removing everything.</h2>
-                <p>No TikTok, but also no Uber, no banking apps, no boarding pass, no WhatsApp.</p>
-                <p>Most people who try it come back. Because modern life requires a modern phone.</p>
-              </div>
-              <MinimalPhoneProblemDemo />
             </div>
           </section>
 
