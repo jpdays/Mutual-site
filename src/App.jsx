@@ -100,43 +100,25 @@ p{line-height:1.85;}
 .story-stat strong{color:var(--ink);font-size:15px;font-weight:600;}
 .story-illus{width:100%;aspect-ratio:4/3;background:var(--surface);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:12px;text-align:center;padding:28px;border:1px solid var(--border);position:relative;overflow:hidden;}
 
-/* HOW THE PHONE WORKS */
-.s-htpw{padding:96px 0;}
-.htpw-inner{max-width:1080px;margin:0 auto;padding:0 40px;}
-.htpw-hdr{margin-bottom:56px;}
-.htpw-hdr h2{font-size:clamp(28px,3.5vw,44px);letter-spacing:-0.025em;}
-.htpw-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
-.htpw-left-label{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;display:block;}
-.htpw-examples{display:flex;flex-direction:column;gap:4px;}
-.htpw-ex{display:flex;align-items:center;gap:16px;padding:18px 22px;border-radius:16px;cursor:pointer;border:1.5px solid transparent;transition:background .18s var(--ease-mag),border-color .18s,box-shadow .18s;user-select:none;}
-.htpw-ex:hover{background:var(--surface);}
-.htpw-ex.active{background:var(--white);border-color:var(--border);box-shadow:0 2px 16px rgba(0,0,0,.06);}
-.htpw-ex-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background .18s,transform .18s;}
-.htpw-ex.active .htpw-ex-dot{background:var(--signal);transform:scale(1.15);}
-.htpw-ex-text{font-size:16px;font-weight:500;color:var(--muted);line-height:1.3;transition:color .18s;}
-.htpw-ex.active .htpw-ex-text{color:var(--ink);}
-.htpw-right{display:flex;justify-content:center;}
-.htpw-phone-frame{width:260px;background:var(--void);border-radius:40px;aspect-ratio:9/19.5;position:relative;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.08);}
-.htpw-phone-frame::before{content:'';position:absolute;top:12px;left:50%;transform:translateX(-50%);width:40px;height:5px;background:rgba(255,255,255,.07);border-radius:3px;z-index:3;}
-.htpw-phone-screen{position:absolute;inset:4px;border-radius:37px;background:#111;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-.htpw-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
-.htpw-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:rgba(255,255,255,.22);height:100%;width:100%;}
-.htpw-ph-icon{font-size:28px;opacity:.5;}
-.htpw-ph-text{font-family:var(--sans);font-size:10px;letter-spacing:.12em;text-transform:uppercase;}
-
-/* HOW TO JOIN */
-.s-process{padding:96px 0;}
-.process-inner{max-width:1240px;margin:0 auto;padding:0 32px;}
-.process-hdr{margin-bottom:52px;}
-.process-hdr h2{font-size:clamp(32px,3.8vw,52px);letter-spacing:-0.04em;line-height:1.04;margin-bottom:8px;max-width:12ch;}
-.process-track{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;}
-.process-card{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:34px 28px 30px;display:flex;flex-direction:column;min-height:270px;transition:border-color .2s,box-shadow .2s,transform .2s var(--ease-mag);}
-.process-card:hover{border-color:rgba(232,160,48,.45);box-shadow:0 14px 30px rgba(0,0,0,.06),0 4px 10px rgba(0,0,0,.03);transform:translateY(-1px);}
-.process-card-head{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
-.process-num{font-family:var(--serif);font-style:italic;font-size:30px;color:#B8B1A9;line-height:1;flex-shrink:0;}
-.process-card-title{font-size:18px;font-weight:600;color:var(--ink);letter-spacing:-0.02em;line-height:1.25;}
-.process-card-desc{font-size:15px;color:var(--muted);line-height:1.8;flex:1;}
-.process-card-cta{margin-top:24px;}
+/* JOURNEY */
+.s-journey{padding:96px 0;}
+.journey-inner{max-width:1080px;margin:0 auto;padding:0 40px;}
+.journey-hdr{margin-bottom:64px;}
+.journey-step{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;padding:80px 0;border-top:1px solid var(--border);}
+.journey-step:first-of-type{border-top:none;padding-top:40px;}
+.journey-step.flip{direction:rtl;}
+.journey-step.flip>*{direction:ltr;}
+.journey-num{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--muted);letter-spacing:.04em;display:block;margin-bottom:12px;}
+.journey-text h3{font-size:clamp(22px,2.4vw,32px);letter-spacing:-0.025em;line-height:1.15;margin-bottom:16px;color:var(--ink);}
+.journey-text p{font-size:15px;color:var(--muted);line-height:1.9;max-width:400px;}
+.journey-text ul{margin-top:16px;list-style:none;display:flex;flex-direction:column;gap:8px;}
+.journey-text ul li{font-size:14px;color:var(--muted);padding-left:18px;position:relative;line-height:1.6;}
+.journey-text ul li::before{content:'—';position:absolute;left:0;color:var(--border);}
+.journey-visual{display:flex;justify-content:center;align-items:center;}
+.journey-visual img{mix-blend-mode:multiply;width:100%;max-width:440px;display:block;}
+.journey-visual-ph{width:100%;max-width:440px;aspect-ratio:4/3.4;background:var(--surface);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--border);letter-spacing:.08em;text-transform:uppercase;}
+.journey-close{padding-top:80px;padding-bottom:16px;text-align:center;border-top:1px solid var(--border);}
+.journey-close-line{font-size:clamp(20px,2.2vw,28px);font-family:var(--serif);font-style:italic;color:var(--ink);letter-spacing:-0.02em;margin-bottom:32px;}
 
 /* PRICING */
 .s-pricing{padding:112px 0;background:#FFFFFF;border-top:1px solid rgba(34,31,28,.08);}
@@ -306,10 +288,10 @@ p{line-height:1.85;}
   .about-grid{grid-template-columns:1fr;padding:0 24px;}
   .about-media{display:none;}
   .story-text h2,.story-text p,.about-text h2,.about-text p{max-width:100%;}
-  .htpw-layout{grid-template-columns:1fr;gap:40px;}
-  .htpw-right{display:none;}
-  .process-track{grid-template-columns:1fr 1fr;}
-  .process-card{min-height:240px;}
+  .journey-step{grid-template-columns:1fr;gap:32px;}
+  .journey-step.flip{direction:ltr;}
+  .journey-visual{display:none;}
+  .journey-text p{max-width:100%;}
   .pricing-panel{grid-template-columns:1fr;gap:32px;}
   .pricing-device{max-width:560px;margin:0 auto;}
 }
@@ -321,17 +303,13 @@ p{line-height:1.85;}
   .nav-links{display:none;}
   .s-hero{padding:140px 24px 80px;}
   .wrap{padding:0 24px;}
-  .story-beat,.faq-inner,.htpw-inner,.process-inner,.about-grid{padding:0 24px;}
+  .story-beat,.faq-inner,.about-grid{padding:0 24px;}
+  .journey-inner{padding:0 24px;}
   .site-footer{padding:64px 24px 40px;}
   .tally-card{padding:24px 20px;}
   .apply-nav,.apply-body,.sub-nav{padding-left:24px;padding-right:24px;}
-  .s,.s-htpw,.s-process,.s-pricing,.s-faq,.s-about{padding:72px 0;}
-  .process-track{grid-template-columns:1fr;}
-  .process-card{padding:28px 22px 24px;min-height:0;}
-  .process-card-head{align-items:flex-start;gap:12px;margin-bottom:14px;}
-  .process-num{font-size:28px;}
-  .process-card-title{font-size:17px;}
-  .process-card-desc{font-size:14px;line-height:1.75;}
+  .s,.s-journey,.s-pricing,.s-faq,.s-about{padding:72px 0;}
+  .journey-step{padding:56px 0;}
   .pricing-shell{padding:0 24px;}
   .pricing-top{gap:14px;padding-bottom:18px;margin-bottom:20px;}
   .pricing-title{font-size:26px;}
@@ -538,93 +516,98 @@ function MinimalPhoneProblemDemo() {
 
 // ─── MAIN PAGE SECTIONS ───────────────────────────────────────────────────────
 
-const HTPW_EXAMPLES = [
-  { id: 0, label: 'No Instagram after 9pm',              video: '/how-1.mp4' },
-  { id: 1, label: 'Only the essential apps during work',  video: '/how-2.mp4' },
-  { id: 2, label: 'No social media at work',              video: '/how-3.mp4' },
+const JOURNEY_STEPS = [
+  {
+    n: "01",
+    title: "Become a member",
+    body: "Fill out a short application. We read every one ourselves.",
+    img: "/step-1.png",
+    alt: "Application",
+  },
+  {
+    n: "02",
+    title: "A short conversation",
+    body: "If it looks like a fit, we\u2019ll reach out for a quick call to make sure Mutual is right for you.",
+    img: "/step-2.png",
+    alt: "Conversation",
+  },
+  {
+    n: "03",
+    title: "Receive your phone",
+    body: "A pre-configured Samsung arrives at your door. No setup required on your end.",
+    img: "/Delivery.png",
+    alt: "Phone delivery",
+  },
+  {
+    n: "04",
+    title: "Define your objective",
+    body: "Tell us what you want to change.",
+    bullets: ["Sleep better", "Improve focus", "Stop doomscrolling"],
+    img: "/image-2a.png",
+    alt: "Defining your objective",
+  },
+  {
+    n: "05",
+    title: "We build your system",
+    body: "We configure the phone around your life. Your rules, enforced at the hardware level.",
+    bullets: ["No social media after 9pm", "Only essential apps during work", "No notifications that can wait"],
+    img: "/image-2b.png",
+    alt: "Building your system",
+  },
+  {
+    n: "06",
+    title: "Refine it together",
+    body: "You tell us what\u2019s working. We adjust. Most people make one or two changes in the first week.",
+    img: "/image-5.png",
+    alt: "Refining together",
+  },
 ];
 
-function HowThePhoneWorks() {
-  const [active,  setActive]  = useState(0);
-  const [errored, setErrored] = useState({});
-  const ex = HTPW_EXAMPLES[active];
-
+function JourneyVisual({ img, alt }) {
+  const [errored, setErrored] = useState(false);
+  if (errored) {
+    return <div className="journey-visual-ph">Image coming soon</div>;
+  }
   return (
-    <section className="s-htpw" id="how-it-works">
-      <div className="htpw-inner">
-        <div className="htpw-hdr" data-a="">
-          <h2>How the Phone Works</h2>
-        </div>
-        <div className="htpw-layout">
-          <div data-a="1">
-            <span className="htpw-left-label">You tell us what you want</span>
-            <div className="htpw-examples">
-              {HTPW_EXAMPLES.map(e => (
-                <div
-                  key={e.id}
-                  className={`htpw-ex${active === e.id ? ' active' : ''}`}
-                  onClick={() => setActive(e.id)}
-                >
-                  <span className="htpw-ex-dot" />
-                  <span className="htpw-ex-text">{e.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="htpw-right" data-a="2">
-            <div className="htpw-phone-frame">
-              <div className="htpw-phone-screen">
-                <div className="htpw-ph">
-                  <span className="htpw-ph-icon">▶</span>
-                  <span className="htpw-ph-text">Video coming soon</span>
-                </div>
-                {!errored[ex.id] && (
-                  <video
-                    key={ex.id}
-                    src={ex.video}
-                    autoPlay muted loop playsInline
-                    className="htpw-video"
-                    onError={() => setErrored(p => ({...p, [ex.id]: true}))}
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <img
+      src={img}
+      alt={alt}
+      onError={() => setErrored(true)}
+    />
   );
 }
 
-function HowToJoin({ goApply }) {
-  const CARDS = [
-    { n:'1', title:'Apply to Early Access',              desc:'Fill out a short application. We read every one ourselves.',                                                                 cta: true  },
-    { n:'2', title:'Have a Quick Conversation',          desc:'If it looks like a fit, we’ll reach out for a short call to make sure Mutual is right for you.'                                },
-    { n:'3', title:'Get Your Phone, Set Up Your Way',    desc:'A pre-configured Samsung device arrives ready to match your rules.'                                                             },
-    { n:'4', title:'Check In and Refine',                desc:'We review what’s working and adjust the setup until it sticks.'                                                                  },
-  ];
-
+function JourneySection({ goApply }) {
   return (
-    <section className="s-process" id="join">
-      <div className="process-inner">
-        <div className="process-hdr" data-a="">
-          <h2>Stop scrolling for 50p a day</h2>
+    <section className="s-journey" id="how-it-works">
+      <div className="journey-inner">
+        <div className="journey-hdr" data-a="">
+          <span className="label">How it works</span>
         </div>
-        <div className="process-track" data-a="1">
-          {CARDS.map((card, i) => (
-            <div key={i} className="process-card">
-              <div className="process-card-head">
-                <div className="process-num">{card.n}</div>
-                <div className="process-card-title">{card.title}</div>
-              </div>
-              <div className="process-card-desc">{card.desc}</div>
-              {card.cta && (
-                <div className="process-card-cta">
-                  <button className="btn btn-void btn-sm" onClick={goApply}>Request Early Access →</button>
-                </div>
+        {JOURNEY_STEPS.map((step, i) => (
+          <div
+            key={step.n}
+            className={"journey-step" + (i % 2 === 1 ? " flip" : "")}
+            data-a=""
+          >
+            <div className="journey-text">
+              <span className="journey-num">{step.n}</span>
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
+              {step.bullets && (
+                <ul>
+                  {step.bullets.map((b, j) => <li key={j}>{b}</li>)}
+                </ul>
               )}
             </div>
-          ))}
+            <div className="journey-visual">
+              <JourneyVisual img={step.img} alt={step.alt} />
+            </div>
+          </div>
+        ))}
+        <div className="journey-close" data-a="">
+          <p className="journey-close-line">All of this, for 50p a day.</p>
+          <button className="btn btn-void btn-lg" onClick={goApply}>Early Membership →</button>
         </div>
       </div>
     </section>
@@ -648,10 +631,10 @@ function Pricing({ goApply }) {
 
           <div className="pricing-content">
             <div className="pricing-top">
-              <h2 className="pricing-title">Pre-order your phone</h2>
+              <h2 className="pricing-title">Join the next cohort</h2>
               <div className="pricing-cohort">
                 <span className="pricing-cohort-label">First cohort</span>
-                <span className="pricing-badge">Sold out</span>
+                <span className="pricing-badge">Full</span>
               </div>
             </div>
 
@@ -667,7 +650,7 @@ function Pricing({ goApply }) {
                   <span className="pricing-radio" aria-hidden="true" />
                   <div className="pricing-option-copy">
                     <div className="pricing-option-row">
-                      <div className="pricing-option-price">&pound;15 per month</div>
+                      <div className="pricing-option-price">&pound;15/month</div>
                     </div>
                     <div className="pricing-option-details" aria-hidden={!isPreorder}>
                       <p className="pricing-option-detail">&pound;170 paid upfront.</p>
@@ -867,7 +850,7 @@ export default function App() {
                   <a href="#" onClick={(e) => { e.preventDefault(); goPage('faq'); }}>FAQ</a>
                 </div>
               </div>
-              <button className="btn btn-void btn-sm" onClick={goApply}>Request Early Access</button>
+              <button className="btn btn-void btn-sm" onClick={goApply}>Early Membership</button>
             </div>
           </nav>
 
@@ -876,13 +859,12 @@ export default function App() {
               <h1 className="hero-h" data-a="">The first smartphone<br />that <em>enforces your rules.</em></h1>
               <p className="hero-sub" data-a="1">You decide which apps you want and when. The phone makes sure it stays that way.</p>
               <div data-a="2">
-                <button className="btn btn-void btn-lg" onClick={goApply}>Request Early Access →</button>
+                <button className="btn btn-void btn-lg" onClick={goApply}>Early Membership →</button>
               </div>
             </div>
           </section>
 
-          <HowThePhoneWorks />
-          <HowToJoin goApply={goApply} />
+          <JourneySection goApply={goApply} />
           <Pricing goApply={goApply} />
           {footer}
         </div>
