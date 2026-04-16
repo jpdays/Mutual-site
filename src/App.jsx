@@ -243,18 +243,52 @@ p{line-height:1.85;}
 .lm-divider{height:1px;background:var(--border);max-width:1080px;margin:0 auto;}
 
 /* APPLY PAGE */
-.apply-nav{background:var(--bg);border-bottom:1px solid var(--border);padding:0 40px;position:sticky;top:0;z-index:100;}
-.apply-nav-inner{max-width:720px;margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;}
-.apply-body{max-width:720px;margin:0 auto;padding:72px 40px 96px;}
-.apply-body h1{font-size:clamp(28px,4vw,46px);letter-spacing:-0.03em;line-height:1.1;margin-bottom:14px;}
-.apply-body h1 em{font-family:var(--serif);font-style:italic;font-weight:400;}
-.apply-sub{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:48px;max-width:480px;}
-.tally-card{background:var(--white);border-radius:16px;border:1px solid var(--border);padding:36px;margin-bottom:18px;}
-.deposit-card{background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:18px 22px;font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px;}
-.stripe-section{text-align:center;padding:36px;background:var(--white);border-radius:16px;border:1px solid var(--border);}
-.stripe-section p{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.7;}
-.btn-stripe{display:inline-flex;align-items:center;gap:10px;background:var(--void);color:var(--bg);border:none;border-radius:100px;padding:14px 32px;font-family:var(--sans);font-size:15px;font-weight:500;cursor:pointer;text-decoration:none;transition:background .2s,transform .15s;}
-.btn-stripe:hover{background:#262624;transform:scale(1.02);}
+.apply-nav{background:var(--void);border-bottom:1px solid rgba(249,248,245,.08);padding:0 40px;position:sticky;top:0;z-index:100;}
+.apply-nav-inner{max-width:1080px;margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;}
+.apply-nav .logo{color:var(--bg);}
+.apply-nav .btn-ghost{color:rgba(249,248,245,.72);}
+.apply-nav .btn-ghost:hover{color:var(--bg);}
+
+.apply-shell{min-height:calc(100vh - 62px);display:grid;grid-template-columns:1fr 1fr;align-items:stretch;}
+
+/* Left panel — dark context column */
+.apply-left{background:var(--void);padding:72px 56px 80px;display:flex;flex-direction:column;justify-content:space-between;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto;}
+.apply-left-top{flex:1;}
+.apply-eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(249,248,245,.35);margin-bottom:28px;display:block;}
+.apply-h{font-family:var(--sans);font-size:clamp(40px,5vw,68px);font-weight:700;letter-spacing:-0.04em;line-height:1.02;color:var(--bg);margin-bottom:24px;max-width:10ch;}
+.apply-h em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--signal);}
+.apply-desc{font-size:18px;color:rgba(249,248,245,.62);line-height:1.8;margin-bottom:48px;max-width:440px;}
+.apply-checklist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;max-width:420px;}
+.apply-checklist li{display:flex;align-items:flex-start;gap:12px;font-size:16px;color:rgba(249,248,245,.68);line-height:1.55;}
+.apply-check-dot{width:18px;height:18px;border-radius:50%;background:rgba(232,160,48,.18);border:1px solid rgba(232,160,48,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.apply-check-dot::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--signal);}
+.apply-cta{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 24px;margin-top:32px;border-radius:14px;background:#F3EFE7;border:1px solid rgba(243,239,231,.88);color:var(--void);font-family:var(--sans);font-size:15px;font-weight:600;letter-spacing:-0.01em;text-decoration:none;transition:transform .24s var(--ease-mag),opacity .24s var(--ease-out),box-shadow .24s var(--ease-out);box-shadow:0 10px 24px rgba(0,0,0,.18);}
+.apply-cta:hover{transform:scale(1.02);opacity:.96;}
+.apply-cta:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(249,248,245,.18),0 10px 24px rgba(0,0,0,.18);}
+.apply-cta:active{transform:scale(.98);}
+.apply-cta-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 18px;margin-top:12px;border-radius:10px;border:1px solid rgba(249,248,245,.18);background:transparent;color:rgba(249,248,245,.72);font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:-.01em;text-decoration:none;transition:color .18s var(--ease-out),background .18s var(--ease-out),border-color .18s var(--ease-out),transform .2s var(--ease-mag);}
+.apply-cta-secondary:hover{color:var(--bg);background:rgba(249,248,245,.05);border-color:rgba(249,248,245,.28);transform:scale(1.02);}
+.apply-cta-secondary:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(249,248,245,.14);}
+.apply-cta-secondary:active{transform:scale(.98);}
+
+/* Right panel — form column */
+.apply-right{background:var(--void);padding:72px 56px 80px;display:flex;flex-direction:column;gap:0;border-left:1px solid rgba(249,248,245,.06);}
+.apply-form-label{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(249,248,245,.56);margin-bottom:20px;display:block;}
+.apply-form-card{background:#FFFFFF;border-radius:16px;border:1px solid rgba(226,221,214,.9);padding:28px 28px 20px;margin-bottom:16px;box-shadow:none;}
+.apply-form-card iframe{display:block;}
+.apply-form-hint{font-size:13px;color:rgba(249,248,245,.56);line-height:1.65;padding:0 2px;}
+
+@media(max-width:900px){
+  .apply-shell{grid-template-columns:1fr;}
+  .apply-left{position:static;height:auto;padding:52px 32px 48px;}
+  .apply-desc{max-width:100%;}
+  .apply-right{padding:48px 32px 64px;}
+}
+@media(max-width:640px){
+  .apply-nav{padding:0 20px;}
+  .apply-left{padding:44px 24px 40px;}
+  .apply-right{padding:40px 24px 56px;}
+}
 
 /* VIDEO OVERLAY */
 .video-overlay{position:fixed;inset:0;background:rgba(15,15,14,.88);z-index:10000;display:flex;align-items:center;justify-content:center;padding:24px;}
@@ -327,8 +361,7 @@ p{line-height:1.85;}
   .wrap{padding:0 24px;}
   .story-beat,.faq-inner,.about-grid{padding:0 24px;}
   .site-footer{padding:64px 24px 40px;}
-  .tally-card{padding:24px 20px;}
-  .apply-nav,.apply-body,.sub-nav{padding-left:24px;padding-right:24px;}
+  .sub-nav{padding-left:24px;padding-right:24px;}
   .s,.s-faq,.s-about{padding:72px 0;}
   .pricing-shell{padding:0 20px;}
 }
@@ -529,7 +562,7 @@ const HOW_STEPS = [
   {
     id: "receive",
     title: "Receive your phone",
-    img: "/Delivery.png",
+    images: ["/1.png"],
     alt: "Phone delivery",
     fit: "contain",
     w: 320, h: 320, x: 90,  y: 40,
@@ -537,7 +570,7 @@ const HOW_STEPS = [
   {
     id: "tell",
     title: "Tell us your objective",
-    img: "/image-2a.png",
+    images: ["/2a.png", "/2b.png", "/2c.png"],
     alt: "Your objective",
     fit: "contain",
     w: 300, h: 280, x: 520, y: 90,
@@ -545,7 +578,7 @@ const HOW_STEPS = [
   {
     id: "look",
     title: "We look at your data",
-    img: "/image-3.png",
+    images: ["/3.png"],
     alt: "Data analysis",
     fit: "cover",
     w: 280, h: 320, x: 960, y: 250,
@@ -553,15 +586,15 @@ const HOW_STEPS = [
   {
     id: "adjust",
     title: "We adjust over time",
-    img: "/image-5.png",
+    images: ["/5.png"],
     alt: "Ongoing refinement",
     fit: "cover",
     w: 240, h: 300, x: 130, y: 470,
   },
   {
     id: "rules",
-    title: "We set the rules",
-    img: "/image-2b.png",
+    title: "We set the rules together",
+    images: ["/4a.png"],
     alt: "Your rules",
     fit: "cover",
     w: 320, h: 300, x: 610, y: 520,
@@ -569,6 +602,30 @@ const HOW_STEPS = [
 ];
 
 function HowItWorksSection({ goApply }) {
+  const [stepImageIndexes, setStepImageIndexes] = useState(() =>
+    Object.fromEntries(HOW_STEPS.map((step) => [step.id, 0]))
+  );
+
+  useEffect(() => {
+    const rotatingSteps = HOW_STEPS.filter((step) =>
+      step.id === "tell" || step.id === "adjust"
+    );
+    const interval = setInterval(() => {
+      setStepImageIndexes((current) => {
+        const next = { ...current };
+        rotatingSteps.forEach((step) => {
+          const imageCount = step.images.length;
+          if (imageCount > 1) {
+            next[step.id] = ((current[step.id] ?? 0) + 1) % imageCount;
+          }
+        });
+        return next;
+      });
+    }, 2600);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="s-howitworks" id="how-it-works">
       {/* Header sits above the composition frame */}
@@ -616,6 +673,7 @@ function HowItWorksSection({ goApply }) {
         {/* Nodes — transparent containers, absolutely positioned */}
         {HOW_STEPS.map((step) => {
           const imgH = Math.round(step.h * 0.72);
+          const activeImage = step.images[stepImageIndexes[step.id] ?? 0] ?? step.images[0];
           return (
             <div
               key={step.id}
@@ -627,7 +685,7 @@ function HowItWorksSection({ goApply }) {
                 style={{ height: imgH }}
               >
                 <img
-                  src={step.img}
+                  src={activeImage}
                   alt={step.alt}
                   style={{
                     width: "100%",
@@ -654,71 +712,73 @@ const SPEC_TABS = [
     id: 'details',
     label: 'Details',
     specs: [
-      { label: 'Screen Size',        value: '6.7 inches' },
-      { label: 'Storage & Memory',   value: '128 GB / 4 GB RAM' },
-      { label: 'Camera',             value: '50MP / 5MP / 2MP' },
-      { label: 'Operating System',   value: 'Balance OS' },
-      { label: 'Brand',              value: 'Samsung · Quality & Reliability' },
-      { label: 'Battery',            value: '5000 mAh' },
-      { label: 'Connectivity',       value: 'NFC' },
-      { label: 'Security',           value: 'Fingerprint & Face Unlock' },
+      { label: 'Screen Size',       value: '6.7 inches' },
+      { label: 'Storage & Memory',  value: '128 GB / 4 GB RAM' },
+      { label: 'Camera',            value: '50 MP / 5 MP / 2 MP' },
+      { label: 'Operating System',  value: 'Android' },
+      { label: 'Brand',             value: 'Samsung · Quality & Reliability' },
+      { label: 'Battery',           value: '5000 mAh' },
+      { label: 'Durability',        value: 'IP54 · Gorilla Glass Victus' },
+      { label: 'Security',          value: 'Fingerprint & Face Unlock' },
     ],
   },
   {
     id: 'performance',
     label: 'Performance',
     specs: [
-      { label: 'CPU Speed',               value: '2.2 GHz, 2 GHz' },
-      { label: 'CPU Type',                value: 'Octa-Core' },
-      { label: 'Memory',                  value: '4 GB RAM' },
-      { label: 'Storage',                 value: '128 GB' },
-      { label: 'External Storage',        value: 'MicroSD up to 1.5 TB' },
-      { label: 'Physical Dimensions',     value: '164.4 × 77.9 × 7.9 mm' },
+      { label: 'CPU Speed',          value: '2.4 GHz, 2 GHz' },
+      { label: 'CPU Type',           value: 'Octa-Core' },
+      { label: 'Memory',             value: '4 GB RAM' },
+      { label: 'Storage',            value: '128 GB (107.1 GB available)' },
+      { label: 'External Storage',   value: 'MicroSD up to 2 TB' },
+      { label: 'Dimensions',         value: '164.4 × 77.9 × 7.5 mm' },
+      { label: 'Weight',             value: '192 g' },
     ],
   },
   {
     id: 'display',
     label: 'Display',
     specs: [
-      { label: 'Display Size',      value: '6.7 inches' },
-      { label: 'Resolution',        value: '1080 × 2340 (FHD+)' },
-      { label: 'Technology',        value: 'Super AMOLED' },
-      { label: 'Max Refresh Rate',  value: '90 Hz' },
-      { label: 'Colour Depth',      value: '16M colours' },
+      { label: 'Display Size',     value: '6.7 inches' },
+      { label: 'Resolution',       value: '1080 × 2340 (FHD+)' },
+      { label: 'Technology',       value: 'Super AMOLED' },
+      { label: 'Refresh Rate',     value: '90 Hz' },
+      { label: 'Colour Depth',     value: '16M colours' },
     ],
   },
   {
     id: 'camera',
     label: 'Camera',
     specs: [
-      { label: 'Rear Camera',          value: '50 MP + 5 MP + 2 MP' },
-      { label: 'Rear Aperture',        value: 'f/1.8, f/2.2, f/2.4' },
-      { label: 'Rear Zoom',            value: 'Digital up to 10×' },
-      { label: 'Front Camera',         value: '13 MP' },
-      { label: 'Front Aperture',       value: 'f/2.0' },
-      { label: 'Video',                value: 'FHD 1920 × 1080 @ 30 fps' },
+      { label: 'Rear Camera',     value: '50 MP + 5 MP + 2 MP' },
+      { label: 'Rear Aperture',   value: 'f/1.8, f/2.2, f/2.4' },
+      { label: 'OIS',             value: 'Yes' },
+      { label: 'Rear Zoom',       value: 'Digital up to 10×' },
+      { label: 'Front Camera',    value: '13 MP, f/2.0' },
+      { label: 'Video',           value: 'FHD 1920 × 1080 @ 30 fps' },
+      { label: 'Slow Motion',     value: '120 fps @ HD' },
     ],
   },
   {
     id: 'network',
     label: 'Network',
     specs: [
-      { label: 'SIM',    value: 'Dual SIM' },
-      { label: 'eSIM',   value: 'No' },
-      { label: '2G',     value: 'GSM 850 / 900 / 1800 / 1900' },
-      { label: '3G',     value: 'B1, B5, B8' },
-      { label: '4G LTE', value: 'B1, B3, B5, B7, B8, B20, B28' },
+      { label: 'SIM',       value: 'Dual Nano-SIM (4FF)' },
+      { label: 'Networks',  value: '2G / 3G / 4G LTE / 5G Sub-6' },
+      { label: 'Wi-Fi',     value: '802.11a/b/g/n/ac 2.4 GHz + 5 GHz' },
+      { label: 'Bluetooth', value: 'v5.3' },
+      { label: 'USB',       value: 'USB-C 2.0' },
     ],
   },
   {
     id: 'other',
     label: 'Other',
     specs: [
-      { label: 'Battery',          value: '5000 mAh' },
-      { label: 'NFC',              value: 'Yes' },
-      { label: 'Fingerprint & Face ID', value: 'Yes' },
-      { label: 'OS',               value: 'Balance OS on Android' },
-      { label: 'Software Support', value: 'Until November 2030' },
+      { label: 'Battery',           value: '5000 mAh · non-removable' },
+      { label: 'Video Playback',    value: 'Up to 18 hours' },
+      { label: 'Sensors',           value: 'Accelerometer, Gyro, Fingerprint, Light, Geomagnetic' },
+      { label: 'OS',                value: 'Android' },
+      { label: 'Software Support',  value: 'Until August 2031' },
     ],
   },
 ];
@@ -927,19 +987,21 @@ export default function App() {
       <style>{css}</style>
       <div id="noise" aria-hidden="true" />
 
-      <div id="topBar" ref={topBarRef}>
-        <div className="tb">
-          <span className="tb-label"><strong>Stay Updated</strong>&ensp;News on spot openings and product development</span>
-          {!tbOk ? (
-            <form className="tb-form" onSubmit={handleTbSubmit}>
-              <input type="email" placeholder="Email address" required ref={tbEmailRef} />
-              <button type="submit">→</button>
-            </form>
-          ) : (
-            <span className="tb-ok show">✓ You're on the list</span>
-          )}
+      {page === 'main' && (
+        <div id="topBar" ref={topBarRef}>
+          <div className="tb">
+            <span className="tb-label"><strong>Stay Updated</strong>&ensp;News on spot openings and product development</span>
+            {!tbOk ? (
+              <form className="tb-form" onSubmit={handleTbSubmit}>
+                <input type="email" placeholder="Email address" required ref={tbEmailRef} />
+                <button type="submit">→</button>
+              </form>
+            ) : (
+              <span className="tb-ok show">✓ You're on the list</span>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* MAIN PAGE */}
       {page === 'main' && (
@@ -991,29 +1053,44 @@ export default function App() {
               <button className="btn-ghost" onClick={goMain}>← Back</button>
             </div>
           </nav>
-          <div className="apply-body">
-            <p className="label">Early access application</p>
-            <h1>Answer a few quick<br /><em>questions to apply.</em></h1>
-            <p className="apply-sub">If you're a fit, we'll confirm your spot and send next steps.</p>
-            <div className="tally-card">
-              <iframe
-                src="https://tally.so/embed/RGRWGK?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-                loading="lazy"
-                width="100%"
-                height="580"
-                frameBorder="0"
-                title="mutual. Early Access Application"
-              />
+          <div className="apply-shell">
+
+            {/* ── Left: context + deposit ── */}
+            <div className="apply-left">
+              <div className="apply-left-top">
+                <span className="apply-eyebrow">Early access</span>
+                <h1 className="apply-h">Apply<br /><em>Second Cohort.</em></h1>
+                <p className="apply-desc">Answer a few short questions. If you're a fit, we'll confirm your spot and send next steps.</p>
+                <ul className="apply-checklist">
+                  <li><span className="apply-check-dot" /><span>Takes about 2 minutes</span></li>
+                  <li><span className="apply-check-dot" /><span>No commitment until you pay</span></li>
+                  <li><span className="apply-check-dot" /><span>Get a refund or roll over if you're not selected</span></li>
+                </ul>
+                <a href={STRIPE_APPLY} target="_blank" rel="noopener noreferrer" className="apply-cta">
+                  Reserve your spot
+                </a>
+                <button className="apply-cta-secondary" onClick={() => goPage('learn-more')}>
+                  Learn More
+                </button>
+              </div>
             </div>
-            <div className="deposit-card">
-              If you're not selected for the first cohort, you'll receive a full refund or we'll roll it to the next opening. Whichever you prefer.
+
+            {/* ── Right: form ── */}
+            <div className="apply-right">
+              <span className="apply-form-label">Your application</span>
+              <div className="apply-form-card">
+                <iframe
+                  src="https://tally.so/embed/RGRWGK?alignLeft=1&hideTitle=1&transparentBackground=0&dynamicHeight=1"
+                  loading="lazy"
+                  width="100%"
+                  height="387"
+                  frameBorder="0"
+                  title="mutual. Early Access Application"
+                />
+              </div>
+              
             </div>
-            <div className="stripe-section">
-              <p>Ready to secure your spot? A £10 deposit confirms your place in the first cohort.</p>
-              <a href={STRIPE_APPLY} target="_blank" rel="noopener noreferrer" className="btn-stripe">
-                Secure my spot →
-              </a>
-            </div>
+
           </div>
         </div>
       )}
