@@ -70,7 +70,7 @@ p{line-height:1.85;}
 .s-hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:160px 40px 100px;background:var(--bg);position:relative;}
 .hero-content{max-width:760px;text-align:center;margin:0 auto;}
 .hero-h{font-family:var(--sans);font-weight:700;font-size:clamp(38px,5.5vw,68px);line-height:1.08;letter-spacing:-0.03em;margin-bottom:22px;color:var(--ink);}
-.hero-h em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--ink);}
+.hero-h em{font-family:var(--serif);font-style:italic;font-weight:400;color:#f97316;}
 .hero-sub{font-size:clamp(16px,1.6vw,18px);color:var(--muted);line-height:1.75;margin-bottom:40px;max-width:480px;margin-left:auto;margin-right:auto;font-weight:400;}
 
 .s{padding:96px 0;}
@@ -198,11 +198,8 @@ p{line-height:1.85;}
 .about-text p{font-size:15px;line-height:1.9;color:var(--muted);margin-bottom:18px;max-width:380px;}
 .about-text p:last-child{margin-bottom:0;}
 .about-media{display:flex;flex-direction:column;gap:16px;}
-.founders{display:flex;gap:48px;justify-content:flex-start;margin-top:32px;}
-.founder{display:flex;flex-direction:column;align-items:center;gap:10px;}
-.founder-circle{width:100px;height:100px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);overflow:hidden;}
-.founder-circle img{width:100%;height:100%;object-fit:cover;}
-.founder-name{font-size:13px;font-weight:500;color:var(--ink);letter-spacing:-.01em;}
+.about-photo{width:100%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:var(--surface);border:1px solid var(--border);}
+.about-photo img{width:100%;height:100%;object-fit:cover;display:block;}
 
 /* FAQ */
 .s-faq{padding:96px 0;}
@@ -1179,19 +1176,8 @@ export default function App() {
                 <p>We're two founders building in London. We're looking for the right people to build this with.</p>
               </div>
               <div className="about-media" data-a="1">
-                <div className="founders">
-                  <div className="founder">
-                    <div className="founder-circle">
-                      <img src="/joao.png" alt="João" onError={(e) => { e.target.style.display='none'; }} />
-                    </div>
-                    <span className="founder-name">João</span>
-                  </div>
-                  <div className="founder">
-                    <div className="founder-circle">
-                      <img src="/ali.png" alt="Ali" onError={(e) => { e.target.style.display='none'; }} />
-                    </div>
-                    <span className="founder-name">Ali</span>
-                  </div>
+                <div className="about-photo">
+                  <img src="https://placehold.co/800x600" alt="João and Ali" />
                 </div>
               </div>
             </div>
