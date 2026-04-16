@@ -221,6 +221,27 @@ p{line-height:1.85;}
 .sub-nav{background:var(--bg);border-bottom:1px solid var(--border);padding:0 40px;position:sticky;top:0;z-index:100;}
 .sub-nav-inner{max-width:1080px;margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;}
 
+/* SPEC TABS */
+.s-specs{padding:80px 0 96px;background:var(--bg);}
+.specs-shell{max-width:1080px;margin:0 auto;padding:0 40px;}
+.specs-header{margin-bottom:48px;}
+.specs-header h2{font-size:clamp(22px,2.4vw,30px);font-weight:600;letter-spacing:-0.025em;color:var(--ink);}
+.spec-tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:40px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.spec-tab-bar::-webkit-scrollbar{display:none;}
+.spec-tab{background:none;border:none;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--muted);padding:12px 20px;letter-spacing:-0.01em;position:relative;white-space:nowrap;transition:color .2s;cursor:pointer;}
+.spec-tab::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease-out);}
+.spec-tab:hover{color:var(--ink);}
+.spec-tab.active{color:var(--ink);}
+.spec-tab.active::after{transform:scaleX(1);}
+.spec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px 24px;}
+.spec-item-label{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-0.01em;margin-bottom:6px;line-height:1.35;}
+.spec-item-value{font-size:14px;color:var(--muted);line-height:1.6;}
+@media(max-width:860px){.spec-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.spec-grid{grid-template-columns:1fr;gap:24px;}.spec-tab{padding:10px 14px;font-size:13px;}.specs-shell{padding:0 24px;}}
+
+/* LEARN MORE hero divider */
+.lm-divider{height:1px;background:var(--border);max-width:1080px;margin:0 auto;}
+
 /* APPLY PAGE */
 .apply-nav{background:var(--bg);border-bottom:1px solid var(--border);padding:0 40px;position:sticky;top:0;z-index:100;}
 .apply-nav-inner{max-width:720px;margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;}
@@ -628,7 +649,117 @@ function HowItWorksSection({ goApply }) {
   );
 }
 
-function Pricing() {
+const SPEC_TABS = [
+  {
+    id: 'details',
+    label: 'Details',
+    specs: [
+      { label: 'Screen Size',        value: '6.7 inches' },
+      { label: 'Storage & Memory',   value: '128 GB / 4 GB RAM' },
+      { label: 'Camera',             value: '50MP / 5MP / 2MP' },
+      { label: 'Operating System',   value: 'Balance OS' },
+      { label: 'Brand',              value: 'Samsung · Quality & Reliability' },
+      { label: 'Battery',            value: '5000 mAh' },
+      { label: 'Connectivity',       value: 'NFC' },
+      { label: 'Security',           value: 'Fingerprint & Face Unlock' },
+    ],
+  },
+  {
+    id: 'performance',
+    label: 'Performance',
+    specs: [
+      { label: 'CPU Speed',               value: '2.2 GHz, 2 GHz' },
+      { label: 'CPU Type',                value: 'Octa-Core' },
+      { label: 'Memory',                  value: '4 GB RAM' },
+      { label: 'Storage',                 value: '128 GB' },
+      { label: 'External Storage',        value: 'MicroSD up to 1.5 TB' },
+      { label: 'Physical Dimensions',     value: '164.4 × 77.9 × 7.9 mm' },
+    ],
+  },
+  {
+    id: 'display',
+    label: 'Display',
+    specs: [
+      { label: 'Display Size',      value: '6.7 inches' },
+      { label: 'Resolution',        value: '1080 × 2340 (FHD+)' },
+      { label: 'Technology',        value: 'Super AMOLED' },
+      { label: 'Max Refresh Rate',  value: '90 Hz' },
+      { label: 'Colour Depth',      value: '16M colours' },
+    ],
+  },
+  {
+    id: 'camera',
+    label: 'Camera',
+    specs: [
+      { label: 'Rear Camera',          value: '50 MP + 5 MP + 2 MP' },
+      { label: 'Rear Aperture',        value: 'f/1.8, f/2.2, f/2.4' },
+      { label: 'Rear Zoom',            value: 'Digital up to 10×' },
+      { label: 'Front Camera',         value: '13 MP' },
+      { label: 'Front Aperture',       value: 'f/2.0' },
+      { label: 'Video',                value: 'FHD 1920 × 1080 @ 30 fps' },
+    ],
+  },
+  {
+    id: 'network',
+    label: 'Network',
+    specs: [
+      { label: 'SIM',    value: 'Dual SIM' },
+      { label: 'eSIM',   value: 'No' },
+      { label: '2G',     value: 'GSM 850 / 900 / 1800 / 1900' },
+      { label: '3G',     value: 'B1, B5, B8' },
+      { label: '4G LTE', value: 'B1, B3, B5, B7, B8, B20, B28' },
+    ],
+  },
+  {
+    id: 'other',
+    label: 'Other',
+    specs: [
+      { label: 'Battery',          value: '5000 mAh' },
+      { label: 'NFC',              value: 'Yes' },
+      { label: 'Fingerprint & Face ID', value: 'Yes' },
+      { label: 'OS',               value: 'Balance OS on Android' },
+      { label: 'Software Support', value: 'Until November 2030' },
+    ],
+  },
+];
+
+function SpecTabs() {
+  const [active, setActive] = useState('details');
+  const tab = SPEC_TABS.find(t => t.id === active);
+  return (
+    <section className="s-specs">
+      <div className="specs-shell">
+        <div className="specs-header" data-a="">
+          <span className="label">What you get</span>
+          <h2>Samsung Galaxy A17 5G — <em>full specs.</em></h2>
+        </div>
+        <div className="spec-tab-bar" role="tablist">
+          {SPEC_TABS.map(t => (
+            <button
+              key={t.id}
+              role="tab"
+              aria-selected={active === t.id}
+              className={`spec-tab${active === t.id ? ' active' : ''}`}
+              onClick={() => setActive(t.id)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <div className="spec-grid" data-a="">
+          {tab.specs.map(s => (
+            <div key={s.label}>
+              <p className="spec-item-label">{s.label}</p>
+              <p className="spec-item-value">{s.value}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Pricing({ goLearnMore }) {
   return (
     <section className="s-pricing" id="pricing">
       <div className="pricing-shell">
@@ -662,7 +793,7 @@ function Pricing() {
                   <span className="pe-price">&pound;15</span>
                   <span className="pe-price-unit">&thinsp;/ month</span>
                 </div>
-                <p className="pe-cancel">Cancel anytime</p>
+                <p className="pe-cancel">Cancel anytime. We refund unused time.</p>
               </div>
 
               {/* Divider */}
@@ -681,7 +812,10 @@ function Pricing() {
               {/* CTA */}
               <div className="pe-cta">
                 <a href={STRIPE_PREORDER} className="pe-btn-primary">Reserve Your Spot</a>
-                <a href="#faqs" className="pe-btn-secondary">Learn More</a>
+                {goLearnMore
+                  ? <button className="pe-btn-secondary" onClick={goLearnMore}>Learn More</button>
+                  : <a href="#faqs" className="pe-btn-secondary">Learn More</a>
+                }
               </div>
 
             </div>
@@ -816,7 +950,7 @@ export default function App() {
                 <a className="logo" href="#" onClick={(e) => { e.preventDefault(); goMain(); }}>mutual.</a>
                 <div className="nav-links">
                   <a href="#" onClick={(e) => { e.preventDefault(); goPage('why'); }}>Our Story</a>
-                  <a href="#" onClick={(e) => { e.preventDefault(); goPage('faq'); }}>FAQ</a>
+                  <a href="#" onClick={(e) => { e.preventDefault(); goPage('learn-more'); }}>Learn More</a>
                 </div>
               </div>
               <button className="btn btn-void btn-sm" onClick={goApply}>Early Membership</button>
@@ -834,7 +968,7 @@ export default function App() {
           </section>
 
           <HowItWorksSection goApply={goApply} />
-          <Pricing />
+          <Pricing goLearnMore={() => goPage('learn-more')} />
           {footer}
         </div>
       )}
@@ -954,6 +1088,29 @@ export default function App() {
             </div>
           </section>
 
+          {footer}
+        </div>
+      )}
+
+      {/* LEARN MORE PAGE */}
+      {page === 'learn-more' && (
+        <div id="page-learn-more">
+          <SubNav />
+          {/* Pricing section — exact copy */}
+          <Pricing />
+          {/* Divider */}
+          <div style={{padding:'0 40px'}}><div className="lm-divider" /></div>
+          {/* Spec tabs */}
+          <SpecTabs />
+          {/* FAQ */}
+          <section className="s-faq" id="faqs">
+            <div className="faq-inner">
+              <h2 data-a="">Frequently asked questions</h2>
+              <div>
+                {faqs.map((f, i) => <FaqItem key={i} question={f.q} answer={f.a} />)}
+              </div>
+            </div>
+          </section>
           {footer}
         </div>
       )}
