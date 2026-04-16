@@ -10,7 +10,7 @@ const STRIPE_APPLY    = "https://buy.stripe.com/bJeaEP6cO13LfKF0EBgMw02";
 const STRIPE_PREORDER = "#"; // placeholder — swap when Stripe link is ready
 
 const css = `
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Geist:wght@400;500;600;700&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -23,6 +23,7 @@ button,a{cursor:pointer;}
   --signal:#E8A030;--signal-dk:#C8891F;--white:#FFFFFF;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',system-ui,sans-serif;
+  --display:'Geist',var(--sans);
   --ease-out:cubic-bezier(0.215,0.61,0.355,1);
   --ease-mag:cubic-bezier(0.25,0.46,0.45,0.94);
   --max:1160px;
@@ -100,74 +101,79 @@ p{line-height:1.85;}
 .story-stat strong{color:var(--ink);font-size:15px;font-weight:600;}
 .story-illus{width:100%;aspect-ratio:4/3;background:var(--surface);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:12px;text-align:center;padding:28px;border:1px solid var(--border);position:relative;overflow:hidden;}
 
-/* JOURNEY */
-.s-journey{padding:96px 0;}
-.journey-inner{max-width:1080px;margin:0 auto;padding:0 40px;}
-.journey-hdr{margin-bottom:64px;}
-.journey-step{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;padding:80px 0;border-top:1px solid var(--border);}
-.journey-step:first-of-type{border-top:none;padding-top:40px;}
-.journey-step.flip{direction:rtl;}
-.journey-step.flip>*{direction:ltr;}
-.journey-num{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--muted);letter-spacing:.04em;display:block;margin-bottom:12px;}
-.journey-text h3{font-size:clamp(22px,2.4vw,32px);letter-spacing:-0.025em;line-height:1.15;margin-bottom:16px;color:var(--ink);}
-.journey-text p{font-size:15px;color:var(--muted);line-height:1.9;max-width:400px;}
-.journey-text ul{margin-top:16px;list-style:none;display:flex;flex-direction:column;gap:8px;}
-.journey-text ul li{font-size:14px;color:var(--muted);padding-left:18px;position:relative;line-height:1.6;}
-.journey-text ul li::before{content:'—';position:absolute;left:0;color:var(--border);}
-.journey-visual{display:flex;justify-content:center;align-items:center;}
-.journey-visual img{mix-blend-mode:multiply;width:100%;max-width:440px;display:block;}
-.journey-visual-ph{width:100%;max-width:440px;aspect-ratio:4/3.4;background:var(--surface);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--border);letter-spacing:.08em;text-transform:uppercase;}
-.journey-close{padding-top:80px;padding-bottom:16px;text-align:center;border-top:1px solid var(--border);}
-.journey-close-line{font-size:clamp(20px,2.2vw,28px);font-family:var(--serif);font-style:italic;color:var(--ink);letter-spacing:-0.02em;margin-bottom:32px;}
+/* HOW IT WORKS */
+.s-howitworks{width:100%;overflow:hidden;background:#FFFFFF;border-top:1px solid var(--border);padding:100px 0 120px;}
+.hiw-header{max-width:1440px;margin:0 auto;padding:0 90px 72px;}
+.hiw-header h2{font-size:clamp(28px,2.4vw,40px);font-weight:600;letter-spacing:-0.03em;line-height:1.2;margin-top:8px;}
+.hiw-frame{position:relative;width:1440px;height:880px;margin:0 auto;}
+.hiw-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+.hiw-node{position:absolute;border-radius:20px;overflow:hidden;z-index:2;}
+.hiw-node-img{width:100%;background:transparent;}
+.hiw-node-label{padding:14px 18px 0;}
+.hiw-node-title{font-size:14px;font-weight:500;letter-spacing:-0.01em;line-height:1.35;color:var(--ink);}
 
 /* PRICING */
-.s-pricing{padding:112px 0;background:#FFFFFF;border-top:1px solid rgba(34,31,28,.08);}
-.pricing-shell{max-width:1160px;margin:0 auto;padding:0 40px;}
-.pricing-panel{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:56px;align-items:center;}
-.pricing-media{display:flex;justify-content:center;align-items:center;min-width:0;}
-.pricing-device{width:min(100%,640px);}
-.pricing-device img{width:100%;height:auto;display:block;filter:drop-shadow(0 30px 40px rgba(17,16,14,.16));}
-.pricing-content{min-width:0;}
-.pricing-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding-bottom:22px;margin-bottom:24px;border-bottom:1px solid rgba(34,31,28,.08);}
-.pricing-title{font-size:clamp(24px,2.8vw,30px);font-weight:500;letter-spacing:-0.03em;line-height:1.08;color:#181613;max-width:12ch;}
-.pricing-cohort{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
-.pricing-cohort-label{font-size:15px;font-weight:500;letter-spacing:-.02em;color:#181613;}
-.pricing-badge{display:inline-flex;align-items:center;justify-content:center;padding:7px 12px;border-radius:999px;background:#E5484D;color:#FFFFFF;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
-.pricing-options{display:flex;flex-direction:column;gap:12px;}
-.pricing-option{width:100%;text-align:left;background:#FFFFFF;border:1px solid #D7D7DB;border-radius:20px;padding:18px 20px;transition:border-color .24s var(--ease-out),box-shadow .24s var(--ease-out),transform .24s var(--ease-mag);}
-.pricing-option:hover{transform:translateY(-1px);border-color:#BDBDC4;box-shadow:0 10px 20px rgba(17,16,14,.05);}
-.pricing-option:focus-visible{outline:none;border-color:#F59E0B;box-shadow:0 0 0 4px rgba(245,158,11,.12);}
-.pricing-option:active{transform:scale(.995);}
-.pricing-option.selected{border:2px solid #F59E0B;box-shadow:none;padding:17px 19px;}
-.pricing-option-head{display:flex;gap:16px;align-items:flex-start;}
-.pricing-radio{width:22px;height:22px;border-radius:50%;border:1.5px solid #C9C9CF;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:border-color .2s var(--ease-out),background-color .2s var(--ease-out),transform .2s var(--ease-mag),box-shadow .2s var(--ease-out);}
-.pricing-radio::after{content:'';width:10px;height:10px;border-radius:50%;background:#181613;opacity:0;transform:scale(.45);transition:opacity .2s var(--ease-out),transform .22s var(--ease-mag);}
-.pricing-option.selected .pricing-radio{border-color:#F59E0B;background:#FFFFFF;box-shadow:none;}
-.pricing-option.selected .pricing-radio::after{opacity:1;transform:scale(1);}
-.pricing-option-copy{flex:1;min-width:0;}
-.pricing-option-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
-.pricing-option-title{font-size:19px;font-weight:500;line-height:1.28;letter-spacing:-0.03em;color:#181613;max-width:34ch;}
-.pricing-option-price{font-size:19px;font-weight:500;letter-spacing:-0.03em;color:#181613;white-space:nowrap;}
-.pricing-option-details{max-height:0;opacity:0;overflow:hidden;transition:max-height .34s var(--ease-out),opacity .26s var(--ease-out),padding-top .24s var(--ease-out);}
-.pricing-option.selected .pricing-option-details{max-height:140px;opacity:1;padding-top:14px;}
-.pricing-option-detail{font-size:14px;line-height:1.72;color:#5A534B;max-width:44ch;}
-.pricing-option-detail + .pricing-option-detail{margin-top:2px;}
-.pricing-cta{margin-top:24px;display:flex;align-items:center;gap:14px;}
-.pricing-qty{display:inline-flex;align-items:center;border:1px solid #D7D7DB;border-radius:999px;overflow:hidden;background:#FFFFFF;flex-shrink:0;}
-.pricing-qty-btn{width:42px;height:48px;border:none;background:transparent;color:#181613;font-family:var(--sans);font-size:22px;font-weight:400;display:flex;align-items:center;justify-content:center;transition:opacity .2s var(--ease-out),transform .2s var(--ease-mag),background-color .2s var(--ease-out);}
-.pricing-qty-btn:hover{background:#F6F6F7;}
-.pricing-qty-btn:focus-visible{outline:none;background:#F6F6F7;}
-.pricing-qty-btn:active{transform:scale(.94);}
-.pricing-qty-btn:disabled{opacity:.35;cursor:default;}
-.pricing-qty-value{min-width:34px;padding:0 4px;text-align:center;font-size:16px;font-weight:500;color:#181613;}
-.pricing-action{display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:999px;background:#11100E;color:#FFFFFF;padding:15px 32px;font-family:var(--sans);font-size:15px;font-weight:600;letter-spacing:-.01em;text-decoration:none;transition:transform .24s var(--ease-mag),opacity .24s var(--ease-out),box-shadow .24s var(--ease-out);box-shadow:0 18px 30px rgba(17,16,14,.12),0 6px 12px rgba(17,16,14,.08);min-width:220px;flex:1;}
-.pricing-action:hover{transform:scale(1.03);opacity:.96;}
-.pricing-action:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(17,16,14,.1),0 18px 30px rgba(17,16,14,.12),0 6px 12px rgba(17,16,14,.08);}
-.pricing-action:active{transform:scale(.98);}
-.pricing-foot{margin-top:22px;padding-top:18px;border-top:1px solid rgba(34,31,28,.08);}
-.pricing-batch{font-size:14px;font-weight:500;line-height:1.7;color:#403A34;margin-bottom:14px;}
-.pricing-meta{display:flex;flex-direction:column;gap:4px;}
-.pricing-meta-item{font-size:13px;line-height:1.7;color:#6B645D;}
+.s-pricing{padding:clamp(80px,12vh,140px) 0 clamp(64px,10vh,120px);background:#FFFFFF;scroll-margin-top:66px;}
+.pricing-shell{max-width:min(1180px,calc(100vw - 64px));margin:0 auto;padding:0;}
+.pricing-panel{display:grid;grid-template-columns:minmax(320px,460px) minmax(380px,460px);justify-content:center;align-items:center;column-gap:clamp(40px,6vw,88px);row-gap:32px;}
+.pricing-media{display:flex;justify-content:center;align-items:center;}
+.pricing-device{width:clamp(400px,42vw,470px);}
+.pricing-device img{width:100%;height:auto;display:block;max-height:calc(85vh - 66px);object-fit:contain;filter:drop-shadow(0 30px 40px rgba(17,16,14,.16));}
+.pricing-content{width:min(100%,440px);}
+
+/* PRICING — editorial, card-free */
+.pe-content{display:flex;flex-direction:column;max-width:420px;width:100%;}
+
+/* Headline block */
+.pe-headline{margin-bottom:28px;}
+.pe-headline h2{font-size:clamp(24px,2.6vw,32px);font-weight:600;letter-spacing:-0.03em;line-height:1.2;color:var(--ink);margin:0;}
+
+/* Cohort status */
+.pe-status{margin-bottom:32px;}
+.pe-status-primary{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);line-height:1.4;margin-bottom:4px;}
+.pe-status-secondary{font-size:11px;font-weight:400;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);opacity:.7;line-height:1.4;}
+
+/* Membership block */
+.pe-membership{margin-bottom:0;}
+.pe-membership-title{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:-0.01em;margin-bottom:10px;}
+.pe-price-block{display:flex;align-items:baseline;gap:0;}
+.pe-price{font-family:var(--display);font-size:clamp(36px,4.2vw,44px);font-weight:700;letter-spacing:-0.045em;line-height:1;color:var(--ink);}
+.pe-price-unit{font-size:14px;font-weight:400;color:var(--muted);opacity:.6;margin-left:5px;letter-spacing:0;}
+.pe-cancel{font-size:13px;color:var(--muted);margin-top:8px;line-height:1;}
+
+/* Section gap */
+.pe-gap{height:1px;background:rgba(0,0,0,.06);margin:28px 0;}
+
+/* What's included */
+.pe-includes-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+.pe-includes{display:flex;flex-direction:column;gap:14px;list-style:none;padding:0;margin:0;}
+.pe-include-item{font-family:var(--sans);font-size:14px;color:var(--ink);line-height:1.45;padding-left:16px;position:relative;list-style:none;}
+.pe-include-item::before{content:'';position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--muted);opacity:.3;}
+.pe-include-item a{color:inherit;text-decoration:none;}
+
+/* CTA row */
+.pe-cta{display:flex;gap:12px;margin-top:28px;}
+.pe-btn-primary{flex:1.3;display:flex;align-items:center;justify-content:center;border:none;border-radius:10px;background:linear-gradient(180deg,#1e1e1e 0%,#000 100%);color:#fff;min-height:48px;padding:0 20px;font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:-.01em;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,.18),0 1px 2px rgba(0,0,0,.12);transition:transform .26s var(--ease-mag),box-shadow .26s var(--ease-out);}
+.pe-btn-primary:hover{transform:scale(1.03);box-shadow:0 8px 22px rgba(0,0,0,.26);}
+.pe-btn-primary:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(0,0,0,.1),0 8px 20px rgba(0,0,0,.2);}
+.pe-btn-primary:active{transform:scale(.97);}
+.pe-btn-secondary{flex:1;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,0,0,.13);border-radius:10px;background:transparent;color:var(--muted);min-height:48px;padding:0 16px;font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:-.01em;text-decoration:none;transition:color .18s var(--ease-out),background .18s var(--ease-out),border-color .18s;}
+.pe-btn-secondary:hover{color:var(--ink);background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.2);}
+.pe-btn-secondary:focus-visible{outline:none;}
+.pe-btn-secondary:active{background:rgba(0,0,0,.06);}
+
+@media(max-width:980px){
+  .pricing-panel{column-gap:clamp(32px,4vw,48px);}
+}
+@media(max-width:860px){
+  .pricing-panel{grid-template-columns:1fr;justify-content:start;}
+  .pricing-content{width:min(100%,480px);margin:0 auto;}
+}
+@media(max-width:640px){
+  .s-pricing{padding:60px 0 72px;}
+  .pricing-shell{padding:0 20px;}
+  .pe-price{font-size:clamp(30px,8vw,38px);}
+}
 
 /* ABOUT */
 .s-about{padding:96px 0;}
@@ -288,11 +294,6 @@ p{line-height:1.85;}
   .about-grid{grid-template-columns:1fr;padding:0 24px;}
   .about-media{display:none;}
   .story-text h2,.story-text p,.about-text h2,.about-text p{max-width:100%;}
-  .journey-step{grid-template-columns:1fr;gap:32px;}
-  .journey-step.flip{direction:ltr;}
-  .journey-visual{display:none;}
-  .journey-text p{max-width:100%;}
-  .pricing-panel{grid-template-columns:1fr;gap:32px;}
   .pricing-device{max-width:560px;margin:0 auto;}
 }
 @media(max-width:640px){
@@ -304,24 +305,11 @@ p{line-height:1.85;}
   .s-hero{padding:140px 24px 80px;}
   .wrap{padding:0 24px;}
   .story-beat,.faq-inner,.about-grid{padding:0 24px;}
-  .journey-inner{padding:0 24px;}
   .site-footer{padding:64px 24px 40px;}
   .tally-card{padding:24px 20px;}
   .apply-nav,.apply-body,.sub-nav{padding-left:24px;padding-right:24px;}
-  .s,.s-journey,.s-pricing,.s-faq,.s-about{padding:72px 0;}
-  .journey-step{padding:56px 0;}
-  .pricing-shell{padding:0 24px;}
-  .pricing-top{gap:14px;padding-bottom:18px;margin-bottom:20px;}
-  .pricing-title{font-size:26px;}
-  .pricing-cohort{justify-content:flex-start;}
-  .pricing-option{padding:16px;border-radius:18px;}
-  .pricing-option.selected{padding:15px;}
-  .pricing-option-row{gap:12px;}
-  .pricing-option-title,.pricing-option-price{font-size:17px;}
-  .pricing-cta{flex-wrap:wrap;}
-  .pricing-qty{height:46px;}
-  .pricing-qty-btn{height:46px;}
-  .pricing-action{min-width:0;width:100%;}
+  .s,.s-faq,.s-about{padding:72px 0;}
+  .pricing-shell{padding:0 20px;}
 }
 `;
 
@@ -516,205 +504,186 @@ function MinimalPhoneProblemDemo() {
 
 // ─── MAIN PAGE SECTIONS ───────────────────────────────────────────────────────
 
-const JOURNEY_STEPS = [
+const HOW_STEPS = [
   {
-    n: "01",
-    title: "Become a member",
-    body: "Fill out a short application. We read every one ourselves.",
-    img: "/step-1.png",
-    alt: "Application",
-  },
-  {
-    n: "02",
-    title: "A short conversation",
-    body: "If it looks like a fit, we\u2019ll reach out for a quick call to make sure Mutual is right for you.",
-    img: "/step-2.png",
-    alt: "Conversation",
-  },
-  {
-    n: "03",
+    id: "receive",
     title: "Receive your phone",
-    body: "A pre-configured Samsung arrives at your door. No setup required on your end.",
     img: "/Delivery.png",
     alt: "Phone delivery",
+    fit: "contain",
+    w: 320, h: 320, x: 90,  y: 40,
   },
   {
-    n: "04",
-    title: "Define your objective",
-    body: "Tell us what you want to change.",
-    bullets: ["Sleep better", "Improve focus", "Stop doomscrolling"],
+    id: "tell",
+    title: "Tell us your objective",
     img: "/image-2a.png",
-    alt: "Defining your objective",
+    alt: "Your objective",
+    fit: "contain",
+    w: 300, h: 280, x: 520, y: 90,
   },
   {
-    n: "05",
-    title: "We build your system",
-    body: "We configure the phone around your life. Your rules, enforced at the hardware level.",
-    bullets: ["No social media after 9pm", "Only essential apps during work", "No notifications that can wait"],
-    img: "/image-2b.png",
-    alt: "Building your system",
+    id: "look",
+    title: "We look at your data",
+    img: "/image-3.png",
+    alt: "Data analysis",
+    fit: "cover",
+    w: 280, h: 320, x: 960, y: 250,
   },
   {
-    n: "06",
-    title: "Refine it together",
-    body: "You tell us what\u2019s working. We adjust. Most people make one or two changes in the first week.",
+    id: "adjust",
+    title: "We adjust over time",
     img: "/image-5.png",
-    alt: "Refining together",
+    alt: "Ongoing refinement",
+    fit: "cover",
+    w: 240, h: 300, x: 130, y: 470,
+  },
+  {
+    id: "rules",
+    title: "We set the rules",
+    img: "/image-2b.png",
+    alt: "Your rules",
+    fit: "cover",
+    w: 320, h: 300, x: 610, y: 520,
   },
 ];
 
-function JourneyVisual({ img, alt }) {
-  const [errored, setErrored] = useState(false);
-  if (errored) {
-    return <div className="journey-visual-ph">Image coming soon</div>;
-  }
+function HowItWorksSection({ goApply }) {
   return (
-    <img
-      src={img}
-      alt={alt}
-      onError={() => setErrored(true)}
-    />
-  );
-}
+    <section className="s-howitworks" id="how-it-works">
+      {/* Header sits above the composition frame */}
+      <div className="hiw-header">
+        <span className="label">How it works</span>
+        <h2>You name the goal. <em>We build the system.</em></h2>
+      </div>
 
-function JourneySection({ goApply }) {
-  return (
-    <section className="s-journey" id="how-it-works">
-      <div className="journey-inner">
-        <div className="journey-hdr" data-a="">
-          <span className="label">How it works</span>
-        </div>
-        {JOURNEY_STEPS.map((step, i) => (
-          <div
-            key={step.n}
-            className={"journey-step" + (i % 2 === 1 ? " flip" : "")}
-            data-a=""
-          >
-            <div className="journey-text">
-              <span className="journey-num">{step.n}</span>
-              <h3>{step.title}</h3>
-              <p>{step.body}</p>
-              {step.bullets && (
-                <ul>
-                  {step.bullets.map((b, j) => <li key={j}>{b}</li>)}
-                </ul>
-              )}
+      {/* Fixed 1440×880 composition frame */}
+      <div className="hiw-frame">
+
+        {/* SVG connector lines — z-index:1, behind all nodes */}
+        <svg
+          className="hiw-svg"
+          viewBox="0 0 1440 880"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          {/* receive → tell: right-center card1(410,200) → left-center card2(520,230) */}
+          <path
+            d="M410,200 C465,200 465,230 520,230"
+            stroke="#9E9890" strokeWidth="1.5" opacity="0.45"
+            strokeDasharray="4 7" fill="none" strokeLinecap="round"
+          />
+          {/* tell → look: right-center card2(820,230) → left-center card3(960,410) */}
+          <path
+            d="M820,230 C900,230 960,330 960,410"
+            stroke="#9E9890" strokeWidth="1.5" opacity="0.45"
+            strokeDasharray="4 7" fill="none" strokeLinecap="round"
+          />
+          {/* look → rules: bottom-center card3(1100,570) → right-center card5(930,670) */}
+          <path
+            d="M1100,570 C1100,645 1010,670 930,670"
+            stroke="#9E9890" strokeWidth="1.5" opacity="0.45"
+            strokeDasharray="4 7" fill="none" strokeLinecap="round"
+          />
+          {/* rules → adjust: left-center card5(610,670) → right-center card4(370,620) */}
+          <path
+            d="M610,670 C500,670 400,635 370,620"
+            stroke="#9E9890" strokeWidth="1.5" opacity="0.45"
+            strokeDasharray="4 7" fill="none" strokeLinecap="round"
+          />
+        </svg>
+
+        {/* Nodes — transparent containers, absolutely positioned */}
+        {HOW_STEPS.map((step) => {
+          const imgH = Math.round(step.h * 0.72);
+          return (
+            <div
+              key={step.id}
+              className="hiw-node"
+              style={{ width: step.w, height: step.h, left: step.x, top: step.y }}
+            >
+              <div
+                className="hiw-node-img"
+                style={{ height: imgH }}
+              >
+                <img
+                  src={step.img}
+                  alt={step.alt}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: step.fit,
+                    display: "block",
+                  }}
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
+                />
+              </div>
+              <div className="hiw-node-label">
+                <p className="hiw-node-title">{step.title}</p>
+              </div>
             </div>
-            <div className="journey-visual">
-              <JourneyVisual img={step.img} alt={step.alt} />
-            </div>
-          </div>
-        ))}
-        <div className="journey-close" data-a="">
-          <p className="journey-close-line">All of this, for 50p a day.</p>
-          <button className="btn btn-void btn-lg" onClick={goApply}>Early Membership →</button>
-        </div>
+          );
+        })}
       </div>
     </section>
   );
 }
 
-function Pricing({ goApply }) {
-  const [selectedOption, setSelectedOption] = useState('preorder');
-  const [quantity, setQuantity] = useState(1);
-  const isPreorder = selectedOption === 'preorder';
-
+function Pricing() {
   return (
     <section className="s-pricing" id="pricing">
       <div className="pricing-shell">
-        <div className="pricing-panel" data-a="1">
+        <div className="pricing-panel">
+          {/* Left: phone image */}
           <div className="pricing-media">
             <div className="pricing-device">
               <img src="/samsunggalaxya17.png" alt="Samsung Galaxy A17 5G" />
             </div>
           </div>
 
+          {/* Right: editorial free-floating content */}
           <div className="pricing-content">
-            <div className="pricing-top">
-              <h2 className="pricing-title">Join the next cohort</h2>
-              <div className="pricing-cohort">
-                <span className="pricing-cohort-label">First cohort</span>
-                <span className="pricing-badge">Full</span>
-              </div>
-            </div>
+            <div className="pe-content">
 
-            <div className="pricing-options" role="radiogroup" aria-label="Pre-order options">
-              <button
-                type="button"
-                className={`pricing-option${isPreorder ? ' selected' : ''}`}
-                onClick={() => setSelectedOption('preorder')}
-                role="radio"
-                aria-checked={isPreorder}
-              >
-                <div className="pricing-option-head">
-                  <span className="pricing-radio" aria-hidden="true" />
-                  <div className="pricing-option-copy">
-                    <div className="pricing-option-row">
-                      <div className="pricing-option-price">&pound;15/month</div>
-                    </div>
-                    <div className="pricing-option-details" aria-hidden={!isPreorder}>
-                      <p className="pricing-option-detail">&pound;170 paid upfront.</p>
-                      <p className="pricing-option-detail">Cancel anytime. Get refunded for unused time.</p>
-                    </div>
-                  </div>
+              {/* Headline + subline */}
+              <div className="pe-headline">
+                <h2>Take control of your phone.<br /><em>For 50p a day.</em></h2>
+              </div>
+
+              {/* Cohort status */}
+              <div className="pe-status">
+                <p className="pe-status-primary">Now selecting for Cohort 2</p>
+                <p className="pe-status-secondary">First cohort filled</p>
+              </div>
+
+              {/* Membership + price */}
+              <div className="pe-membership">
+                <p className="pe-membership-title">Mutual Membership</p>
+                <div className="pe-price-block">
+                  <span className="pe-price">&pound;15</span>
+                  <span className="pe-price-unit">&thinsp;/ month</span>
                 </div>
-              </button>
-
-              <button
-                type="button"
-                className={`pricing-option${!isPreorder ? ' selected' : ''}`}
-                onClick={() => setSelectedOption('reserve')}
-                role="radio"
-                aria-checked={!isPreorder}
-              >
-                <div className="pricing-option-head">
-                  <span className="pricing-radio" aria-hidden="true" />
-                  <div className="pricing-option-copy">
-                    <div className="pricing-option-row">
-                      <div className="pricing-option-title">Undecided? Reserve a spot in the next cohort for &pound;15</div>
-                    </div>
-                    <div className="pricing-option-details" aria-hidden={isPreorder}>
-                      <p className="pricing-option-detail">Discounted from your first month if you continue. Refunded otherwise.</p>
-                    </div>
-                  </div>
-                </div>
-              </button>
-            </div>
-
-            <div className="pricing-cta">
-              <div className="pricing-qty" aria-label="Quantity selector">
-                <button
-                  type="button"
-                  className="pricing-qty-btn"
-                  aria-label="Decrease quantity"
-                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  disabled={quantity === 1}
-                >
-                  -
-                </button>
-                <span className="pricing-qty-value" aria-live="polite">{quantity}</span>
-                <button
-                  type="button"
-                  className="pricing-qty-btn"
-                  aria-label="Increase quantity"
-                  onClick={() => setQuantity((q) => q + 1)}
-                >
-                  +
-                </button>
+                <p className="pe-cancel">Cancel anytime</p>
               </div>
-              {isPreorder ? (
-                <a href={STRIPE_PREORDER} className="pricing-action">Pre-order now</a>
-              ) : (
-                <button type="button" className="pricing-action" onClick={goApply}>Pre-order now</button>
-              )}
-            </div>
 
-            <div className="pricing-foot">
-              <p className="pricing-batch">Secure a place in the next batch in late May (UK only)</p>
-              <div className="pricing-meta">
-                <p className="pricing-meta-item">Hardware: Samsung Galaxy A17 5G</p>
-                <p className="pricing-meta-item">Cancel anytime. Get refunded for unused time</p>
+              {/* Divider */}
+              <div className="pe-gap" />
+
+              {/* What's included */}
+              <p className="pe-includes-title">What&rsquo;s included</p>
+              <ul className="pe-includes" role="list">
+                <li className="pe-include-item">Samsung Galaxy A17 5G</li>
+                <li className="pe-include-item">It follows your rules</li>
+                <li className="pe-include-item">App access that changes with your day</li>
+                <li className="pe-include-item">No bypass or deleting the blocker</li>
+                <li className="pe-include-item">We adjust it with you</li>
+              </ul>
+
+              {/* CTA */}
+              <div className="pe-cta">
+                <a href={STRIPE_PREORDER} className="pe-btn-primary">Reserve Your Spot</a>
+                <a href="#faqs" className="pe-btn-secondary">Learn More</a>
               </div>
+
             </div>
           </div>
         </div>
@@ -846,7 +815,7 @@ export default function App() {
               <div className="nav-logo-group">
                 <a className="logo" href="#" onClick={(e) => { e.preventDefault(); goMain(); }}>mutual.</a>
                 <div className="nav-links">
-                  <a href="#" onClick={(e) => { e.preventDefault(); goPage('why'); }}>Why Mutual</a>
+                  <a href="#" onClick={(e) => { e.preventDefault(); goPage('why'); }}>Our Story</a>
                   <a href="#" onClick={(e) => { e.preventDefault(); goPage('faq'); }}>FAQ</a>
                 </div>
               </div>
@@ -864,8 +833,8 @@ export default function App() {
             </div>
           </section>
 
-          <JourneySection goApply={goApply} />
-          <Pricing goApply={goApply} />
+          <HowItWorksSection goApply={goApply} />
+          <Pricing />
           {footer}
         </div>
       )}
