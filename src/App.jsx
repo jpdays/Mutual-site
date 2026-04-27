@@ -7,7 +7,7 @@ const supabase = createClient(
 );
 
 const STRIPE_APPLY    = "https://buy.stripe.com/bJeaEP6cO13LfKF0EBgMw02";
-const STRIPE_PREORDER = "#"; // placeholder — swap when Stripe link is ready
+const STRIPE_PREORDER = "https://buy.stripe.com/3cI3cn44GdQx9mhbjfgMw03";
 
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Geist:wght@400;500;600;700&display=swap');
@@ -54,19 +54,34 @@ p{line-height:1.85;}
 .btn-sm{padding:9px 20px;font-size:13px;}
 .btn-md{padding:12px 26px;font-size:14px;}
 .btn-lg{padding:15px 34px;font-size:15px;}
+.hero-cta-wrap{display:flex;justify-content:center;margin-top:8px;}
+.hero-cta-form{display:flex;align-items:stretch;border:1px solid var(--border);border-radius:100px;overflow:hidden;background:var(--white);transition:border-color .2s,box-shadow .2s;max-width:380px;width:100%;}
+.hero-cta-form:focus-within{border-color:rgba(28,27,25,.3);box-shadow:0 0 0 4px rgba(28,27,25,.06);}
+.hero-cta-input{flex:1;border:none;outline:none;background:transparent;padding:11px 18px;font-family:var(--sans);font-size:13px;color:var(--ink);min-width:0;}
+.hero-cta-input::placeholder{color:rgba(122,119,116,.55);}
+.hero-cta-btn{background:var(--void);color:var(--bg);border:none;padding:0 20px;font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:-.01em;cursor:pointer;transition:background .2s;white-space:nowrap;}
+.hero-cta-btn:hover{background:#262624;}
+@media(max-width:640px){
+  .hero-cta-form{max-width:320px;}
+  .hero-cta-input{padding:9px 14px;font-size:12px;}
+  .hero-cta-btn{padding:0 14px;font-size:12px;}
+}
+.hero-cta-ok{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:500;color:#22863a;letter-spacing:-.01em;}
+.hero-cta-ok svg{width:18px;height:18px;}
 
 /* NAV */
 #nav{position:fixed;top:0;left:0;right:0;z-index:400;padding:0 32px;transition:background .4s var(--ease-out),border-color .4s var(--ease-out),backdrop-filter .4s;border-bottom:1px solid transparent;}
 #nav.init{background:transparent;}
 #nav.scrolled{background:rgba(249,248,245,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom-color:rgba(226,221,214,.5);top:0;}
-.nav-inner{max-width:var(--max);margin:0 auto;height:66px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo-group{display:flex;align-items:center;gap:36px;}
-.nav-links{display:flex;gap:28px;}
+.nav-inner{max-width:var(--max);margin:0 auto;height:74px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;}
+.nav-logo-group{display:flex;align-items:center;gap:36px;justify-self:start;}
+.nav-launching{font-family:var(--sans);font-size:14px;font-weight:700;color:var(--void);letter-spacing:-.01em;text-align:center;white-space:nowrap;justify-self:center;}
+.nav-right{display:flex;align-items:center;gap:10px;justify-self:end;}
+.nav-learn-link{font-size:13px;font-weight:500;color:var(--ink);text-decoration:none;transition:color .2s,transform .2s var(--ease-mag);display:inline-block;white-space:nowrap;}
+.nav-learn-link:hover{color:var(--void);transform:translateY(-1px);}
 .logo{font-family:var(--serif);font-size:22px;letter-spacing:-.02em;color:var(--void);text-decoration:none;line-height:1;}
 .logo-img{display:inline-flex;align-items:center;height:28px;}
 .logo-img img{height:100%;width:auto;display:block;}
-.nav-links a{font-size:13px;font-weight:400;color:var(--muted);text-decoration:none;transition:color .2s,transform .2s var(--ease-mag);display:inline-block;}
-.nav-links a:hover{color:var(--ink);transform:translateY(-1px);}
 
 /* HERO */
 .s-hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:160px 40px 100px;background:var(--bg);position:relative;}
@@ -74,6 +89,7 @@ p{line-height:1.85;}
 .hero-h{font-family:var(--sans);font-weight:700;font-size:clamp(38px,5.5vw,68px);line-height:1.08;letter-spacing:-0.03em;margin-bottom:22px;color:var(--ink);}
 .hero-h em{font-family:var(--serif);font-style:italic;font-weight:400;color:#f97316;}
 .hero-sub{font-size:clamp(16px,1.6vw,18px);color:var(--muted);line-height:1.75;margin-bottom:40px;max-width:480px;margin-left:auto;margin-right:auto;font-weight:400;}
+.hero-sub + .hero-sub{margin-top:-28px;}
 
 .s{padding:96px 0;}
 
@@ -90,9 +106,10 @@ p{line-height:1.85;}
 .story-illus{width:100%;aspect-ratio:4/3;background:var(--surface);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:12px;text-align:center;padding:28px;border:1px solid var(--border);position:relative;overflow:hidden;}
 
 /* HOW IT WORKS */
-.s-howitworks{width:100%;overflow:hidden;background:#FFFFFF;border-top:1px solid var(--border);padding:100px 0 120px;}
+.s-howitworks{width:100%;overflow:hidden;background:#FFFFFF;border-top:1px solid var(--border);padding:100px 0 60px;}
 .hiw-header{max-width:min(1680px,calc(100vw - 64px));margin:0 auto;padding:0 32px 72px;}
 .hiw-header h2{font-size:clamp(30px,2.8vw,46px);font-weight:600;letter-spacing:-0.03em;line-height:1.18;margin-top:8px;max-width:760px;}
+.hiw-em-orange{color:#f97316;}
 .hiw-frame{position:relative;width:min(1680px,calc(100vw - 64px));aspect-ratio:1440 / 880;height:auto;margin:0 auto;}
 .hiw-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
 .hiw-node{position:absolute;left:var(--node-x);top:var(--node-y);width:var(--node-w);height:var(--node-h);display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;z-index:2;}
@@ -123,8 +140,23 @@ p{line-height:1.85;}
 
 /* Headline block */
 .pe-headline-mobile{display:none;}
-.pe-headline{margin-bottom:28px;}
-.pe-headline h2,.pe-headline-mobile h2{font-size:clamp(24px,2.6vw,32px);font-weight:600;letter-spacing:-0.03em;line-height:1.2;color:var(--ink);margin:0;}
+.pe-headline{margin-bottom:28px;text-align:left;}
+.pe-headline h2,.pe-headline-mobile h2{font-size:clamp(24px,2.6vw,32px);font-weight:600;letter-spacing:-0.03em;line-height:1.2;color:var(--ink);margin:0;text-align:left;}
+.pe-headline em,.pe-headline-mobile em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--ink);}
+.pe-orange{color:#f97316;font-family:var(--serif);font-style:italic;font-weight:400;}
+.pe-pricing{margin-bottom:24px;}
+.pe-price-row{display:flex;align-items:baseline;gap:10px;}
+.pe-price-now{font-family:var(--display);font-size:clamp(36px,4.2vw,44px);font-weight:700;letter-spacing:-0.045em;line-height:1;color:var(--ink);}
+.pe-price-was{font-size:16px;color:var(--muted);text-decoration:line-through;opacity:.7;}
+.pe-price-note{font-size:13px;color:#5a5754;margin-top:10px;line-height:1.55;}
+.pe-refund{font-size:13px;color:var(--ink);margin-top:6px;line-height:1.55;}
+.pe-colour{margin-bottom:8px;}
+.pe-colour-label{font-size:13px;color:var(--ink);margin-bottom:10px;font-weight:500;}
+.pe-colour-options{display:flex;gap:10px;flex-wrap:wrap;}
+.pe-colour-btn{display:inline-flex;align-items:center;gap:8px;padding:7px 14px 7px 8px;border-radius:100px;border:1px solid var(--border);background:var(--white);font-family:var(--sans);font-size:13px;color:var(--ink);cursor:pointer;transition:border-color .18s,box-shadow .18s,transform .18s var(--ease-mag);}
+.pe-colour-btn:hover{border-color:rgba(28,27,25,.4);transform:translateY(-1px);}
+.pe-colour-btn.active{border-color:var(--void);box-shadow:0 0 0 1px var(--void) inset;}
+.pe-swatch{width:18px;height:18px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.08);}
 
 /* Cohort status */
 .pe-status{margin-bottom:32px;}
@@ -170,7 +202,7 @@ p{line-height:1.85;}
   .pe-headline-mobile{display:block;width:min(100%,520px);margin:0 auto 24px;padding:0 4px;}
   .pe-headline{display:none;}
   .pe-btn-primary{font-size:12px;padding:0 14px;}
-  .s-howitworks{padding:84px 0 88px;}
+  .s-howitworks{padding:84px 0 44px;}
   .hiw-header{max-width:100%;padding:0 24px 40px;}
   .hiw-frame{width:min(640px,calc(100vw - 48px));aspect-ratio:auto;display:grid;grid-template-columns:1fr;gap:52px;}
   .hiw-svg{display:none;}
@@ -195,6 +227,47 @@ p{line-height:1.85;}
 
 /* ABOUT */
 .s-about{padding:96px 0;}
+.s-action{padding:60px 40px 96px;background:var(--bg);}
+.action-header{max-width:var(--max);margin:0 auto 56px;text-align:center;}
+.action-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.action-copy{justify-self:end;max-width:440px;}
+.action-rule-title{font-size:18px;line-height:1.4;color:var(--ink);margin:0 0 14px;letter-spacing:-.01em;}
+.action-rule-title strong{font-weight:600;color:var(--void);}
+.action-rule-title-2{margin-top:32px;}
+.action-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;}
+.action-list li{font-size:15px;line-height:1.7;color:var(--muted);padding-left:22px;position:relative;}
+.action-list li::before{content:"";position:absolute;left:6px;top:.85em;width:6px;height:1px;background:var(--muted);}
+.action-media{justify-self:start;width:100%;max-width:288px;border-radius:24px;overflow:hidden;background:var(--void);box-shadow:0 30px 60px -20px rgba(15,15,14,.25),0 12px 24px -8px rgba(15,15,14,.18);}
+.action-media video{display:block;width:100%;height:auto;}
+.section-cta-wrap{display:flex;justify-content:center;margin-top:48px;}
+.btn-community{background:var(--void);color:var(--bg);border:none;padding:11px 22px;border-radius:100px;font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:-.01em;cursor:pointer;transition:background .2s,transform .2s var(--ease-mag);}
+.btn-community:hover{background:#262624;transform:translateY(-1px);}
+.section-cta-form{display:flex;align-items:stretch;border:1px solid var(--border);border-radius:100px;overflow:hidden;background:var(--white);transition:border-color .2s,box-shadow .2s;max-width:380px;width:100%;}
+.section-cta-form:focus-within{border-color:rgba(28,27,25,.3);box-shadow:0 0 0 4px rgba(28,27,25,.06);}
+.section-cta-input{flex:1;border:none;outline:none;background:transparent;padding:11px 18px;font-family:var(--sans);font-size:13px;color:var(--ink);min-width:0;}
+.section-cta-input::placeholder{color:rgba(122,119,116,.55);}
+.section-cta-btn{background:var(--void);color:var(--bg);border:none;padding:0 20px;font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:-.01em;cursor:pointer;transition:background .2s;white-space:nowrap;}
+.section-cta-btn:hover{background:#262624;}
+.section-cta-ok{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:#22863a;letter-spacing:-.01em;}
+.section-cta-ok svg{width:16px;height:16px;}
+@media(max-width:640px){
+  .section-cta-form{max-width:320px;}
+  .section-cta-input{padding:9px 14px;font-size:12px;}
+  .section-cta-btn{padding:0 14px;font-size:12px;}
+}
+@media (max-width:900px){
+  .action-grid{grid-template-columns:1fr;gap:48px;}
+  .action-copy,.action-media{justify-self:center;}
+  .s-action{padding:44px 24px 72px;}
+}
+@media (max-width:760px){
+  .hiw-header,.action-header{text-align:center;}
+  .hiw-header .label,.action-header .label{display:inline-block;}
+  .hiw-header h2{margin-left:auto;margin-right:auto;}
+  .about-text{text-align:center;}
+  .about-text h2,.about-text p{margin-left:auto;margin-right:auto;}
+  .about-text .label{display:inline-block;}
+}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:var(--max);margin:0 auto;padding:0 40px;}
 .about-text h2{font-size:clamp(24px,2.8vw,36px);margin-bottom:24px;max-width:380px;}
 .about-text p{font-size:15px;line-height:1.9;color:var(--muted);margin-bottom:18px;max-width:380px;}
@@ -202,9 +275,13 @@ p{line-height:1.85;}
 .about-media{display:flex;flex-direction:column;gap:16px;}
 .about-photo{width:100%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:var(--surface);border:1px solid var(--border);}
 .about-photo img{width:100%;height:100%;object-fit:cover;display:block;}
-.about-headshots{display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap;}
-.headshot{width:200px;height:200px;border-radius:50%;overflow:hidden;background:var(--surface);border:1px solid var(--border);flex-shrink:0;}
+.about-headshots{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:nowrap;}
+.headshot{width:140px;height:140px;border-radius:50%;overflow:hidden;background:var(--surface);border:1px solid var(--border);flex-shrink:0;}
 .headshot img{width:100%;height:100%;object-fit:cover;display:block;}
+@media(max-width:760px){
+  .about-headshots{gap:14px;}
+  .headshot{width:120px;height:120px;}
+}
 
 /* FAQ */
 .s-faq{padding:96px 0;}
@@ -221,20 +298,30 @@ p{line-height:1.85;}
 
 /* NAV WAITLIST */
 .nav-waitlist{display:flex;align-items:center;gap:10px;}
-.nav-waitlist-label{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:-.01em;white-space:nowrap;}
+.nav-waitlist-label{font-size:13px;font-weight:500;color:var(--muted);letter-spacing:-.01em;white-space:nowrap;}
 .nav-waitlist-form{display:flex;align-items:center;border:1px solid var(--border);border-radius:100px;overflow:hidden;background:var(--white);transition:border-color .2s,box-shadow .2s;}
 .nav-waitlist-form:focus-within{border-color:rgba(28,27,25,.3);box-shadow:0 0 0 3px rgba(28,27,25,.06);}
-.nav-waitlist-input{border:none;outline:none;background:transparent;padding:8px 14px;font-family:var(--sans);font-size:13px;color:var(--ink);width:168px;}
+.nav-waitlist-input{border:none;outline:none;background:transparent;padding:11px 18px;font-family:var(--sans);font-size:14px;color:var(--ink);width:210px;}
 .nav-waitlist-input::placeholder{color:rgba(122,119,116,.55);}
-.nav-waitlist-btn{background:none;border:none;border-left:1px solid var(--border);padding:0 12px;height:34px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:color .18s,background .18s;}
+.nav-waitlist-btn{background:none;border:none;border-left:1px solid var(--border);padding:0 16px;height:44px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:color .18s,background .18s;}
 .nav-waitlist-btn:hover{color:var(--ink);background:rgba(28,27,25,.04);}
 .nav-waitlist-btn:active{background:rgba(28,27,25,.08);}
-.nav-waitlist-btn svg{width:14px;height:14px;display:block;}
+.nav-waitlist-btn svg{width:16px;height:16px;display:block;}
 .nav-waitlist-ok{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:#22863a;letter-spacing:-.01em;white-space:nowrap;}
 .nav-waitlist-ok svg{width:15px;height:15px;flex-shrink:0;}
-@media(max-width:640px){
+@media(max-width:760px){
+  .nav-inner{height:auto;padding:14px 0;grid-template-columns:auto auto;grid-template-rows:auto auto;row-gap:12px;}
+  .nav-logo-group{grid-column:1;grid-row:1;}
+  .nav-launching{grid-column:1 / -1;grid-row:2;font-size:13px;}
+  .nav-right{grid-column:2;grid-row:1;gap:8px;}
   .nav-waitlist-label{display:none;}
+  .nav-waitlist-input{width:160px;padding:9px 14px;font-size:13px;}
+  .nav-waitlist-btn{height:38px;padding:0 12px;}
+  .nav-waitlist-btn svg{width:14px;height:14px;}
+}
+@media(max-width:480px){
   .nav-waitlist-input{width:130px;}
+  .nav-learn-link{font-size:12px;}
 }
 
 /* FOOTER */
@@ -277,6 +364,15 @@ p{line-height:1.85;}
 
 /* LEARN MORE hero divider */
 .lm-divider{height:1px;background:var(--border);max-width:var(--max);margin:0 auto;}
+.lm-banner{padding:96px 40px 0;background:#FFFFFF;}
+.lm-banner-inner{max-width:var(--max);margin:0 auto;text-align:left;padding-left:clamp(24px,4vw,80px);}
+.lm-banner h1{font-size:clamp(24px,2.4vw,32px);line-height:1.2;letter-spacing:-.02em;color:var(--void);margin:0;}
+.lm-banner h1 em{font-family:var(--serif);font-style:italic;font-weight:400;}
+.lm-banner + .s-pricing{padding-top:clamp(20px,3vh,40px);}
+@media (max-width:760px){
+  .lm-banner{padding:80px 24px 0;}
+  .lm-banner-inner{padding-left:0;}
+}
 
 /* APPLY PAGE */
 .apply-nav{background:var(--void);border-bottom:1px solid rgba(249,248,245,.08);padding:0 40px;position:sticky;top:0;z-index:100;}
@@ -584,7 +680,7 @@ function MinimalPhoneProblemDemo() {
 const HOW_STEPS = [
   {
     id: "receive",
-    title: "Receive your phone",
+    title: "(01) Receive your phone",
     images: ["/1.png"],
     alt: "Phone delivery",
     fit: "contain",
@@ -592,7 +688,7 @@ const HOW_STEPS = [
   },
   {
     id: "tell",
-    title: "Tell us your objective",
+    title: "(02) Tell us your objective",
     images: ["/2a.png", "/2b.png", "/2c.png"],
     alt: "Your objective",
     fit: "contain",
@@ -600,7 +696,7 @@ const HOW_STEPS = [
   },
   {
     id: "look",
-    title: "We look at your data",
+    title: "(03) We look at your data",
     images: ["/3.png"],
     alt: "Data analysis",
     fit: "contain",
@@ -608,7 +704,7 @@ const HOW_STEPS = [
   },
   {
     id: "rules",
-    title: "We set the rules together",
+    title: "(04) We set the rules together",
     images: ["/4a.png", "/4b.png"],
     alt: "Your rules",
     fit: "contain",
@@ -616,7 +712,7 @@ const HOW_STEPS = [
   },
   {
     id: "adjust",
-    title: "We adjust over time",
+    title: "(05) We adjust over time",
     images: ["/5.png"],
     alt: "Ongoing refinement",
     fit: "contain",
@@ -624,7 +720,7 @@ const HOW_STEPS = [
   },
 ];
 
-function HowItWorksSection({ goApply }) {
+function HowItWorksSection({ goApply, onWaitlist }) {
   const [stepImageIndexes, setStepImageIndexes] = useState(() =>
     Object.fromEntries(HOW_STEPS.map((step) => [step.id, 0]))
   );
@@ -661,7 +757,7 @@ function HowItWorksSection({ goApply }) {
       {/* Header sits above the composition frame */}
       <div className="hiw-header">
         <span className="label">How it works</span>
-        <h2>You name the goal. <em>We build the system.</em></h2>
+        <h2>You name the goal. <em className="hiw-em-orange">We build the system.</em></h2>
       </div>
 
       {/* Fixed 1440×880 composition frame */}
@@ -772,6 +868,41 @@ function HowItWorksSection({ goApply }) {
         })}
       </div>
     </section>
+  );
+}
+
+function scrollToHeroCta() {
+  const el = document.querySelector('.hero-cta-input');
+  if (el) { el.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(() => el.focus(), 600); }
+}
+
+function SectionWaitlistForm({ source, onSubmit }) {
+  const inputRef = useRef();
+  const [ok, setOk] = useState(false);
+  const handle = async (e) => {
+    e.preventDefault();
+    await onSubmit(inputRef.current.value, source);
+    setOk(true);
+  };
+  if (ok) {
+    return (
+      <div className="section-cta-ok">
+        <svg viewBox="0 0 15 15" fill="none"><path d="M2.5 7.5L6 11L12.5 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        You're on the list. Redirecting…
+      </div>
+    );
+  }
+  return (
+    <form className="section-cta-form" onSubmit={handle}>
+      <input
+        ref={inputRef}
+        type="email"
+        className="section-cta-input"
+        placeholder="Email Address"
+        required
+      />
+      <button type="submit" className="section-cta-btn">Join the waitlist</button>
+    </form>
   );
 }
 
@@ -887,20 +1018,27 @@ function SpecTabs() {
   );
 }
 
+const PHONE_COLOURS = [
+  { id: 'black', label: 'Black', swatch: '#1C1B19' },
+  { id: 'grey',  label: 'Grey',  swatch: '#A8ADB3' },
+  { id: 'blue',  label: 'Blue',  swatch: '#1E3A8A' },
+];
+
 function Pricing({ goLearnMore, goApply }) {
+  const [colour, setColour] = useState('black');
   return (
     <section className="s-pricing" id="pricing">
       <div className="pricing-shell">
         <div className="pricing-panel">
           {/* Mobile-only headline — shown above phone on small screens */}
           <div className="pe-headline-mobile">
-            <h2>Take control of your phone.<br /><em>For 50p a day.</em></h2>
+            <h2>Take control of your phone.<br /><span className="pe-orange">For 50p a day.</span></h2>
           </div>
 
           {/* Left: phone image */}
           <div className="pricing-media">
             <div className="pricing-device">
-              <img src="/samsunggalaxya17.png" alt="Samsung Galaxy A17 5G" />
+              <img src="/phones.png" alt="Mutual phone" />
             </div>
           </div>
 
@@ -908,25 +1046,39 @@ function Pricing({ goLearnMore, goApply }) {
           <div className="pricing-content">
             <div className="pe-content">
 
-              {/* Headline + subline */}
+              {/* Headline */}
               <div className="pe-headline">
-                <h2>Take control of your phone.<br /><em>For 50p a day.</em></h2>
+                <h2>Take control of your phone.<br /><span className="pe-orange">For 50p a day.</span></h2>
               </div>
 
-              {/* Cohort status */}
-              <div className="pe-status">
-                <p className="pe-status-primary">Now selecting for Cohort 2</p>
-                <p className="pe-status-secondary">First cohort filled</p>
-              </div>
-
-              {/* Membership + price */}
-              <div className="pe-membership">
-                <p className="pe-membership-title">Mutual Membership</p>
-                <div className="pe-price-block">
-                  <span className="pe-price">&pound;15</span>
-                  <span className="pe-price-unit">&thinsp;/ month</span>
+              {/* Pricing */}
+              <div className="pe-pricing">
+                <div className="pe-price-row">
+                  <span className="pe-price-now">$180</span>
+                  <span className="pe-price-was">£240</span>
                 </div>
-                <p className="pe-cancel">Cancel anytime. We refund unused time.</p>
+                <p className="pe-price-note">Includes 1 year subscription. Batch 1 ships Q3 2026.</p>
+                <p className="pe-refund">Fully refundable. Cancel anytime and we refund unused time.</p>
+              </div>
+
+              {/* Colour */}
+              <div className="pe-colour">
+                <p className="pe-colour-label">Colour</p>
+                <div className="pe-colour-options" role="radiogroup" aria-label="Colour">
+                  {PHONE_COLOURS.map(c => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={colour === c.id}
+                      className={`pe-colour-btn${colour === c.id ? ' active' : ''}`}
+                      onClick={() => setColour(c.id)}
+                    >
+                      <span className="pe-swatch" style={{background: c.swatch}} />
+                      {c.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Divider */}
@@ -944,14 +1096,7 @@ function Pricing({ goLearnMore, goApply }) {
 
               {/* CTA */}
               <div className="pe-cta">
-                {goApply
-                  ? <button className="pe-btn-primary" onClick={goApply}>Reserve Your Spot</button>
-                  : <a href={STRIPE_PREORDER} className="pe-btn-primary">Reserve Your Spot</a>
-                }
-                {goLearnMore
-                  ? <button className="pe-btn-secondary" onClick={goLearnMore}>Learn More</button>
-                  : <a href="#faqs" className="pe-btn-secondary">Learn More</a>
-                }
+                <a href={STRIPE_PREORDER} target="_blank" rel="noopener noreferrer" className="pe-btn-primary">Pre-order</a>
               </div>
 
             </div>
@@ -1028,15 +1173,30 @@ export default function App() {
     e.preventDefault();
     await saveEmail(navEmailRef.current.value, 'nav-waitlist');
     setNavWaitlistOk(true);
+    goPage('learn-more');
+  };
+
+  const heroEmailRef = useRef();
+  const [heroOk, setHeroOk] = useState(false);
+  const handleHeroSubmit = async (e) => {
+    e.preventDefault();
+    await saveEmail(heroEmailRef.current.value, 'hero-waitlist');
+    setHeroOk(true);
+    goPage('learn-more');
+  };
+
+  const handleSectionWaitlist = async (email, source) => {
+    await saveEmail(email, source);
+    setTimeout(() => goPage('learn-more'), 600);
   };
 
   const faqs = [
-    { q: 'What happens to my current phone?',                 a: "You keep it. Most users keep their current device as a backup, especially for the first week. You're not giving anything up." },
-    { q: 'Can I still use WhatsApp, maps, and banking apps?', a: "Yes. Mutual removes what pulls you away — not what you actually need. You tell us what stays, and it stays." },
-    { q: 'Can I still download and delete apps?',             a: "Yes, with one exception. You can download and delete anything freely, except the apps you specifically asked us to manage." },
-    { q: 'What if I want to change something?',               a: "You message us. We make the adjustment. The friction is intentional, it keeps you accountable, but we're here to make it work for you, not to be dogmatic about it." },
+    { q: 'What happens to my current phone?',                 a: "You keep it. Most users keep their current device as a backup. You're not giving anything up." },
+    { q: 'Can I still use WhatsApp, maps, and banking apps?', a: "Yes. It functions like a completely new phone. We only removes what you decide and when." },
+    { q: 'Can I still download and delete apps?',             a: "Yes. You can download and delete anything freely, except the apps you specifically asked us to manage on your behalf." },
+    { q: 'What if I want to change something?',               a: "You message us and we can make the adjustment. The friction is intentional, it keeps you accountable, but we want to make it work for you, not to be dogmatic about it." },
     { q: 'How long does this last?',                          a: "A few weeks. Enough time to actually feel a difference. After that, you decide whether to continue, adjust, or stop." },
-    { q: "What if it's not working for me?",                  a: "That's exactly the feedback we need. We'll work with you to understand what's not working and adjust. This cohort is as much about us learning as it is about you changing." },
+    { q: "What if it's not working for me?",                  a: "That's exactly the feedback we need. We'll work with you to understand what's not working and adjust. If it's not for you, you can cancel anytime and we will refund you." },
   ];
 
   const SubNav = () => (
@@ -1067,46 +1227,97 @@ export default function App() {
                 <a className="logo logo-img" href="#" onClick={(e) => { e.preventDefault(); goMain(); }} aria-label="mutual.">
                   <img src="/logo.png" alt="mutual." />
                 </a>
-                <div className="nav-links">
-                  <a href="#" onClick={(e) => { e.preventDefault(); goPage('learn-more'); }}>Learn More</a>
-                </div>
               </div>
-              {navWaitlistOk ? (
-                <div className="nav-waitlist-ok">
-                  <svg viewBox="0 0 15 15" fill="none"><path d="M2.5 7.5L6 11L12.5 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  You're on the list.
-                </div>
-              ) : (
-                <div className="nav-waitlist">
-                  <span className="nav-waitlist-label">Join the Waitlist</span>
-                  <form className="nav-waitlist-form" onSubmit={handleNavWaitlistSubmit}>
-                    <input
-                      ref={navEmailRef}
-                      type="email"
-                      className="nav-waitlist-input"
-                      placeholder="Email Address"
-                      required
-                    />
-                    <button type="submit" className="nav-waitlist-btn" aria-label="Submit">
-                      <svg viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                    </button>
-                  </form>
-                </div>
-              )}
+              <div className="nav-launching">Launching in 2027</div>
+              <div className="nav-right">
+                <a className="nav-learn-link" href="#" onClick={(e) => { e.preventDefault(); goPage('learn-more'); }}>Learn More</a>
+                {navWaitlistOk ? (
+                  <div className="nav-waitlist-ok">
+                    <svg viewBox="0 0 15 15" fill="none"><path d="M2.5 7.5L6 11L12.5 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    You're on the list.
+                  </div>
+                ) : (
+                  <div className="nav-waitlist">
+                    <form className="nav-waitlist-form" onSubmit={handleNavWaitlistSubmit}>
+                      <input
+                        ref={navEmailRef}
+                        type="email"
+                        className="nav-waitlist-input"
+                        placeholder="Join the waitlist"
+                        onFocus={(e) => { e.target.placeholder = 'Email Address'; }}
+                        onBlur={(e) => { if (!e.target.value) e.target.placeholder = 'Join the waitlist'; }}
+                        required
+                      />
+                      <button type="submit" className="nav-waitlist-btn" aria-label="Submit">
+                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      </button>
+                    </form>
+                  </div>
+                )}
+              </div>
             </div>
           </nav>
 
           <section className="s-hero" id="hero" ref={heroRef}>
             <div className="hero-content">
-              <h1 className="hero-h" data-a="">The first smartphone<br />that <em>enforces your rules.</em></h1>
-              <p className="hero-sub" data-a="1">You decide which apps you want and when. The phone makes sure it stays that way.</p>
-              <div data-a="2">
-                <button className="btn btn-void btn-lg" onClick={goApply}>Reserve your Spot</button>
+              <h1 className="hero-h" data-a="">The first smartphone<br /><em>where you set the rules.</em></h1>
+              <p className="hero-sub" data-a="1">You decide which apps you want and when.</p>
+              <p className="hero-sub" data-a="1">We make sure it stays that way.</p>
+              <div data-a="2" className="hero-cta-wrap">
+                {heroOk ? (
+                  <div className="hero-cta-ok">
+                    <svg viewBox="0 0 15 15" fill="none"><path d="M2.5 7.5L6 11L12.5 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    You're in. Redirecting…
+                  </div>
+                ) : (
+                  <form className="hero-cta-form" onSubmit={handleHeroSubmit}>
+                    <input
+                      ref={heroEmailRef}
+                      type="email"
+                      className="hero-cta-input"
+                      placeholder="Email Address"
+                      required
+                    />
+                    <button type="submit" className="hero-cta-btn">Join the waitlist</button>
+                  </form>
+                )}
               </div>
             </div>
           </section>
 
-          <HowItWorksSection goApply={goApply} />
+          <HowItWorksSection goApply={goApply} onWaitlist={handleSectionWaitlist} />
+          <section className="s-action" id="see-it-in-action">
+            <div className="action-header">
+              <span className="label">See it in action</span>
+            </div>
+            <div className="action-grid">
+              <div className="action-copy" data-a="">
+                <p className="action-rule-title"><strong>User specified rules:</strong></p>
+                <ul className="action-list">
+                  <li>Apps blocked: YouTube, X, Facebook, Reddit, Instagram, LinkedIn</li>
+                  <li>Include Web Filtering block (cannot open the app via browser)</li>
+                  <li>From 3.25pm onwards</li>
+                </ul>
+                <p className="action-rule-title action-rule-title-2"><strong>Unbypassable:</strong></p>
+                <ul className="action-list">
+                  <li>Cannot open the apps in any way possible</li>
+                </ul>
+              </div>
+              <div className="action-media" data-a="1">
+                <video
+                  src="/mdm-demo.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  controls
+                />
+              </div>
+            </div>
+            <div className="section-cta-wrap">
+              <SectionWaitlistForm source="action-waitlist" onSubmit={handleSectionWaitlist} />
+            </div>
+          </section>
           <section className="s-about">
             <div className="about-grid">
               <div className="about-text" data-a="">
@@ -1117,10 +1328,10 @@ export default function App() {
               </div>
               <div className="about-headshots" data-a="1">
                 <div className="headshot">
-                  <img src="https://placehold.co/400x400" alt="Founder headshot" />
+                  <img src="/joao.jpg" alt="João" style={{objectPosition:'center 22%'}} />
                 </div>
                 <div className="headshot">
-                  <img src="https://placehold.co/400x400" alt="Founder headshot" />
+                  <img src="/ali.jpg" alt="Ali" style={{objectPosition:'center 30%'}} />
                 </div>
               </div>
             </div>
@@ -1160,8 +1371,8 @@ export default function App() {
                   <li><span className="apply-check-dot" /><span>No commitment until you pay</span></li>
                   <li><span className="apply-check-dot" /><span>Get a refund or roll over if you're not selected</span></li>
                 </ul>
-                <a href={STRIPE_APPLY} target="_blank" rel="noopener noreferrer" className="apply-cta">
-                  Reserve your spot
+                <a href={STRIPE_PREORDER} target="_blank" rel="noopener noreferrer" className="apply-cta">
+                Pre-order
                 </a>
               </div>
             </div>
@@ -1214,6 +1425,11 @@ export default function App() {
       {page === 'learn-more' && (
         <div id="page-learn-more">
           <SubNav />
+          <section className="lm-banner">
+            <div className="lm-banner-inner">
+              <h1><em>Pre-order now.</em></h1>
+            </div>
+          </section>
           {/* Pricing section — exact copy */}
           <Pricing />
           {/* Divider */}
