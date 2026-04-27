@@ -63,6 +63,8 @@ p{line-height:1.85;}
 .nav-logo-group{display:flex;align-items:center;gap:36px;}
 .nav-links{display:flex;gap:28px;}
 .logo{font-family:var(--serif);font-size:22px;letter-spacing:-.02em;color:var(--void);text-decoration:none;line-height:1;}
+.logo-img{display:inline-flex;align-items:center;height:28px;}
+.logo-img img{height:100%;width:auto;display:block;}
 .nav-links a{font-size:13px;font-weight:400;color:var(--muted);text-decoration:none;transition:color .2s,transform .2s var(--ease-mag);display:inline-block;}
 .nav-links a:hover{color:var(--ink);transform:translateY(-1px);}
 
@@ -200,6 +202,9 @@ p{line-height:1.85;}
 .about-media{display:flex;flex-direction:column;gap:16px;}
 .about-photo{width:100%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:var(--surface);border:1px solid var(--border);}
 .about-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.about-headshots{display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap;}
+.headshot{width:200px;height:200px;border-radius:50%;overflow:hidden;background:var(--surface);border:1px solid var(--border);flex-shrink:0;}
+.headshot img{width:100%;height:100%;object-fit:cover;display:block;}
 
 /* FAQ */
 .s-faq{padding:96px 0;}
@@ -1059,9 +1064,10 @@ export default function App() {
           <nav id="nav" className="init" ref={navRef}>
             <div className="nav-inner">
               <div className="nav-logo-group">
-                <a className="logo" href="#" onClick={(e) => { e.preventDefault(); goMain(); }}>mutual.</a>
+                <a className="logo logo-img" href="#" onClick={(e) => { e.preventDefault(); goMain(); }} aria-label="mutual.">
+                  <img src="/logo.png" alt="mutual." />
+                </a>
                 <div className="nav-links">
-                  <a href="#" onClick={(e) => { e.preventDefault(); goPage('why'); }}>Our Story</a>
                   <a href="#" onClick={(e) => { e.preventDefault(); goPage('learn-more'); }}>Learn More</a>
                 </div>
               </div>
@@ -1101,7 +1107,24 @@ export default function App() {
           </section>
 
           <HowItWorksSection goApply={goApply} />
-          <Pricing goLearnMore={() => goPage('learn-more')} goApply={goApply} />
+          <section className="s-about">
+            <div className="about-grid">
+              <div className="about-text" data-a="">
+                <span className="label">About</span>
+                <h2>Built from a simple frustration.</h2>
+                <p>Smartphone overuse is the most documented, least solved problem in consumer technology. We have tried most solutions out there, but they either ask you to rely on willpower or take away too much. We think that's the wrong approach.</p>
+                <p>We're two founders building in London. We're looking for the right people to build this with.</p>
+              </div>
+              <div className="about-headshots" data-a="1">
+                <div className="headshot">
+                  <img src="https://placehold.co/400x400" alt="Founder headshot" />
+                </div>
+                <div className="headshot">
+                  <img src="https://placehold.co/400x400" alt="Founder headshot" />
+                </div>
+              </div>
+            </div>
+          </section>
           {footer}
         </div>
       )}
