@@ -1235,7 +1235,7 @@ export default function App() {
               </div>
               <div className="nav-launching">Early Access</div>
               <div className="nav-right">
-                <a className="nav-learn-link" href="#" onClick={(e) => { e.preventDefault(); goPage('learn-more'); }}>Learn More</a>
+                <a className="nav-learn-link" href="https://mutual.technology/about" target="_blank" rel="noopener noreferrer">Learn More</a>
                 {navWaitlistOk ? (
                   <div className="nav-waitlist-ok">
                     <svg viewBox="0 0 15 15" fill="none"><path d="M2.5 7.5L6 11L12.5 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
