@@ -231,12 +231,15 @@ p{line-height:1.85;}
 .action-header{max-width:var(--max);margin:0 auto 56px;text-align:center;}
 .action-grid{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
 .action-copy{justify-self:end;max-width:440px;}
-.action-rule-title{font-size:18px;line-height:1.4;color:var(--ink);margin:0 0 14px;letter-spacing:-.01em;}
-.action-rule-title strong{font-weight:600;color:var(--void);}
-.action-rule-title-2{margin-top:32px;}
-.action-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;}
-.action-list li{font-size:15px;line-height:1.7;color:var(--muted);padding-left:22px;position:relative;}
-.action-list li::before{content:"";position:absolute;left:6px;top:.85em;width:6px;height:1px;background:var(--muted);}
+.ar-title{font-size:22px;font-weight:600;letter-spacing:-.02em;color:var(--void);margin:0 0 18px;line-height:1.2;}
+.ar-rows{margin:0;padding:0;display:flex;flex-direction:column;gap:18px;}
+.ar-row{display:flex;flex-direction:column;gap:4px;}
+.ar-label{font-size:13px;font-weight:500;color:rgba(28,27,25,.55);letter-spacing:-.005em;line-height:1.4;}
+.ar-value{margin:0;font-size:15px;font-weight:400;color:var(--ink);line-height:1.55;letter-spacing:-.005em;}
+.ar-divider{height:1px;background:rgba(0,0,0,.06);margin:28px 0 24px;}
+.ar-subtitle{font-size:18px;font-weight:600;letter-spacing:-.015em;color:var(--void);margin:0 0 6px;line-height:1.2;}
+.ar-state{margin:0;font-size:15px;color:var(--ink);line-height:1.55;}
+.ar-foot{margin:14px 0 0;font-size:13px;color:rgba(28,27,25,.6);line-height:1.5;}
 .action-media{justify-self:start;width:100%;max-width:288px;border-radius:24px;overflow:hidden;background:var(--void);box-shadow:0 30px 60px -20px rgba(15,15,14,.25),0 12px 24px -8px rgba(15,15,14,.18);}
 .action-media video{display:block;width:100%;height:auto;}
 .section-cta-wrap{display:flex;justify-content:center;margin-top:48px;}
@@ -319,9 +322,11 @@ p{line-height:1.85;}
   .nav-waitlist-btn{height:38px;padding:0 12px;}
   .nav-waitlist-btn svg{width:14px;height:14px;}
 }
+@media(max-width:760px){
+  .nav-learn-link{display:none;}
+}
 @media(max-width:480px){
   .nav-waitlist-input{width:130px;}
-  .nav-learn-link{font-size:12px;}
 }
 
 /* FOOTER */
@@ -1228,7 +1233,7 @@ export default function App() {
                   <img src="/logo.png" alt="mutual." />
                 </a>
               </div>
-              <div className="nav-launching">Launching in 2027</div>
+              <div className="nav-launching">Early Access</div>
               <div className="nav-right">
                 <a className="nav-learn-link" href="#" onClick={(e) => { e.preventDefault(); goPage('learn-more'); }}>Learn More</a>
                 {navWaitlistOk ? (
@@ -1292,16 +1297,25 @@ export default function App() {
             </div>
             <div className="action-grid">
               <div className="action-copy" data-a="">
-                <p className="action-rule-title"><strong>User specified rules:</strong></p>
-                <ul className="action-list">
-                  <li>Apps blocked: YouTube, X, Facebook, Reddit, Instagram, LinkedIn</li>
-                  <li>Include Web Filtering block (cannot open the app via browser)</li>
-                  <li>From 3.25pm onwards</li>
-                </ul>
-                <p className="action-rule-title action-rule-title-2"><strong>Unbypassable:</strong></p>
-                <ul className="action-list">
-                  <li>Cannot open the apps in any way possible</li>
-                </ul>
+                <h3 className="ar-title">Your rules</h3>
+                <dl className="ar-rows">
+                  <div className="ar-row">
+                    <dt className="ar-label">Blocked apps</dt>
+                    <dd className="ar-value">YouTube · X · Facebook · Reddit · Instagram · LinkedIn</dd>
+                  </div>
+                  <div className="ar-row">
+                    <dt className="ar-label">Web access</dt>
+                    <dd className="ar-value">Restricted. No browser workaround</dd>
+                  </div>
+                  <div className="ar-row">
+                    <dt className="ar-label">Schedule</dt>
+                    <dd className="ar-value">Starts at 3:25pm</dd>
+                  </div>
+                </dl>
+                <div className="ar-divider" aria-hidden="true" />
+                <h4 className="ar-subtitle">Unbypassable</h4>
+                <p className="ar-state">No access. No workarounds.</p>
+                <p className="ar-foot">Keep everything else</p>
               </div>
               <div className="action-media" data-a="1">
                 <video
