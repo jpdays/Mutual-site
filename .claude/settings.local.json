@@ -6,7 +6,9 @@
       "Bash(node -e \"require\\('puppeteer'\\)\")",
       "Bash(npx puppeteer *)",
       "Bash(npm list *)",
-      "Read(//c/Users/nateh/AppData/Local/Temp/**)"
+      "Read(//c/Users/nateh/AppData/Local/Temp/**)",
+      "mcp__acp__Bash",
+      "mcp__acp__Write"
     ]
   }
 }
