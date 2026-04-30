@@ -3,10 +3,10 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   "https://jcgelvlzwfearecpoaxg.supabase.co",
-  "sb_publishable_dlyG3pjDXQwPt7XRSIsxgA_tN-PItUj"
+  "sb_publishable_dlyG3pjDXQwPt7XRSIsxgA_tN-PItUj",
 );
 
-const STRIPE_APPLY    = "https://buy.stripe.com/bJeaEP6cO13LfKF0EBgMw02";
+const STRIPE_APPLY = "https://buy.stripe.com/bJeaEP6cO13LfKF0EBgMw02";
 const STRIPE_PREORDER = "https://buy.stripe.com/3cI3cn44GdQx9mhbjfgMw03";
 
 const css = `
@@ -71,14 +71,12 @@ p{line-height:1.85;}
 
 /* NAV */
 #nav{position:fixed;top:0;left:0;right:0;z-index:400;padding:0 32px;transition:background .4s var(--ease-out),border-color .4s var(--ease-out),backdrop-filter .4s;border-bottom:1px solid transparent;}
-#nav.init{background:transparent;}
-#nav.scrolled{background:rgba(249,248,245,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom-color:rgba(226,221,214,.5);top:0;}
+#nav.init,#nav.scrolled{background:rgba(249,248,245,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom-color:rgba(226,221,214,.5);top:0;}
 .nav-inner{max-width:var(--max);margin:0 auto;height:74px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;}
 .nav-logo-group{display:flex;align-items:center;gap:36px;justify-self:start;}
 .nav-launching{font-family:var(--sans);font-size:14px;font-weight:700;color:var(--void);letter-spacing:-.01em;text-align:center;white-space:nowrap;justify-self:center;}
 .nav-right{display:flex;align-items:center;gap:10px;justify-self:end;}
-.nav-learn-link{font-size:13px;font-weight:500;color:var(--ink);text-decoration:none;transition:color .2s,transform .2s var(--ease-mag);display:inline-block;white-space:nowrap;}
-.nav-learn-link:hover{color:var(--void);transform:translateY(-1px);}
+.nav-learn-link{font-size:15px;font-weight:700;color:var(--ink);text-decoration:none;display:inline-block;white-space:nowrap;letter-spacing:-.01em;}
 .logo{font-family:var(--serif);font-size:22px;letter-spacing:-.02em;color:var(--void);text-decoration:none;line-height:1;}
 .logo-img{display:inline-flex;align-items:center;height:28px;}
 .logo-img img{height:100%;width:auto;display:block;}
@@ -323,7 +321,7 @@ p{line-height:1.85;}
   .nav-waitlist-btn svg{width:14px;height:14px;}
 }
 @media(max-width:760px){
-  .nav-learn-link{display:none;}
+  .nav-learn-link{font-size:12px;}
 }
 @media(max-width:480px){
   .nav-waitlist-input{width:130px;}
@@ -382,7 +380,7 @@ p{line-height:1.85;}
 /* APPLY PAGE */
 .apply-nav{background:var(--void);border-bottom:1px solid rgba(249,248,245,.08);padding:0 40px;position:sticky;top:0;z-index:100;}
 .apply-nav-inner{max-width:var(--max);margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between;}
-.apply-nav .logo{color:var(--bg);}
+.apply-nav .logo-img img{filter:brightness(0) invert(1);}
 .apply-nav .btn-ghost{color:rgba(249,248,245,.72);}
 .apply-nav .btn-ghost:hover{color:var(--bg);}
 
@@ -506,7 +504,13 @@ p{line-height:1.85;}
 
 const ChevronIcon = () => (
   <svg className="chev" viewBox="0 0 20 20" fill="none">
-    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path
+      d="M5 7.5L10 12.5L15 7.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
@@ -515,11 +519,14 @@ const ChevronIcon = () => (
 function FaqItem({ question, answer }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className={`faq-item${open ? ' open' : ''}`}>
+    <div className={`faq-item${open ? " open" : ""}`}>
       <button className="faq-q" onClick={() => setOpen(!open)}>
-        {question}<ChevronIcon />
+        {question}
+        <ChevronIcon />
       </button>
-      <div className="faq-a"><p>{answer}</p></div>
+      <div className="faq-a">
+        <p>{answer}</p>
+      </div>
     </div>
   );
 }
@@ -544,23 +551,23 @@ function SiteFooter() {
 
 function NotificationProblemDemo() {
   const NOTIFS = [
-    { app: 'Instagram', msg: 'Sarah liked your photo' },
-    { app: 'Twitter',   msg: 'Breaking: Markets react to...' },
-    { app: 'YouTube',   msg: 'New video from a channel you follow' },
-    { app: 'Messages',  msg: 'Mum: Are you coming Sunday?' },
-    { app: 'Reddit',    msg: 'Your post is trending in r/london' },
-    { app: 'LinkedIn',  msg: '12 people viewed your profile' },
+    { app: "Instagram", msg: "Sarah liked your photo" },
+    { app: "Twitter", msg: "Breaking: Markets react to..." },
+    { app: "YouTube", msg: "New video from a channel you follow" },
+    { app: "Messages", msg: "Mum: Are you coming Sunday?" },
+    { app: "Reddit", msg: "Your post is trending in r/london" },
+    { app: "LinkedIn", msg: "12 people viewed your profile" },
   ];
   const [visible, setVisible] = useState([]);
   const [exiting, setExiting] = useState([]);
-  const nextId   = useRef(0);
+  const nextId = useRef(0);
   const queueRef = useRef(0);
 
   useEffect(() => {
     const add = () => {
-      setVisible(v => {
+      setVisible((v) => {
         if (v.length >= 3) return v;
-        const id    = nextId.current++;
+        const id = nextId.current++;
         const notif = { ...NOTIFS[queueRef.current % NOTIFS.length], id };
         queueRef.current++;
         return [...v, notif];
@@ -572,25 +579,30 @@ function NotificationProblemDemo() {
   }, []);
 
   const dismiss = (id) => {
-    setExiting(e => [...e, id]);
+    setExiting((e) => [...e, id]);
     setTimeout(() => {
-      setVisible(v => v.filter(n => n.id !== id));
-      setExiting(e => e.filter(x => x !== id));
+      setVisible((v) => v.filter((n) => n.id !== id));
+      setExiting((e) => e.filter((x) => x !== id));
     }, 260);
   };
 
   return (
-    <div className="story-illus" style={{padding:'24px 20px',flexDirection:'column',gap:0}}>
-      <div className="notif-scene" style={{flex:1,position:'relative'}}>
+    <div
+      className="story-illus"
+      style={{ padding: "24px 20px", flexDirection: "column", gap: 0 }}
+    >
+      <div className="notif-scene" style={{ flex: 1, position: "relative" }}>
         <div className="notif-phone">
-          <div className="notif-screen"><div className="notif-pill" /></div>
+          <div className="notif-screen">
+            <div className="notif-pill" />
+          </div>
         </div>
         <div className="notif-stack">
           {visible.map((n, i) => (
             <div
               key={n.id}
-              className={`notif-toast${exiting.includes(n.id) ? ' exiting' : ''}`}
-              style={{top:`${i * 56}px`}}
+              className={`notif-toast${exiting.includes(n.id) ? " exiting" : ""}`}
+              style={{ top: `${i * 56}px` }}
               onClick={() => dismiss(n.id)}
             >
               <span className="notif-app">{n.app}</span>
@@ -605,48 +617,71 @@ function NotificationProblemDemo() {
 }
 
 function BypassProblemDemo() {
-  const [phase, setPhase] = useState('modal');
+  const [phase, setPhase] = useState("modal");
   const ignore = () => {
-    setPhase('bypassed');
-    setTimeout(() => setPhase('modal'), 2800);
+    setPhase("bypassed");
+    setTimeout(() => setPhase("modal"), 2800);
   };
   return (
-    <div className="story-illus" style={{padding:'24px 20px',flexDirection:'column',gap:10}}>
-      <div className="bypass-wrap" style={{flex:1}}>
+    <div
+      className="story-illus"
+      style={{ padding: "24px 20px", flexDirection: "column", gap: 10 }}
+    >
+      <div className="bypass-wrap" style={{ flex: 1 }}>
         <div className="bypass-phone">
           <div className="bypass-screen">
-            <div className={`bypass-modal${phase === 'bypassed' ? ' hidden' : ''}`}>
+            <div
+              className={`bypass-modal${phase === "bypassed" ? " hidden" : ""}`}
+            >
               <div className="bypass-icon">⏳</div>
               <div className="bypass-title">Time Limit</div>
-              <div className="bypass-sub">You've reached your limit on Instagram</div>
+              <div className="bypass-sub">
+                You've reached your limit on Instagram
+              </div>
               <button className="bypass-btn-ok">OK</button>
-              <button className="bypass-btn-ignore" onClick={ignore}>Ignore for today</button>
+              <button className="bypass-btn-ignore" onClick={ignore}>
+                Ignore for today
+              </button>
             </div>
-            <div className={`bypass-success${phase === 'bypassed' ? ' show' : ''}`}>
+            <div
+              className={`bypass-success${phase === "bypassed" ? " show" : ""}`}
+            >
               <div className="bypass-success-icon">📱</div>
-              <div className="bypass-success-text">Limit ignored.<br />Back to scrolling.</div>
+              <div className="bypass-success-text">
+                Limit ignored.
+                <br />
+                Back to scrolling.
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <p style={{textAlign:'center',fontSize:'10px',color:'var(--muted)',letterSpacing:'.06em',textTransform:'uppercase'}}>
-        {phase === 'modal' ? 'try clicking ignore' : 'resets in a moment…'}
+      <p
+        style={{
+          textAlign: "center",
+          fontSize: "10px",
+          color: "var(--muted)",
+          letterSpacing: ".06em",
+          textTransform: "uppercase",
+        }}
+      >
+        {phase === "modal" ? "try clicking ignore" : "resets in a moment…"}
       </p>
     </div>
   );
 }
 
 function MinimalPhoneProblemDemo() {
-  const [toast, setToast]               = useState('');
+  const [toast, setToast] = useState("");
   const [toastVisible, setToastVisible] = useState(false);
   const timerRef = useRef(null);
   const APPS = [
-    { name:'Call',     icon:'📞', color:'#2d6a4f', avail:true  },
-    { name:'SMS',      icon:'💬', color:'#1b4332', avail:true  },
-    { name:'Maps',     icon:'🗺️',  color:'#555',   avail:false },
-    { name:'Uber',     icon:'🚗',  color:'#555',   avail:false },
-    { name:'Banking',  icon:'🏦',  color:'#555',   avail:false },
-    { name:'WhatsApp', icon:'💚',  color:'#555',   avail:false },
+    { name: "Call", icon: "📞", color: "#2d6a4f", avail: true },
+    { name: "SMS", icon: "💬", color: "#1b4332", avail: true },
+    { name: "Maps", icon: "🗺️", color: "#555", avail: false },
+    { name: "Uber", icon: "🚗", color: "#555", avail: false },
+    { name: "Banking", icon: "🏦", color: "#555", avail: false },
+    { name: "WhatsApp", icon: "💚", color: "#555", avail: false },
   ];
   const tap = (app) => {
     if (app.avail) return;
@@ -656,26 +691,55 @@ function MinimalPhoneProblemDemo() {
     timerRef.current = setTimeout(() => setToastVisible(false), 1800);
   };
   return (
-    <div className="story-illus" style={{padding:'24px 20px',flexDirection:'column',gap:8}}>
-      <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center'}}>
+    <div
+      className="story-illus"
+      style={{ padding: "24px 20px", flexDirection: "column", gap: 8 }}
+    >
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <div className="minimal-phone">
           <div className="minimal-screen">
             <div className="minimal-time">09:41</div>
             <div className="minimal-grid">
-              {APPS.map(app => (
-                <div className="minimal-app" key={app.name} onClick={() => tap(app)}>
-                  <div className={`minimal-icon${!app.avail ? ' unavail' : ''}`} style={{background: app.avail ? app.color : '#333'}}>
+              {APPS.map((app) => (
+                <div
+                  className="minimal-app"
+                  key={app.name}
+                  onClick={() => tap(app)}
+                >
+                  <div
+                    className={`minimal-icon${!app.avail ? " unavail" : ""}`}
+                    style={{ background: app.avail ? app.color : "#333" }}
+                  >
                     {app.icon}
                   </div>
                   <span className="minimal-app-name">{app.name}</span>
                 </div>
               ))}
             </div>
-            <div className={`minimal-toast${toastVisible ? '' : ' hide'}`}>{toast}</div>
+            <div className={`minimal-toast${toastVisible ? "" : " hide"}`}>
+              {toast}
+            </div>
           </div>
         </div>
       </div>
-      <p style={{textAlign:'center',fontSize:'10px',color:'var(--muted)',letterSpacing:'.06em',textTransform:'uppercase'}}>tap an app</p>
+      <p
+        style={{
+          textAlign: "center",
+          fontSize: "10px",
+          color: "var(--muted)",
+          letterSpacing: ".06em",
+          textTransform: "uppercase",
+        }}
+      >
+        tap an app
+      </p>
     </div>
   );
 }
@@ -685,54 +749,71 @@ function MinimalPhoneProblemDemo() {
 const HOW_STEPS = [
   {
     id: "receive",
-    title: "(01) Receive your phone",
+    title: "(1) Receive your phone",
     images: ["/1.png"],
     alt: "Phone delivery",
     fit: "contain",
-    w: 360, h: 360, x: 70,  y: 34,
+    w: 360,
+    h: 360,
+    x: 70,
+    y: 34,
   },
   {
     id: "tell",
-    title: "(02) Tell us your objective",
+    title: "(2) Tell us your objective",
     images: ["/2a.png", "/2b.png", "/2c.png"],
     alt: "Your objective",
     fit: "contain",
-    w: 352, h: 318, x: 494, y: 82,
+    w: 352,
+    h: 318,
+    x: 494,
+    y: 82,
   },
   {
     id: "look",
-    title: "(03) We look at your data",
+    title: "(3) We look at your data",
     images: ["/3.png"],
     alt: "Data analysis",
     fit: "contain",
-    w: 330, h: 372, x: 972, y: 214,
+    w: 330,
+    h: 372,
+    x: 972,
+    y: 214,
   },
   {
     id: "rules",
-    title: "(04) We set the rules together",
+    title: "(4) We set the rules together",
     images: ["/4a.png", "/4b.png"],
     alt: "Your rules",
     fit: "contain",
-    w: 370, h: 338, x: 574, y: 506,
+    w: 370,
+    h: 338,
+    x: 574,
+    y: 506,
   },
   {
     id: "adjust",
-    title: "(05) We adjust over time",
+    title: "(5) We adjust over time",
     images: ["/5.png"],
     alt: "Ongoing refinement",
     fit: "contain",
-    w: 286, h: 338, x: 104, y: 472,
+    w: 286,
+    h: 338,
+    x: 104,
+    y: 472,
   },
 ];
 
 function HowItWorksSection({ goApply, onWaitlist }) {
   const [stepImageIndexes, setStepImageIndexes] = useState(() =>
-    Object.fromEntries(HOW_STEPS.map((step) => [step.id, 0]))
+    Object.fromEntries(HOW_STEPS.map((step) => [step.id, 0])),
   );
 
   useEffect(() => {
     const rotatingSteps = HOW_STEPS.filter(
-      (step) => (step.id === "tell" || step.id === "adjust" || step.id === "rules") && step.images.length > 1
+      (step) =>
+        (step.id === "tell" || step.id === "adjust" || step.id === "rules") &&
+        step.images.length > 1,
     );
     const interval = setInterval(() => {
       setStepImageIndexes((current) => {
@@ -762,12 +843,14 @@ function HowItWorksSection({ goApply, onWaitlist }) {
       {/* Header sits above the composition frame */}
       <div className="hiw-header">
         <span className="label">How it works</span>
-        <h2>You name the goal. <em className="hiw-em-orange">We build the system.</em></h2>
+        <h2>
+          You name the goal.{" "}
+          <em className="hiw-em-orange">We build the system.</em>
+        </h2>
       </div>
 
       {/* Fixed 1440×880 composition frame */}
       <div className="hiw-frame">
-
         {/* SVG connector lines — z-index:1, behind all nodes */}
         <svg
           className="hiw-svg"
@@ -778,26 +861,42 @@ function HowItWorksSection({ goApply, onWaitlist }) {
           {/* receive → tell: right-center card1(410,200) → left-center card2(520,230) */}
           <path
             d="M410,200 C465,200 465,230 520,230"
-            stroke="#9E9890" strokeWidth="1.5" opacity="0.45"
-            strokeDasharray="4 7" fill="none" strokeLinecap="round"
+            stroke="#9E9890"
+            strokeWidth="1.5"
+            opacity="0.45"
+            strokeDasharray="4 7"
+            fill="none"
+            strokeLinecap="round"
           />
           {/* tell → look: right-center card2(820,230) → left-center card3(960,410) */}
           <path
             d="M820,230 C900,230 960,330 960,410"
-            stroke="#9E9890" strokeWidth="1.5" opacity="0.45"
-            strokeDasharray="4 7" fill="none" strokeLinecap="round"
+            stroke="#9E9890"
+            strokeWidth="1.5"
+            opacity="0.45"
+            strokeDasharray="4 7"
+            fill="none"
+            strokeLinecap="round"
           />
           {/* look → rules: bottom-center card3(1100,570) → right-center card5(930,670) */}
           <path
             d="M1100,570 C1100,645 1010,670 930,670"
-            stroke="#9E9890" strokeWidth="1.5" opacity="0.45"
-            strokeDasharray="4 7" fill="none" strokeLinecap="round"
+            stroke="#9E9890"
+            strokeWidth="1.5"
+            opacity="0.45"
+            strokeDasharray="4 7"
+            fill="none"
+            strokeLinecap="round"
           />
           {/* rules → adjust: left-center card5(610,670) → right-center card4(370,620) */}
           <path
             d="M610,670 C500,670 400,635 370,620"
-            stroke="#9E9890" strokeWidth="1.5" opacity="0.45"
-            strokeDasharray="4 7" fill="none" strokeLinecap="round"
+            stroke="#9E9890"
+            strokeWidth="1.5"
+            opacity="0.45"
+            strokeDasharray="4 7"
+            fill="none"
+            strokeLinecap="round"
           />
         </svg>
 
@@ -819,23 +918,26 @@ function HowItWorksSection({ goApply, onWaitlist }) {
               <div className="hiw-node-label">
                 <p className="hiw-node-title">{step.title}</p>
               </div>
-              <div
-                className="hiw-node-img"
-              >
+              <div className="hiw-node-img">
                 {hasCarousel ? (
                   <div
                     className="hiw-node-track"
                     style={{ transform: `translateX(-${activeIndex * 100}%)` }}
                   >
                     {step.images.map((image, index) => (
-                      <div key={`${step.id}-${image}`} className="hiw-node-slide">
+                      <div
+                        key={`${step.id}-${image}`}
+                        className="hiw-node-slide"
+                      >
                         <img
                           src={image}
                           alt={`${step.alt} ${index + 1}`}
                           style={{
                             objectFit: step.fit,
                           }}
-                          onError={(e) => { e.currentTarget.style.display = "none"; }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                          }}
                         />
                       </div>
                     ))}
@@ -850,12 +952,17 @@ function HowItWorksSection({ goApply, onWaitlist }) {
                       objectFit: step.fit,
                       display: "block",
                     }}
-                    onError={(e) => { e.currentTarget.style.display = "none"; }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
                   />
                 )}
               </div>
               {hasCarousel && (
-                <div className="hiw-node-dots" aria-label={`${step.title} image selector`}>
+                <div
+                  className="hiw-node-dots"
+                  aria-label={`${step.title} image selector`}
+                >
                   {step.images.map((_, index) => (
                     <button
                       key={`${step.id}-dot-${index}`}
@@ -877,8 +984,11 @@ function HowItWorksSection({ goApply, onWaitlist }) {
 }
 
 function scrollToHeroCta() {
-  const el = document.querySelector('.hero-cta-input');
-  if (el) { el.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(() => el.focus(), 600); }
+  const el = document.querySelector(".hero-cta-input");
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(() => el.focus(), 600);
+  }
 }
 
 function SectionWaitlistForm({ source, onSubmit }) {
@@ -892,7 +1002,15 @@ function SectionWaitlistForm({ source, onSubmit }) {
   if (ok) {
     return (
       <div className="section-cta-ok">
-        <svg viewBox="0 0 15 15" fill="none"><path d="M2.5 7.5L6 11L12.5 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        <svg viewBox="0 0 15 15" fill="none">
+          <path
+            d="M2.5 7.5L6 11L12.5 4"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
         You're on the list. Redirecting…
       </div>
     );
@@ -906,104 +1024,111 @@ function SectionWaitlistForm({ source, onSubmit }) {
         placeholder="Email Address"
         required
       />
-      <button type="submit" className="section-cta-btn">Join the waitlist</button>
+      <button type="submit" className="section-cta-btn">
+        Stay updated
+      </button>
     </form>
   );
 }
 
 const SPEC_TABS = [
   {
-    id: 'details',
-    label: 'Details',
+    id: "details",
+    label: "Details",
     specs: [
-      { label: 'Screen Size',       value: '6.7 inches' },
-      { label: 'Storage & Memory',  value: '128 GB / 4 GB RAM' },
-      { label: 'Camera',            value: '50 MP / 5 MP / 2 MP' },
-      { label: 'Operating System',  value: 'Android' },
-      { label: 'Brand',             value: 'Samsung · Quality & Reliability' },
-      { label: 'Battery',           value: '5000 mAh' },
-      { label: 'Durability',        value: 'IP54 · Gorilla Glass Victus' },
-      { label: 'Security',          value: 'Fingerprint & Face Unlock' },
+      { label: "Screen Size", value: "6.7 inches" },
+      { label: "Storage & Memory", value: "128 GB / 4 GB RAM" },
+      { label: "Camera", value: "50 MP / 5 MP / 2 MP" },
+      { label: "Operating System", value: "Android" },
+      { label: "Brand", value: "Samsung · Quality & Reliability" },
+      { label: "Battery", value: "5000 mAh" },
+      { label: "Durability", value: "IP54 · Gorilla Glass Victus" },
+      { label: "Security", value: "Fingerprint & Face Unlock" },
     ],
   },
   {
-    id: 'performance',
-    label: 'Performance',
+    id: "performance",
+    label: "Performance",
     specs: [
-      { label: 'CPU Speed',          value: '2.4 GHz, 2 GHz' },
-      { label: 'CPU Type',           value: 'Octa-Core' },
-      { label: 'Memory',             value: '4 GB RAM' },
-      { label: 'Storage',            value: '128 GB (107.1 GB available)' },
-      { label: 'External Storage',   value: 'MicroSD up to 2 TB' },
-      { label: 'Dimensions',         value: '164.4 × 77.9 × 7.5 mm' },
-      { label: 'Weight',             value: '192 g' },
+      { label: "CPU Speed", value: "2.4 GHz, 2 GHz" },
+      { label: "CPU Type", value: "Octa-Core" },
+      { label: "Memory", value: "4 GB RAM" },
+      { label: "Storage", value: "128 GB (107.1 GB available)" },
+      { label: "External Storage", value: "MicroSD up to 2 TB" },
+      { label: "Dimensions", value: "164.4 × 77.9 × 7.5 mm" },
+      { label: "Weight", value: "192 g" },
     ],
   },
   {
-    id: 'display',
-    label: 'Display',
+    id: "display",
+    label: "Display",
     specs: [
-      { label: 'Display Size',     value: '6.7 inches' },
-      { label: 'Resolution',       value: '1080 × 2340 (FHD+)' },
-      { label: 'Technology',       value: 'Super AMOLED' },
-      { label: 'Refresh Rate',     value: '90 Hz' },
-      { label: 'Colour Depth',     value: '16M colours' },
+      { label: "Display Size", value: "6.7 inches" },
+      { label: "Resolution", value: "1080 × 2340 (FHD+)" },
+      { label: "Technology", value: "Super AMOLED" },
+      { label: "Refresh Rate", value: "90 Hz" },
+      { label: "Colour Depth", value: "16M colours" },
     ],
   },
   {
-    id: 'camera',
-    label: 'Camera',
+    id: "camera",
+    label: "Camera",
     specs: [
-      { label: 'Rear Camera',     value: '50 MP + 5 MP + 2 MP' },
-      { label: 'Rear Aperture',   value: 'f/1.8, f/2.2, f/2.4' },
-      { label: 'OIS',             value: 'Yes' },
-      { label: 'Rear Zoom',       value: 'Digital up to 10×' },
-      { label: 'Front Camera',    value: '13 MP, f/2.0' },
-      { label: 'Video',           value: 'FHD 1920 × 1080 @ 30 fps' },
-      { label: 'Slow Motion',     value: '120 fps @ HD' },
+      { label: "Rear Camera", value: "50 MP + 5 MP + 2 MP" },
+      { label: "Rear Aperture", value: "f/1.8, f/2.2, f/2.4" },
+      { label: "OIS", value: "Yes" },
+      { label: "Rear Zoom", value: "Digital up to 10×" },
+      { label: "Front Camera", value: "13 MP, f/2.0" },
+      { label: "Video", value: "FHD 1920 × 1080 @ 30 fps" },
+      { label: "Slow Motion", value: "120 fps @ HD" },
     ],
   },
   {
-    id: 'network',
-    label: 'Network',
+    id: "network",
+    label: "Network",
     specs: [
-      { label: 'SIM',       value: 'Dual Nano-SIM (4FF)' },
-      { label: 'Networks',  value: '2G / 3G / 4G LTE / 5G Sub-6' },
-      { label: 'Wi-Fi',     value: '802.11a/b/g/n/ac 2.4 GHz + 5 GHz' },
-      { label: 'Bluetooth', value: 'v5.3' },
-      { label: 'USB',       value: 'USB-C 2.0' },
+      { label: "SIM", value: "Dual Nano-SIM (4FF)" },
+      { label: "Networks", value: "2G / 3G / 4G LTE / 5G Sub-6" },
+      { label: "Wi-Fi", value: "802.11a/b/g/n/ac 2.4 GHz + 5 GHz" },
+      { label: "Bluetooth", value: "v5.3" },
+      { label: "USB", value: "USB-C 2.0" },
     ],
   },
   {
-    id: 'other',
-    label: 'Other',
+    id: "other",
+    label: "Other",
     specs: [
-      { label: 'Battery',           value: '5000 mAh · non-removable' },
-      { label: 'Video Playback',    value: 'Up to 18 hours' },
-      { label: 'Sensors',           value: 'Accelerometer, Gyro, Fingerprint, Light, Geomagnetic' },
-      { label: 'OS',                value: 'Android' },
-      { label: 'Software Support',  value: 'Until August 2031' },
+      { label: "Battery", value: "5000 mAh · non-removable" },
+      { label: "Video Playback", value: "Up to 18 hours" },
+      {
+        label: "Sensors",
+        value: "Accelerometer, Gyro, Fingerprint, Light, Geomagnetic",
+      },
+      { label: "OS", value: "Android" },
+      { label: "Software Support", value: "Until August 2031" },
     ],
   },
 ];
 
 function SpecTabs() {
-  const [active, setActive] = useState('details');
-  const tab = SPEC_TABS.find(t => t.id === active);
+  const [active, setActive] = useState("details");
+  const tab = SPEC_TABS.find((t) => t.id === active);
   return (
     <section className="s-specs">
       <div className="specs-shell">
         <div className="specs-header" data-a="">
           <span className="label">What you get</span>
-          <h2>Samsung Galaxy A17 5G — <em>full specs.</em></h2>
+          <h2>
+            Samsung Galaxy A17 5G — <em>full specs.</em>
+          </h2>
         </div>
         <div className="spec-tab-bar" role="tablist">
-          {SPEC_TABS.map(t => (
+          {SPEC_TABS.map((t) => (
             <button
               key={t.id}
               role="tab"
               aria-selected={active === t.id}
-              className={`spec-tab${active === t.id ? ' active' : ''}`}
+              className={`spec-tab${active === t.id ? " active" : ""}`}
               onClick={() => setActive(t.id)}
             >
               {t.label}
@@ -1011,7 +1136,7 @@ function SpecTabs() {
           ))}
         </div>
         <div className="spec-grid" data-a="">
-          {tab.specs.map(s => (
+          {tab.specs.map((s) => (
             <div key={s.label}>
               <p className="spec-item-label">{s.label}</p>
               <p className="spec-item-value">{s.value}</p>
@@ -1024,20 +1149,24 @@ function SpecTabs() {
 }
 
 const PHONE_COLOURS = [
-  { id: 'black', label: 'Black', swatch: '#1C1B19' },
-  { id: 'grey',  label: 'Grey',  swatch: '#A8ADB3' },
-  { id: 'blue',  label: 'Blue',  swatch: '#1E3A8A' },
+  { id: "black", label: "Black", swatch: "#1C1B19" },
+  { id: "grey", label: "Grey", swatch: "#A8ADB3" },
+  { id: "blue", label: "Blue", swatch: "#1E3A8A" },
 ];
 
 function Pricing({ goLearnMore, goApply }) {
-  const [colour, setColour] = useState('black');
+  const [colour, setColour] = useState("black");
   return (
     <section className="s-pricing" id="pricing">
       <div className="pricing-shell">
         <div className="pricing-panel">
           {/* Mobile-only headline — shown above phone on small screens */}
           <div className="pe-headline-mobile">
-            <h2>Take control of your phone.<br /><span className="pe-orange">For 50p a day.</span></h2>
+            <h2>
+              Take control of your phone.
+              <br />
+              <span className="pe-orange">For 50p a day.</span>
+            </h2>
           </div>
 
           {/* Left: phone image */}
@@ -1050,10 +1179,13 @@ function Pricing({ goLearnMore, goApply }) {
           {/* Right: editorial free-floating content */}
           <div className="pricing-content">
             <div className="pe-content">
-
               {/* Headline */}
               <div className="pe-headline">
-                <h2>Take control of your phone.<br /><span className="pe-orange">For 50p a day.</span></h2>
+                <h2>
+                  Take control of your phone.
+                  <br />
+                  <span className="pe-orange">For 50p a day.</span>
+                </h2>
               </div>
 
               {/* Pricing */}
@@ -1062,24 +1194,35 @@ function Pricing({ goLearnMore, goApply }) {
                   <span className="pe-price-now">$180</span>
                   <span className="pe-price-was">£240</span>
                 </div>
-                <p className="pe-price-note">Includes 1 year subscription. Batch 1 ships Q3 2026.</p>
-                <p className="pe-refund">Fully refundable. Cancel anytime and we refund unused time.</p>
+                <p className="pe-price-note">
+                  Includes 1 year subscription. Batch 1 ships Q3 2026.
+                </p>
+                <p className="pe-refund">
+                  Fully refundable. Cancel anytime and we refund unused time.
+                </p>
               </div>
 
               {/* Colour */}
               <div className="pe-colour">
                 <p className="pe-colour-label">Colour</p>
-                <div className="pe-colour-options" role="radiogroup" aria-label="Colour">
-                  {PHONE_COLOURS.map(c => (
+                <div
+                  className="pe-colour-options"
+                  role="radiogroup"
+                  aria-label="Colour"
+                >
+                  {PHONE_COLOURS.map((c) => (
                     <button
                       key={c.id}
                       type="button"
                       role="radio"
                       aria-checked={colour === c.id}
-                      className={`pe-colour-btn${colour === c.id ? ' active' : ''}`}
+                      className={`pe-colour-btn${colour === c.id ? " active" : ""}`}
                       onClick={() => setColour(c.id)}
                     >
-                      <span className="pe-swatch" style={{background: c.swatch}} />
+                      <span
+                        className="pe-swatch"
+                        style={{ background: c.swatch }}
+                      />
                       {c.label}
                     </button>
                   ))}
@@ -1094,16 +1237,26 @@ function Pricing({ goLearnMore, goApply }) {
               <ul className="pe-includes" role="list">
                 <li className="pe-include-item">Samsung Galaxy A17 5G</li>
                 <li className="pe-include-item">It follows your rules</li>
-                <li className="pe-include-item">App access that changes with your day</li>
-                <li className="pe-include-item">No bypass or deleting the blocker</li>
+                <li className="pe-include-item">
+                  App access that changes with your day
+                </li>
+                <li className="pe-include-item">
+                  No bypass or deleting the blocker
+                </li>
                 <li className="pe-include-item">We adjust it with you</li>
               </ul>
 
               {/* CTA */}
               <div className="pe-cta">
-                <a href={STRIPE_PREORDER} target="_blank" rel="noopener noreferrer" className="pe-btn-primary">Pre-order</a>
+                <a
+                  href={STRIPE_PREORDER}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pe-btn-primary"
+                >
+                  Pre-order
+                </a>
               </div>
-
             </div>
           </div>
         </div>
@@ -1112,149 +1265,244 @@ function Pricing({ goLearnMore, goApply }) {
   );
 }
 
+function getPageFromPath() {
+  const path = window.location.pathname;
+  if (path === "/product") return "product";
+  if (path === "/apply") return "apply";
+  return "main";
+}
+
 export default function App() {
-  const [page,         setPage]         = useState('main');
-  const [footerOk,     setFooterOk]     = useState(false);
+  const [page, setPage] = useState(getPageFromPath);
+  const [footerOk, setFooterOk] = useState(false);
   const [navWaitlistOk, setNavWaitlistOk] = useState(false);
-  const [showVideo,    setShowVideo]    = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
 
   const footerEmailRef = useRef();
-  const navEmailRef    = useRef();
-  const heroRef        = useRef();
-  const navRef         = useRef();
+  const navEmailRef = useRef();
+  const heroRef = useRef();
+  const navRef = useRef();
 
-  const goPage  = (p) => { setPage(p); window.scrollTo({top:0,behavior:'instant'}); };
-  const goApply = ()  => goPage('apply');
-  const goMain  = ()  => goPage('main');
+  const goPage = (p) => {
+    const url = p === "main" ? "/" : `/${p}`;
+    window.history.pushState({ page: p }, "", url);
+    setPage(p);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+  const goApply = () => goPage("apply");
+  const goMain = () => goPage("main");
 
   useEffect(() => {
-    if (page !== 'main') return;
+    const onPopState = () => {
+      setPage(getPageFromPath());
+      window.scrollTo({ top: 0, behavior: "instant" });
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  useEffect(() => {
+    if (page !== "main") return;
     const hero = heroRef.current;
-    const nav  = navRef.current;
+    const nav = navRef.current;
     if (!hero || !nav) return;
-    const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) {
-        nav.classList.remove('scrolled');
-        nav.classList.add('init');
-      } else {
-        nav.classList.remove('init');
-        nav.classList.add('scrolled');
-      }
-    }, { threshold: 0.05 });
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          nav.classList.remove("scrolled");
+          nav.classList.add("init");
+        } else {
+          nav.classList.remove("init");
+          nav.classList.add("scrolled");
+        }
+      },
+      { threshold: 0.05 },
+    );
     io.observe(hero);
     return () => io.disconnect();
   }, [page]);
 
   useEffect(() => {
-    const els = document.querySelectorAll('[data-a]');
-    const io  = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-      });
-    }, { threshold: 0.12 });
-    els.forEach(el => io.observe(el));
+    const els = document.querySelectorAll("[data-a]");
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12 },
+    );
+    els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, [page]);
 
   useEffect(() => {
     const handler = (e) => {
-      if (e.data && e.data.type === 'tally-form-submitted') setShowVideo(true);
+      if (e.data && e.data.type === "tally-form-submitted") setShowVideo(true);
     };
-    window.addEventListener('message', handler);
-    return () => window.removeEventListener('message', handler);
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
   }, []);
 
   const saveEmail = async (email, source) => {
-    await supabase.from('leads').insert({ contact: email, source });
+    await supabase.from("leads").insert({ contact: email, source });
   };
 
   const handleFooterSubmit = async (e) => {
     e.preventDefault();
-    await saveEmail(footerEmailRef.current.value, 'footer');
+    await saveEmail(footerEmailRef.current.value, "footer");
     setFooterOk(true);
   };
 
   const handleNavWaitlistSubmit = async (e) => {
     e.preventDefault();
-    await saveEmail(navEmailRef.current.value, 'nav-waitlist');
+    await saveEmail(navEmailRef.current.value, "nav-waitlist");
     setNavWaitlistOk(true);
-    goPage('learn-more');
+    goPage("product");
   };
 
   const heroEmailRef = useRef();
   const [heroOk, setHeroOk] = useState(false);
   const handleHeroSubmit = async (e) => {
     e.preventDefault();
-    await saveEmail(heroEmailRef.current.value, 'hero-waitlist');
+    await saveEmail(heroEmailRef.current.value, "hero-waitlist");
     setHeroOk(true);
-    goPage('learn-more');
+    goPage("product");
   };
 
   const handleSectionWaitlist = async (email, source) => {
     await saveEmail(email, source);
-    setTimeout(() => goPage('learn-more'), 600);
+    setTimeout(() => goPage("product"), 600);
   };
 
   const faqs = [
-    { q: 'What happens to my current phone?',                 a: "You keep it. Most users keep their current device as a backup. You're not giving anything up." },
-    { q: 'Can I still use WhatsApp, maps, and banking apps?', a: "Yes. It functions like a completely new phone. We only removes what you decide and when." },
-    { q: 'Can I still download and delete apps?',             a: "Yes. You can download and delete anything freely, except the apps you specifically asked us to manage on your behalf." },
-    { q: 'What if I want to change something?',               a: "You message us and we can make the adjustment. The friction is intentional, it keeps you accountable, but we want to make it work for you, not to be dogmatic about it." },
-    { q: 'How long does this last?',                          a: "A few weeks. Enough time to actually feel a difference. After that, you decide whether to continue, adjust, or stop." },
-    { q: "What if it's not working for me?",                  a: "That's exactly the feedback we need. We'll work with you to understand what's not working and adjust. If it's not for you, you can cancel anytime and we will refund you." },
+    {
+      q: "What happens to my current phone?",
+      a: "You keep it. Most users keep their current device as a backup. You're not giving anything up.",
+    },
+    {
+      q: "Can I still use WhatsApp, maps, and banking apps?",
+      a: "Yes. It functions like a completely new phone. We only removes what you decide and when.",
+    },
+    {
+      q: "Can I still download and delete apps?",
+      a: "Yes. You can download and delete anything freely, except the apps you specifically asked us to manage on your behalf.",
+    },
+    {
+      q: "What if I want to change something?",
+      a: "You message us and we can make the adjustment. The friction is intentional, it keeps you accountable, but we want to make it work for you, not to be dogmatic about it.",
+    },
+    {
+      q: "How long does this last?",
+      a: "A few weeks. Enough time to actually feel a difference. After that, you decide whether to continue, adjust, or stop.",
+    },
+    {
+      q: "What if it's not working for me?",
+      a: "That's exactly the feedback we need. We'll work with you to understand what's not working and adjust. If it's not for you, you can cancel anytime and we will refund you.",
+    },
   ];
 
   const SubNav = () => (
     <nav className="sub-nav">
       <div className="sub-nav-inner">
-        <a className="logo" href="#" onClick={(e) => { e.preventDefault(); goMain(); }}>mutual.</a>
-        <button className="btn-ghost" onClick={goMain}>← Back</button>
+        <a
+          className="logo logo-img"
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            goMain();
+          }}
+          aria-label="mutual."
+        >
+          <img src="/logo.png" alt="mutual." />
+        </a>
+        <button className="btn-ghost" onClick={goMain}>
+          ← Back
+        </button>
       </div>
     </nav>
   );
 
-  const footer = (
-    <SiteFooter />
-  );
+  const footer = <SiteFooter />;
 
   return (
     <>
       <style>{css}</style>
       <div id="noise" aria-hidden="true" />
 
-
       {/* MAIN PAGE */}
-      {page === 'main' && (
+      {page === "main" && (
         <div id="page-main">
           <nav id="nav" className="init" ref={navRef}>
             <div className="nav-inner">
               <div className="nav-logo-group">
-                <a className="logo logo-img" href="#" onClick={(e) => { e.preventDefault(); goMain(); }} aria-label="mutual.">
+                <a
+                  className="logo logo-img"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    goMain();
+                  }}
+                  aria-label="mutual."
+                >
                   <img src="/logo.png" alt="mutual." />
                 </a>
               </div>
-              <div className="nav-launching">Early Access</div>
+              <div className="nav-launching"></div>
               <div className="nav-right">
-                <a className="nav-learn-link" href="https://mutual.technology/about">Learn More</a>
+                <span className="nav-learn-link" style={{ cursor: "default" }}>
+                  Launching in 2027
+                </span>
                 {navWaitlistOk ? (
                   <div className="nav-waitlist-ok">
-                    <svg viewBox="0 0 15 15" fill="none"><path d="M2.5 7.5L6 11L12.5 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg viewBox="0 0 15 15" fill="none">
+                      <path
+                        d="M2.5 7.5L6 11L12.5 4"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                     You're on the list.
                   </div>
                 ) : (
                   <div className="nav-waitlist">
-                    <form className="nav-waitlist-form" onSubmit={handleNavWaitlistSubmit}>
+                    <form
+                      className="nav-waitlist-form"
+                      onSubmit={handleNavWaitlistSubmit}
+                    >
                       <input
                         ref={navEmailRef}
                         type="email"
                         className="nav-waitlist-input"
-                        placeholder="Join the waitlist"
-                        onFocus={(e) => { e.target.placeholder = 'Email Address'; }}
-                        onBlur={(e) => { if (!e.target.value) e.target.placeholder = 'Join the waitlist'; }}
+                        placeholder="Stay updated"
+                        onFocus={(e) => {
+                          e.target.placeholder = "Email Address";
+                        }}
+                        onBlur={(e) => {
+                          if (!e.target.value)
+                            e.target.placeholder = "Stay updated";
+                        }}
                         required
                       />
-                      <button type="submit" className="nav-waitlist-btn" aria-label="Submit">
-                        <svg viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      <button
+                        type="submit"
+                        className="nav-waitlist-btn"
+                        aria-label="Submit"
+                      >
+                        <svg viewBox="0 0 14 14" fill="none">
+                          <path
+                            d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
                       </button>
                     </form>
                   </div>
@@ -1265,13 +1513,29 @@ export default function App() {
 
           <section className="s-hero" id="hero" ref={heroRef}>
             <div className="hero-content">
-              <h1 className="hero-h" data-a="">The first smartphone<br /><em>where you set the rules.</em></h1>
-              <p className="hero-sub" data-a="1">You decide which apps you want and when.</p>
-              <p className="hero-sub" data-a="1">We make sure it stays that way.</p>
+              <h1 className="hero-h" data-a="">
+                The first smartphone
+                <br />
+                <em>where you set the rules.</em>
+              </h1>
+              <p className="hero-sub" data-a="1">
+                You decide which apps you want and when.
+              </p>
+              <p className="hero-sub" data-a="1">
+                We make sure it stays that way.
+              </p>
               <div data-a="2" className="hero-cta-wrap">
                 {heroOk ? (
                   <div className="hero-cta-ok">
-                    <svg viewBox="0 0 15 15" fill="none"><path d="M2.5 7.5L6 11L12.5 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg viewBox="0 0 15 15" fill="none">
+                      <path
+                        d="M2.5 7.5L6 11L12.5 4"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                     You're in. Redirecting…
                   </div>
                 ) : (
@@ -1283,14 +1547,19 @@ export default function App() {
                       placeholder="Email Address"
                       required
                     />
-                    <button type="submit" className="hero-cta-btn">Join the waitlist</button>
+                    <button type="submit" className="hero-cta-btn">
+                      Stay updated
+                    </button>
                   </form>
                 )}
               </div>
             </div>
           </section>
 
-          <HowItWorksSection goApply={goApply} onWaitlist={handleSectionWaitlist} />
+          <HowItWorksSection
+            goApply={goApply}
+            onWaitlist={handleSectionWaitlist}
+          />
           <section className="s-action" id="see-it-in-action">
             <div className="action-header">
               <span className="label">See it in action</span>
@@ -1301,11 +1570,15 @@ export default function App() {
                 <dl className="ar-rows">
                   <div className="ar-row">
                     <dt className="ar-label">Blocked apps</dt>
-                    <dd className="ar-value">YouTube · X · Facebook · Reddit · Instagram · LinkedIn</dd>
+                    <dd className="ar-value">
+                      YouTube · X · Facebook · Reddit · Instagram · LinkedIn
+                    </dd>
                   </div>
                   <div className="ar-row">
                     <dt className="ar-label">Web access</dt>
-                    <dd className="ar-value">Restricted. No browser workaround</dd>
+                    <dd className="ar-value">
+                      Restricted. No browser workaround
+                    </dd>
                   </div>
                   <div className="ar-row">
                     <dt className="ar-label">Schedule</dt>
@@ -1329,7 +1602,10 @@ export default function App() {
               </div>
             </div>
             <div className="section-cta-wrap">
-              <SectionWaitlistForm source="action-waitlist" onSubmit={handleSectionWaitlist} />
+              <SectionWaitlistForm
+                source="action-waitlist"
+                onSubmit={handleSectionWaitlist}
+              />
             </div>
           </section>
           <section className="s-about">
@@ -1337,15 +1613,31 @@ export default function App() {
               <div className="about-text" data-a="">
                 <span className="label">About</span>
                 <h2>Built from a simple frustration.</h2>
-                <p>Smartphone overuse is the most documented, least solved problem in consumer technology. We have tried most solutions out there, but they either ask you to rely on willpower or take away too much. We think that's the wrong approach.</p>
-                <p>We're two founders building in London. We're looking for the right people to build this with.</p>
+                <p>
+                  Smartphone overuse is the most documented, least solved
+                  problem in consumer technology. We have tried most solutions
+                  out there, but they either ask you to rely on willpower or
+                  take away too much. We think that's the wrong approach.
+                </p>
+                <p>
+                  We're two founders building in London. We're looking for the
+                  right people to build this with.
+                </p>
               </div>
               <div className="about-headshots" data-a="1">
                 <div className="headshot">
-                  <img src="/joao.jpg" alt="João" style={{objectPosition:'center 22%'}} />
+                  <img
+                    src="/joao.jpg"
+                    alt="João"
+                    style={{ objectPosition: "center 22%" }}
+                  />
                 </div>
                 <div className="headshot">
-                  <img src="/ali.jpg" alt="Ali" style={{objectPosition:'center 30%'}} />
+                  <img
+                    src="/ali.jpg"
+                    alt="Ali"
+                    style={{ objectPosition: "center 30%" }}
+                  />
                 </div>
               </div>
             </div>
@@ -1356,37 +1648,78 @@ export default function App() {
 
       {showVideo && (
         <div className="video-overlay" onClick={() => setShowVideo(false)}>
-          <div className="video-box" onClick={e => e.stopPropagation()}>
-            <button className="video-close" onClick={() => setShowVideo(false)}>✕</button>
-            <video src="/BetaIntroVideo.mp4" controls autoPlay style={{width:'100%',display:'block'}} />
+          <div className="video-box" onClick={(e) => e.stopPropagation()}>
+            <button className="video-close" onClick={() => setShowVideo(false)}>
+              ✕
+            </button>
+            <video
+              src="/BetaIntroVideo.mp4"
+              controls
+              autoPlay
+              style={{ width: "100%", display: "block" }}
+            />
           </div>
         </div>
       )}
 
       {/* APPLY PAGE */}
-      {page === 'apply' && (
+      {page === "apply" && (
         <div id="page-apply">
           <nav className="apply-nav">
             <div className="apply-nav-inner">
-              <span className="logo">mutual.</span>
-              <button className="btn-ghost" onClick={goMain}>← Back</button>
+              <a
+                className="logo logo-img"
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  goMain();
+                }}
+                aria-label="mutual."
+              >
+                <img src="/logo.png" alt="mutual." />
+              </a>
+              <button className="btn-ghost" onClick={goMain}>
+                ← Back
+              </button>
             </div>
           </nav>
           <div className="apply-shell">
-
             {/* ── Left: context + deposit ── */}
             <div className="apply-left">
               <div className="apply-left-top">
                 <span className="apply-eyebrow">Early access</span>
-                <h1 className="apply-h">Apply<br /><em>Second Cohort.</em></h1>
-                <p className="apply-desc">Answer a few short questions. If you're a fit, we'll confirm your spot and send next steps.</p>
+                <h1 className="apply-h">
+                  Apply
+                  <br />
+                  <em>Second Cohort.</em>
+                </h1>
+                <p className="apply-desc">
+                  Answer a few short questions. If you're a fit, we'll confirm
+                  your spot and send next steps.
+                </p>
                 <ul className="apply-checklist">
-                  <li><span className="apply-check-dot" /><span>Takes about 2 minutes</span></li>
-                  <li><span className="apply-check-dot" /><span>No commitment until you pay</span></li>
-                  <li><span className="apply-check-dot" /><span>Get a refund or roll over if you're not selected</span></li>
+                  <li>
+                    <span className="apply-check-dot" />
+                    <span>Takes about 2 minutes</span>
+                  </li>
+                  <li>
+                    <span className="apply-check-dot" />
+                    <span>No commitment until you pay</span>
+                  </li>
+                  <li>
+                    <span className="apply-check-dot" />
+                    <span>
+                      Get a refund or roll over if you're not selected
+                    </span>
+                  </li>
                 </ul>
-                <a href={STRIPE_PREORDER} target="_blank" rel="noopener noreferrer" className="apply-cta">
-                Pre-order
+                <a
+                  href={STRIPE_PREORDER}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="apply-cta"
+                >
+                  Pre-order
                 </a>
               </div>
             </div>
@@ -1404,15 +1737,13 @@ export default function App() {
                   title="mutual. Early Access Application"
                 />
               </div>
-              
             </div>
-
           </div>
         </div>
       )}
 
       {/* WHY MUTUAL PAGE */}
-      {page === 'why' && (
+      {page === "why" && (
         <div id="page-why">
           <SubNav />
           <section className="s-about">
@@ -1420,8 +1751,16 @@ export default function App() {
               <div className="about-text" data-a="">
                 <span className="label">About</span>
                 <h2>Built from a simple frustration.</h2>
-                <p>Smartphone overuse is the most documented, least solved problem in consumer technology. We have tried most solutions out there, but they either ask you to rely on willpower or take away too much. We think that's the wrong approach.</p>
-                <p>We're two founders building in London. We're looking for the right people to build this with.</p>
+                <p>
+                  Smartphone overuse is the most documented, least solved
+                  problem in consumer technology. We have tried most solutions
+                  out there, but they either ask you to rely on willpower or
+                  take away too much. We think that's the wrong approach.
+                </p>
+                <p>
+                  We're two founders building in London. We're looking for the
+                  right people to build this with.
+                </p>
               </div>
               <div className="about-media" data-a="1">
                 <div className="about-photo">
@@ -1436,18 +1775,22 @@ export default function App() {
       )}
 
       {/* LEARN MORE PAGE */}
-      {page === 'learn-more' && (
-        <div id="page-learn-more">
+      {page === "product" && (
+        <div id="page-product">
           <SubNav />
           <section className="lm-banner">
             <div className="lm-banner-inner">
-              <h1><em>Pre-order now.</em></h1>
+              <h1>
+                <em>Pre-order now.</em>
+              </h1>
             </div>
           </section>
           {/* Pricing section — exact copy */}
           <Pricing />
           {/* Divider */}
-          <div style={{padding:'0 40px'}}><div className="lm-divider" /></div>
+          <div style={{ padding: "0 40px" }}>
+            <div className="lm-divider" />
+          </div>
           {/* Spec tabs */}
           <SpecTabs />
           {/* FAQ */}
@@ -1455,7 +1798,9 @@ export default function App() {
             <div className="faq-inner">
               <h2 data-a="">Frequently asked questions</h2>
               <div>
-                {faqs.map((f, i) => <FaqItem key={i} question={f.q} answer={f.a} />)}
+                {faqs.map((f, i) => (
+                  <FaqItem key={i} question={f.q} answer={f.a} />
+                ))}
               </div>
             </div>
           </section>
@@ -1464,14 +1809,16 @@ export default function App() {
       )}
 
       {/* FAQ PAGE */}
-      {page === 'faq' && (
+      {page === "faq" && (
         <div id="page-faq">
           <SubNav />
           <section className="s-faq">
             <div className="faq-inner">
               <h2 data-a="">Frequently asked questions</h2>
               <div>
-                {faqs.map((f, i) => <FaqItem key={i} question={f.q} answer={f.a} />)}
+                {faqs.map((f, i) => (
+                  <FaqItem key={i} question={f.q} answer={f.a} />
+                ))}
               </div>
             </div>
           </section>
